@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-forest: #0a1811;
+  --bg-forest-card: #08150f;
+  --gold-100: #fcf6ba;
+  --gold-200: #f6e48c;
+  --gold-300: #e6cc65;
+  --gold-400: #d4af37;
+  --gold-500: #c5a059;
+  --gold-accent-muted: rgba(197, 160, 89, 0.3);
+  --gold-accent-faint: rgba(197, 160, 89, 0.15);
+}
+
+body {
+  color: #d6d3d1;
+  background-color: #0a1811;
+  font-family: var(--font-montserrat), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: #c5a059;
+  color: #0a1811;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a1811;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(197, 160, 89, 0.25);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c5a059;
+}
+
+/* ========================================================================= */
+/* LUXURY DIPLOMATIC DESIGN SYSTEM */
+/* ========================================================================= */
+
+/* Gold Metallic Text Gradient */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #fcf6ba 0%, #e6cc65 25%, #d4af37 60%, #b38728 85%, #d4af37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Gold Ornamental Divider */
+.gold-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.8) 50%, transparent 100%);
+}
+
+/* Primary Gold Button */
+.btn-gold {
+  background: linear-gradient(135deg, #fcf6ba 0%, #e6cc65 25%, #d4af37 60%, #aa802b 100%);
+  color: #06120c !important;
+  font-weight: 700;
+  border: 1px solid rgba(252, 246, 186, 0.5);
+  box-shadow: 0 4px 15px -2px rgba(212, 175, 55, 0.3);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-gold:hover {
+  background: linear-gradient(135deg, #ffffff 0%, #fcf6ba 30%, #e6cc65 70%, #d4af37 100%);
+  box-shadow: 0 0 25px 2px rgba(212, 175, 55, 0.55), 0 8px 25px -4px rgba(0, 0, 0, 0.6);
+  transform: translateY(-2px);
+}
+
+.btn-gold:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px -2px rgba(212, 175, 55, 0.3);
+}
+
+/* Outline Gold Button */
+.btn-outline-gold {
+  background: rgba(11, 29, 20, 0.6);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  color: #f6e48c !important;
+  font-weight: 600;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+}
+
+.btn-outline-gold:hover {
+  border-color: #d4af37;
+  color: #ffffff !important;
+  background: rgba(212, 175, 55, 0.15);
+  box-shadow: 0 0 20px -2px rgba(212, 175, 55, 0.35);
+  transform: translateY(-2px);
+}
+
+/* Glass Panels & Cards */
+.glass-panel {
+  background: rgba(8, 21, 15, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel-hover:hover {
+  border-color: rgba(212, 175, 55, 0.55);
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.85), 0 0 24px -2px rgba(212, 175, 55, 0.25);
+  transform: translateY(-3px);
+}
+
+.glass-card {
+  background: rgba(8, 21, 15, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+}
+
+/* Glow Shadows */
+.shadow-gold-glow {
+  box-shadow: 0 0 28px -2px rgba(212, 175, 55, 0.4);
+}
+
+.shadow-gold-subtle {
+  box-shadow: 0 0 16px -2px rgba(212, 175, 55, 0.2);
+}
+
+/* Animations */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s ease-out;
+}

@@ -1,0 +1,25 @@
+{
+  "eventDates": "October 3 - 4 - 5, 2026",
+  "venue": "The City School MTLC",
+  "registrationFee": "PKR 4,500 / Delegate",
+  "bankDetails": {
+    "bankName": "Meezan Bank Islamic Banking",
+    "accountTitle": "MTLC Model United Nations Society",
+    "accountNumber": "0245-0104889201",
+    "iban": "PK78MEZN0002450104889201",
+    "easypaisaNumber": "0300-9876543",
+    "easypaisaTitle": "MTLC Secretariat (Ali Naveed)"
+  },
+  "isRegistrationOpen": true,
+  "announcement": "Registrations for MTLC MUN IV (October 3 - 4 - 5, 2026) are now live! Secure your committee allocations.",
+  "adminPassword": "legacy2026",
+  "committeeAgendas": {
+    "UNSC": "",
+    "UNHRC": "",
+    "UNW": "",
+    "DISEC": "",
+    "PNA": "",
+    "CRISIS": "FIFA: Messi Retirement Crisis"
+  },
+  "lastUpdated": "2026-09-05T16:19:24.349Z"
+}

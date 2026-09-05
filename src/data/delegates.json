@@ -1,0 +1,568 @@
+[
+  {
+    "fullName": "Zaid Khan (Head Delegate • 4 Total)",
+    "email": "zaid@gmail.com",
+    "phone": "+923001234561",
+    "institution": "Army Public School & College",
+    "committee": "Delegation (4 Seats)",
+    "registrationType": "delegation",
+    "delegates": [
+      {
+        "delegateNumber": 1,
+        "fullName": "Zaid Khan",
+        "phone": "+923001234561",
+        "email": "zaid@gmail.com",
+        "institution": "Army Public School & College",
+        "committee": "UNSC",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 2,
+        "fullName": "Maryam Ali",
+        "phone": "+923001234562",
+        "email": "maryam@gmail.com",
+        "institution": "Army Public School & College",
+        "committee": "UNHRC",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 3,
+        "fullName": "Usman Farooq",
+        "phone": "+923001234563",
+        "email": "usman@gmail.com",
+        "institution": "Army Public School & College",
+        "committee": "DISEC",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 4,
+        "fullName": "Sara Ahmed",
+        "phone": "+923001234564",
+        "email": "sara@gmail.com",
+        "institution": "Army Public School & College",
+        "committee": "CRISIS",
+        "isOptional": false
+      }
+    ],
+    "paymentProofUrl": "/uploads/receipt_1788624569694_1_receipt_inst_ok.png",
+    "paymentProofFilename": "receipt_inst_ok.png",
+    "paymentProofUrls": [
+      "/uploads/receipt_1788624569694_1_receipt_inst_ok.png"
+    ],
+    "paymentProofFilenames": [
+      "receipt_inst_ok.png"
+    ],
+    "paymentProofSize": 70,
+    "notes": "Institutional Delegation of 4 delegates led by Head Delegate Zaid Khan (Army Public School & College). Proof files attached: 1.",
+    "id": "MTLC-2026-2721",
+    "status": "Pending",
+    "createdAt": "2026-09-05T16:09:29.703Z"
+  },
+  {
+    "fullName": "Zaid Khan (Head Delegate • 4 Total)",
+    "email": "zaid@gmail.com",
+    "phone": "+923001234561",
+    "institution": "Private Delegation",
+    "committee": "Delegation (4 Seats)",
+    "registrationType": "delegation",
+    "delegates": [
+      {
+        "delegateNumber": 1,
+        "fullName": "Zaid Khan",
+        "phone": "+923001234561",
+        "email": "zaid@gmail.com",
+        "institution": "Private Delegation",
+        "committee": "UNSC",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 2,
+        "fullName": "Maryam Ali",
+        "phone": "+923001234562",
+        "email": "maryam@gmail.com",
+        "institution": "Private Delegation",
+        "committee": "UNHRC",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 3,
+        "fullName": "Usman Farooq",
+        "phone": "+923001234563",
+        "email": "usman@gmail.com",
+        "institution": "Private Delegation",
+        "committee": "DISEC",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 4,
+        "fullName": "Sara Ahmed",
+        "phone": "+923001234564",
+        "email": "sara@gmail.com",
+        "institution": "Private Delegation",
+        "committee": "CRISIS",
+        "isOptional": false
+      }
+    ],
+    "paymentProofUrl": "/uploads/receipt_1788624569315_1_receipt_private.png",
+    "paymentProofFilename": "receipt_private.png",
+    "paymentProofUrls": [
+      "/uploads/receipt_1788624569315_1_receipt_private.png"
+    ],
+    "paymentProofFilenames": [
+      "receipt_private.png"
+    ],
+    "paymentProofSize": 70,
+    "notes": "Private Delegation of 4 delegates led by Head Delegate Zaid Khan (Private Delegation). Proof files attached: 1.",
+    "id": "MTLC-2026-8158",
+    "status": "Pending",
+    "createdAt": "2026-09-05T16:09:29.326Z"
+  },
+  {
+    "fullName": "my full name (Head Delegate • 6 Total)",
+    "email": "me@mydomain.com",
+    "phone": "+92 328 70044334",
+    "institution": "city name",
+    "committee": "Delegation (6 Seats)",
+    "registrationType": "delegation",
+    "delegates": [
+      {
+        "delegateNumber": 1,
+        "fullName": "my full name",
+        "phone": "+92 328 70044334",
+        "email": "me@mydomain.com",
+        "institution": "city name",
+        "committee": "CRISIS",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 2,
+        "fullName": "my full name",
+        "phone": "+92 328 70044334",
+        "email": "me@mydomain.com",
+        "institution": "city name",
+        "committee": "PNA",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 3,
+        "fullName": "my full name",
+        "phone": "+92 328 70044334",
+        "email": "me@mydomain.com",
+        "institution": "city name",
+        "committee": "DISEC",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 4,
+        "fullName": "my full name",
+        "phone": "+92 328 70044334",
+        "email": "me@mydomain.com",
+        "institution": "city name",
+        "committee": "UNW",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 5,
+        "fullName": "my full name",
+        "phone": "+92 328 70044334",
+        "email": "me@mydomain.com",
+        "institution": "city name",
+        "committee": "UNHRC",
+        "isOptional": true
+      },
+      {
+        "delegateNumber": 6,
+        "fullName": "my full name",
+        "phone": "+92 328 70044334",
+        "email": "me@mydomain.com",
+        "institution": "city name",
+        "committee": "UNSC",
+        "isOptional": true
+      }
+    ],
+    "paymentProofUrl": "/uploads/receipt_1788624248070_1_untitled_design.png",
+    "paymentProofFilename": "Untitled design (3).png",
+    "paymentProofUrls": [
+      "/uploads/receipt_1788624248070_1_untitled_design.png"
+    ],
+    "paymentProofFilenames": [
+      "Untitled design (3).png"
+    ],
+    "paymentProofSize": 112754,
+    "notes": "Delegation of 6 delegates led by Head Delegate my full name from city name. Proof files attached: 1.",
+    "id": "MTLC-2026-5971",
+    "status": "Pending",
+    "createdAt": "2026-09-05T16:04:08.079Z"
+  },
+  {
+    "fullName": "Fatima Noor (Head Delegate • 4 Total)",
+    "email": "fatima@lgs.edu.pk",
+    "phone": "+923001111111",
+    "institution": "Lahore Grammar School Paragon",
+    "committee": "Delegation (4 Seats)",
+    "registrationType": "delegation",
+    "delegates": [
+      {
+        "delegateNumber": 1,
+        "fullName": "Fatima Noor",
+        "phone": "+923001111111",
+        "email": "fatima@lgs.edu.pk",
+        "institution": "Lahore Grammar School Paragon",
+        "committee": "UNSC",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 2,
+        "fullName": "Ahmed Bilal",
+        "phone": "+923002222222",
+        "email": "ahmed@lgs.edu.pk",
+        "institution": "Lahore Grammar School Paragon",
+        "committee": "UNHRC",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 3,
+        "fullName": "Zainab Raza",
+        "phone": "+923003333333",
+        "email": "zainab@lgs.edu.pk",
+        "institution": "Lahore Grammar School Paragon",
+        "committee": "DISEC",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 4,
+        "fullName": "Hamza Tariq",
+        "phone": "+923004444444",
+        "email": "hamza@lgs.edu.pk",
+        "institution": "Lahore Grammar School Paragon",
+        "committee": "CRISIS",
+        "isOptional": false
+      }
+    ],
+    "paymentProofUrl": "/uploads/receipt_1788613908123_1_receipt.png",
+    "paymentProofFilename": "receipt.png",
+    "paymentProofUrls": [
+      "/uploads/receipt_1788613908123_1_receipt.png"
+    ],
+    "paymentProofFilenames": [
+      "receipt.png"
+    ],
+    "paymentProofSize": 70,
+    "notes": "Delegation of 4 delegates led by Head Delegate Fatima Noor from Lahore Grammar School Paragon. Proof files attached: 1.",
+    "id": "MTLC-2026-2477",
+    "status": "Pending",
+    "createdAt": "2026-09-05T13:11:48.161Z"
+  },
+  {
+    "fullName": "Maha Siddiqui",
+    "email": "maha@example.com",
+    "phone": "+92 333 4567890",
+    "institution": "Observer",
+    "committee": "Observer",
+    "registrationType": "observer",
+    "comingAs": "Observer",
+    "paymentProofUrl": "/uploads/receipt_1788610536252_1_receipt_observe.png",
+    "paymentProofFilename": "receipt_observer.png",
+    "paymentProofUrls": [
+      "/uploads/receipt_1788610536252_1_receipt_observe.png"
+    ],
+    "paymentProofFilenames": [
+      "receipt_observer.png"
+    ],
+    "paymentProofSize": 39,
+    "notes": "Observer registration. Proof files: 1.",
+    "id": "MTLC-2026-6986",
+    "status": "Pending",
+    "createdAt": "2026-09-05T12:15:36.258Z"
+  },
+  {
+    "fullName": "Daniyal Raza",
+    "email": "daniyal@example.com",
+    "phone": "+92 321 9876543",
+    "institution": "IBA Karachi",
+    "committee": "CRISIS",
+    "registrationType": "private_delegate",
+    "comingAs": "Delegate",
+    "paymentProofUrl": "/uploads/receipt_1788610536203_1_receipt_private.png",
+    "paymentProofFilename": "receipt_private.png",
+    "paymentProofUrls": [
+      "/uploads/receipt_1788610536203_1_receipt_private.png"
+    ],
+    "paymentProofFilenames": [
+      "receipt_private.png"
+    ],
+    "paymentProofSize": 39,
+    "notes": "Private Delegate from IBA Karachi. Proof files: 1.",
+    "id": "MTLC-2026-2427",
+    "status": "Pending",
+    "createdAt": "2026-09-05T12:15:36.208Z"
+  },
+  {
+    "fullName": "Hamza Khan (6 Delegates)",
+    "email": "hamza@example.com",
+    "phone": "+92 300 1111111",
+    "institution": "LUMS",
+    "committee": "Delegation (6 Seats)",
+    "registrationType": "delegation",
+    "delegates": [
+      {
+        "delegateNumber": 1,
+        "fullName": "Hamza Khan",
+        "phone": "+92 300 1111111",
+        "email": "hamza@example.com",
+        "institution": "LUMS",
+        "committee": "UNSC",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 2,
+        "fullName": "Ayesha Tariq",
+        "phone": "+92 300 2222222",
+        "email": "ayesha@example.com",
+        "institution": "LUMS",
+        "committee": "UNHRC",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 3,
+        "fullName": "Bilal Ahmed",
+        "phone": "+92 300 3333333",
+        "email": "bilal@example.com",
+        "institution": "LUMS",
+        "committee": "UNW",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 4,
+        "fullName": "Zainab Noor",
+        "phone": "+92 300 4444444",
+        "email": "zainab@example.com",
+        "institution": "LUMS",
+        "committee": "DISEC",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 5,
+        "fullName": "Omar Farooq",
+        "phone": "+92 300 5555555",
+        "email": "omar@example.com",
+        "institution": "LUMS",
+        "committee": "PNA",
+        "isOptional": true
+      },
+      {
+        "delegateNumber": 6,
+        "fullName": "Sara Malik",
+        "phone": "+92 300 6666666",
+        "email": "sara@example.com",
+        "institution": "LUMS",
+        "committee": "CRISIS",
+        "isOptional": true
+      }
+    ],
+    "paymentProofUrl": "/uploads/receipt_1788610536141_1_receipt_alpha_1.jpg",
+    "paymentProofFilename": "receipt_alpha_1.jpg",
+    "paymentProofUrls": [
+      "/uploads/receipt_1788610536141_1_receipt_alpha_1.jpg",
+      "/uploads/receipt_1788610536145_2_receipt_alpha_2.jpg"
+    ],
+    "paymentProofFilenames": [
+      "receipt_alpha_1.jpg",
+      "receipt_alpha_2.jpg"
+    ],
+    "paymentProofSize": 78,
+    "notes": "Delegation of 6 delegates from LUMS. Proof files attached: 2.",
+    "id": "MTLC-2026-4245",
+    "status": "Pending",
+    "createdAt": "2026-09-05T12:15:36.152Z"
+  },
+  {
+    "fullName": "Maha Siddiqui",
+    "email": "maha@example.com",
+    "phone": "+92 333 4567890",
+    "institution": "Observer",
+    "committee": "Observer",
+    "registrationType": "observer",
+    "comingAs": "Observer",
+    "paymentProofUrl": "/uploads/receipt_1788610523951_1_receipt_observe.png",
+    "paymentProofFilename": "receipt_observer.png",
+    "paymentProofUrls": [
+      "/uploads/receipt_1788610523951_1_receipt_observe.png"
+    ],
+    "paymentProofFilenames": [
+      "receipt_observer.png"
+    ],
+    "paymentProofSize": 39,
+    "notes": "Observer registration. Proof files: 1.",
+    "id": "MTLC-2026-2011",
+    "status": "Pending",
+    "createdAt": "2026-09-05T12:15:23.957Z"
+  },
+  {
+    "fullName": "Daniyal Raza",
+    "email": "daniyal@example.com",
+    "phone": "+92 321 9876543",
+    "institution": "IBA Karachi",
+    "committee": "CRISIS",
+    "registrationType": "private_delegate",
+    "comingAs": "Delegate",
+    "paymentProofUrl": "/uploads/receipt_1788610523868_1_receipt_private.png",
+    "paymentProofFilename": "receipt_private.png",
+    "paymentProofUrls": [
+      "/uploads/receipt_1788610523868_1_receipt_private.png"
+    ],
+    "paymentProofFilenames": [
+      "receipt_private.png"
+    ],
+    "paymentProofSize": 39,
+    "notes": "Private Delegate from IBA Karachi. Proof files: 1.",
+    "id": "MTLC-2026-9265",
+    "status": "Pending",
+    "createdAt": "2026-09-05T12:15:23.876Z"
+  },
+  {
+    "fullName": "Maha Siddiqui",
+    "email": "maha@example.com",
+    "phone": "+92 333 4567890",
+    "institution": "Observer",
+    "committee": "Observer",
+    "registrationType": "observer",
+    "comingAs": "Observer",
+    "paymentProofUrl": "/uploads/receipt_1788610498339_1_receipt_observe.png",
+    "paymentProofFilename": "receipt_observer.png",
+    "paymentProofUrls": [
+      "/uploads/receipt_1788610498339_1_receipt_observe.png"
+    ],
+    "paymentProofFilenames": [
+      "receipt_observer.png"
+    ],
+    "paymentProofSize": 39,
+    "notes": "Observer registration. Proof files: 1.",
+    "id": "MTLC-2026-1974",
+    "status": "Pending",
+    "createdAt": "2026-09-05T12:14:58.347Z"
+  },
+  {
+    "fullName": "Daniyal Raza",
+    "email": "daniyal@example.com",
+    "phone": "+92 321 9876543",
+    "institution": "IBA Karachi",
+    "committee": "CRISIS",
+    "registrationType": "private_delegate",
+    "comingAs": "Delegate",
+    "paymentProofUrl": "/uploads/receipt_1788610498268_1_receipt_private.png",
+    "paymentProofFilename": "receipt_private.png",
+    "paymentProofUrls": [
+      "/uploads/receipt_1788610498268_1_receipt_private.png"
+    ],
+    "paymentProofFilenames": [
+      "receipt_private.png"
+    ],
+    "paymentProofSize": 39,
+    "notes": "Private Delegate from IBA Karachi. Proof files: 1.",
+    "id": "MTLC-2026-3417",
+    "status": "Pending",
+    "createdAt": "2026-09-05T12:14:58.287Z"
+  },
+  {
+    "fullName": "Sophia Montgomery",
+    "email": "sophia.montgomery@oxford.edu",
+    "phone": "+44 7911 123456",
+    "institution": "Independent Delegate",
+    "committee": "UNSC",
+    "experience": "Beginner",
+    "countryPreference1": "",
+    "countryPreference2": "",
+    "paymentProofUrl": "/uploads/receipt_1788527301425_sophia_montgomery.png",
+    "paymentProofFilename": "receipt_sophia.png",
+    "paymentProofSize": 8,
+    "notes": "Direct website registration. Awaiting financial verification.",
+    "id": "MTLC-2026-9445",
+    "status": "Approved",
+    "createdAt": "2026-09-04T13:08:21.429Z"
+  },
+  {
+    "fullName": "Ambassador Daniyal Khan",
+    "email": "daniyal.khan@diplomacy.pk",
+    "phone": "+92 300 8877665",
+    "institution": "Lahore Grammar School",
+    "committee": "UNSC",
+    "experience": "Advanced",
+    "countryPreference1": "United States",
+    "countryPreference2": "United Kingdom",
+    "paymentProofUrl": "/uploads/receipt_1788526409562_ambassador_daniyal_k.png",
+    "paymentProofFilename": "test_receipt_daniyal.png",
+    "paymentProofSize": 2289905,
+    "notes": "Verified via Meezan transaction slip",
+    "id": "MTLC-2026-8591",
+    "status": "Verified",
+    "createdAt": "2026-09-04T12:53:29.567Z"
+  },
+  {
+    "id": "MTLC-2026-1042",
+    "fullName": "Zainab Fatima Khan",
+    "email": "zainab.fatima@diplomacy.edu.pk",
+    "phone": "+92 301 5551234",
+    "institution": "Lahore University of Management Sciences",
+    "committee": "UNSC",
+    "experience": "Advanced",
+    "countryPreference1": "United Kingdom",
+    "countryPreference2": "France",
+    "paymentProofUrl": "/images/logo.png",
+    "paymentProofFilename": "receipt_zainab_1042.png",
+    "paymentProofSize": 245120,
+    "status": "Verified",
+    "createdAt": "2026-09-02T12:53:08.705Z",
+    "notes": "Assigned Delegate of United Kingdom. Fee verified via Meezan Bank transfer."
+  },
+  {
+    "id": "MTLC-2026-1043",
+    "fullName": "Hamza Tariq Qureshi",
+    "email": "hamza.tariq@aitchison.edu.pk",
+    "phone": "+92 321 4448765",
+    "institution": "Aitchison College, Lahore",
+    "committee": "DISEC",
+    "experience": "Intermediate",
+    "countryPreference1": "Germany",
+    "countryPreference2": "Japan",
+    "paymentProofUrl": "/images/logo.png",
+    "paymentProofFilename": "receipt_hamza_1043.png",
+    "paymentProofSize": 312500,
+    "status": "Pending",
+    "createdAt": "2026-09-03T12:53:08.705Z",
+    "notes": "Pending transaction slip re-confirmation with bank statement."
+  },
+  {
+    "id": "MTLC-2026-1044",
+    "fullName": "Ayesha Noor Malik",
+    "email": "ayesha.malik@nust.edu.pk",
+    "phone": "+92 333 8889922",
+    "institution": "NUST Islamabad",
+    "committee": "PNA",
+    "experience": "Advanced",
+    "countryPreference1": "Leader of Opposition",
+    "countryPreference2": "Federal Minister of Finance",
+    "paymentProofUrl": "/images/logo.png",
+    "paymentProofFilename": "receipt_ayesha_1044.png",
+    "paymentProofSize": 198400,
+    "status": "Verified",
+    "createdAt": "2026-09-04T07:53:08.705Z",
+    "notes": "Portfolio confirmed: Leader of the Opposition."
+  },
+  {
+    "id": "MTLC-2026-1045",
+    "fullName": "Bilal Ahmed Siddiqui",
+    "email": "bilal.siddiqui@iba.edu.pk",
+    "phone": "+92 345 7771144",
+    "institution": "IBA Karachi",
+    "committee": "UNHRC",
+    "experience": "Beginner",
+    "countryPreference1": "Switzerland",
+    "countryPreference2": "Norway",
+    "paymentProofUrl": "/images/logo.png",
+    "paymentProofFilename": "receipt_bilal_1045.png",
+    "paymentProofSize": 421000,
+    "status": "Pending",
+    "createdAt": "2026-09-04T10:53:08.705Z"
+  }
+]
