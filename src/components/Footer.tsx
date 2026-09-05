@@ -11,7 +11,7 @@ export default function Footer() {
           {/* Col 1: Brand & Motto */}
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <div className="relative w-11 h-11 rounded-full border border-gold-400/40 p-0.5 overflow-hidden bg-emerald-900/60 shadow-gold-subtle">
+              <div className="relative w-11 h-11 flex items-center justify-center">
                 <Image
                   src="/images/logo.png"
                   alt="MTLC MUN IV Seal"

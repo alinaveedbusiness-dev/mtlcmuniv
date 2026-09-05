@@ -55,13 +55,13 @@ export default function Hero({ settings }: HeroProps) {
       <div className="relative z-10 max-w-5xl mx-auto text-center flex flex-col items-center">
         {/* Emblem */}
         <div className="mb-4 relative">
-          <div className="relative w-44 h-44 sm:w-56 sm:h-56 md:w-64 md:h-64 rounded-full p-2 border-2 border-gold-400/40 shadow-gold-glow flex items-center justify-center bg-emerald-950/80 backdrop-blur-md">
+          <div className="relative w-48 h-48 sm:w-60 sm:h-60 md:w-72 md:h-72 mx-auto flex items-center justify-center">
             <Image
               src="/images/logo.png"
               alt="MTLC MUN IV Seal"
-              width={240}
-              height={240}
-              className="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]"
+              width={288}
+              height={288}
+              className="w-full h-full object-contain filter drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
               priority
             />
           </div>
