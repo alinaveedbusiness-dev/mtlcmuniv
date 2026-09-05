@@ -22,7 +22,7 @@ export default function CommitteesSection({ settings, onSelectCommittee }: Commi
   };
 
   return (
-    <section id="committees" className="py-20 px-4 sm:px-6 lg:px-8 relative border-t border-gold-400/10">
+    <section id="committees" className="py-20 px-4 sm:px-6 lg:px-8 relative border-t border-gold-400/10 scroll-mt-16">
       <div className="max-w-7xl mx-auto">
         {/* Minimal Section Header */}
         <div className="text-center mb-12">

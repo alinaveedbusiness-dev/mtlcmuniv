@@ -26,7 +26,7 @@ export default async function HomePage() {
         {/* ========================================================================= */}
         <section
           id="register"
-          className="py-20 px-4 sm:px-6 lg:px-8 relative border-t border-gold-400/20 bg-gradient-to-b from-[#08150f] via-[#0a1811] to-[#08150f]"
+          className="py-20 px-4 sm:px-6 lg:px-8 relative border-t border-gold-400/20 bg-gradient-to-b from-[#08150f] via-[#0a1811] to-[#08150f] scroll-mt-16"
         >
           {/* Ambient Decorative Shimmers */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">

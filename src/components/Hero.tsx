@@ -34,6 +34,15 @@ export default function Hero({ settings }: HeroProps) {
     return () => clearInterval(timer);
   }, []);
 
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.history.pushState(null, "", `#${targetId}`);
+    }
+  };
+
   return (
     <section className="relative min-h-[85vh] flex items-center justify-center pt-20 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background Decorative Radial Shimmers */}
@@ -43,55 +52,39 @@ export default function Hero({ settings }: HeroProps) {
         <div className="absolute inset-0 opacity-[0.03] mix-blend-screen bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:32px_32px]" />
       </div>
 
-      <div className="relative max-w-4xl mx-auto text-center z-10 flex flex-col items-center">
-        {/* Conference Emblem */}
-        <div className="relative mb-8 group">
-          <div className="absolute -inset-4 bg-gold-400/25 rounded-full blur-2xl group-hover:bg-gold-400/35 transition-all duration-700" />
-          <div className="relative w-52 h-52 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 mx-auto drop-shadow-[0_20px_45px_rgba(0,0,0,0.9)]">
+      <div className="relative z-10 max-w-5xl mx-auto text-center flex flex-col items-center">
+        {/* Emblem */}
+        <div className="mb-4 relative">
+          <div className="relative w-44 h-44 sm:w-56 sm:h-56 md:w-64 md:h-64 rounded-full p-2 border-2 border-gold-400/40 shadow-gold-glow flex items-center justify-center bg-emerald-950/80 backdrop-blur-md">
             <Image
               src="/images/logo.png"
-              alt="MTLC MUN IV Official Seal"
-              fill
-              className="object-contain"
+              alt="MTLC MUN IV Seal"
+              width={240}
+              height={240}
+              className="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]"
               priority
             />
           </div>
         </div>
 
-        {/* Conference Title & Subtitle */}
-        <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-stone-100 mb-2 drop-shadow-md">
-          <span className="text-gold-gradient">MTLC MUN IV</span>
+        {/* Official Assembly Heading */}
+        <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-stone-100 max-w-3xl leading-[1.1] mb-4">
+          MTLC MUN <span className="text-gold-gradient">IV</span>
         </h1>
 
-        <div className="mb-4">
-          <span className="font-serif italic text-2xl sm:text-3xl md:text-4xl text-gold-200/90 tracking-wide">
-            Legacy Edition
-          </span>
-        </div>
-
-        {/* Motto Display */}
-        <div className="my-4 relative inline-block">
-          <div className="gold-divider w-28 sm:w-40 mx-auto mb-2.5" />
-          <p className="font-serif tracking-[0.3em] sm:tracking-[0.4em] uppercase text-xs sm:text-sm font-bold text-gold-400 drop-shadow-[0_2px_10px_rgba(212,175,55,0.4)]">
-            DIALOGUE. DIPLOMACY. IMPACT.
-          </p>
-          <div className="gold-divider w-28 sm:w-40 mx-auto mt-2.5" />
-        </div>
-
-        {/* Date & Location Badges */}
-        <div className="my-4 flex flex-wrap items-center justify-center gap-2.5">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-950/80 border border-gold-400/30 text-xs sm:text-sm text-gold-300 shadow-gold-subtle">
-            <Calendar className="w-4 h-4 text-gold-400 shrink-0" />
-            <span className="font-semibold tracking-wide">{settings?.eventDates || "October 3 - 4 - 5, 2026"}</span>
+        {/* Minimal Badges: Date & Venue */}
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gold-400/10 border border-gold-400/30 text-gold-300 text-xs sm:text-sm font-serif">
+            <Calendar className="w-3.5 h-3.5 text-gold-400" />
+            <span className="font-medium tracking-wide">{settings.eventDates}</span>
           </div>
-
           <a
             href="https://maps.app.goo.gl/Wop3i4t6TH1oHv4t8"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-950/80 border border-gold-400/30 hover:border-gold-400/70 text-xs sm:text-sm text-stone-200 hover:text-gold-200 transition-all duration-300 shadow-gold-subtle group"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/80 border border-gold-400/25 hover:border-gold-400/60 transition-all text-xs sm:text-sm text-stone-300 hover:text-gold-200"
           >
-            <MapPin className="w-4 h-4 text-gold-400 shrink-0 group-hover:scale-110 transition-transform" />
+            <MapPin className="w-3.5 h-3.5 text-gold-400 shrink-0" />
             <span className="font-medium">The City School MTLC</span>
             <span className="text-[11px] text-gold-400/80 font-mono underline underline-offset-2 ml-1">
               View Map ↗
@@ -103,14 +96,16 @@ export default function Hero({ settings }: HeroProps) {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full max-w-md mx-auto my-6">
           <a
             href="#register"
-            className="w-full sm:w-auto btn-gold px-8 py-3 rounded-lg text-xs sm:text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 shadow-gold-glow"
+            onClick={(e) => scrollToSection(e, "register")}
+            className="w-full sm:w-auto btn-gold px-8 py-3 rounded-lg text-xs sm:text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 shadow-gold-glow transition-all duration-200 active:scale-95 cursor-pointer group"
           >
             <span>Register Now</span>
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </a>
           <a
             href="#committees"
-            className="w-full sm:w-auto btn-outline-gold px-7 py-3 rounded-lg text-xs sm:text-sm font-semibold uppercase tracking-wider flex items-center justify-center gap-2"
+            onClick={(e) => scrollToSection(e, "committees")}
+            className="w-full sm:w-auto btn-outline-gold px-7 py-3 rounded-lg text-xs sm:text-sm font-semibold uppercase tracking-wider flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 cursor-pointer"
           >
             <span>Committees</span>
           </a>
