@@ -135,7 +135,7 @@ export default function SettingsForm({ initialSettings, onSettingsSaved }: Setti
               required
               value={eventDates}
               onChange={(e) => setEventDates(e.target.value)}
-              placeholder="e.g. October 3 - 4 - 5, 2026"
+              placeholder="e.g. October 23 - 24 - 25, 2026"
               className="w-full px-4 py-2.5 rounded-lg bg-emerald-950/80 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-sm"
             />
           </div>

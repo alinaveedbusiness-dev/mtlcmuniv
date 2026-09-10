@@ -18,7 +18,7 @@ export default function Hero({ settings }: HeroProps) {
   });
 
   useEffect(() => {
-    const target = new Date("2026-10-03T09:00:00").getTime();
+    const target = new Date("2026-10-23T08:30:00").getTime();
     const updateCountdown = () => {
       const now = Date.now();
       const diff = Math.max(0, target - now);

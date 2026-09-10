@@ -68,7 +68,7 @@ export const DIRECTORATE_CATEGORIES = [
 ] as const;
 
 export const DEFAULT_SETTINGS: ConferenceSettings = {
-  eventDates: "October 3 - 4 - 5, 2026",
+  eventDates: "October 23 - 24 - 25, 2026",
   venue: "The City School MTLC",
   registrationFee: "PKR 4,500 / Delegate",
   bankDetails: {
@@ -80,7 +80,7 @@ export const DEFAULT_SETTINGS: ConferenceSettings = {
     easypaisaTitle: "MTLC Secretariat (Ali Naveed)",
   },
   isRegistrationOpen: true,
-  announcement: "Registrations for MTLC MUN IV (October 3 - 4 - 5, 2026) are now live! Secure your committee allocations.",
+  announcement: "Registrations for MTLC MUN IV (October 23 - 24 - 25, 2026) are now live! Secure your committee allocations.",
   adminPassword: "legacy2026",
   committeeAgendas: {
     UNSC: "Addressing Escalating Geopolitical Flashpoints and Autonomous Warfare in Maritime Corridors",
@@ -96,7 +96,7 @@ export const DEFAULT_SETTINGS: ConferenceSettings = {
 export const SCHEDULE_DAYS = [
   {
     day: "Day 01",
-    date: "Saturday, Oct 3",
+    date: "Friday, Oct 23",
     title: "Opening Plenary & Committee Inception",
     items: [
       { time: "08:30 AM – 10:00 AM", title: "Delegate Check-In & Diplomatic Kit Distribution", location: "Grand Foyer" },
@@ -109,7 +109,7 @@ export const SCHEDULE_DAYS = [
   },
   {
     day: "Day 02",
-    date: "Sunday, Oct 4",
+    date: "Saturday, Oct 24",
     title: "Crisis Directives & Working Papers",
     items: [
       { time: "09:00 AM – 12:00 PM", title: "Committee Session III: Introduction of Working Papers", location: "Assigned Committee Chambers" },
@@ -122,7 +122,7 @@ export const SCHEDULE_DAYS = [
   },
   {
     day: "Day 03",
-    date: "Monday, Oct 5",
+    date: "Sunday, Oct 25",
     title: "Final Voting & Grand Award Ceremony",
     items: [
       { time: "09:30 AM – 12:30 PM", title: "Committee Session VI: Substantive Amendments & Final Voting Procedure", location: "Assigned Committee Chambers" },

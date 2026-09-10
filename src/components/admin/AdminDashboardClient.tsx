@@ -376,7 +376,7 @@ export default function AdminDashboardClient({
                 type="text"
                 value={eventDates}
                 onChange={(e) => setEventDates(e.target.value)}
-                placeholder="e.g. October 3 - 4 - 5, 2026"
+                placeholder="e.g. October 23 - 24 - 25, 2026"
                 className="w-64 bg-[#0a1811] border border-[#c5a059]/30 rounded px-3 py-1.5 text-stone-100 text-xs focus:outline-none focus:border-[#c5a059]"
               />
               <button
