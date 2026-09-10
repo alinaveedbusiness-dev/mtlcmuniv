@@ -26,6 +26,12 @@ export async function GET() {
       "Phone / WhatsApp",
       "Institution",
       "Committee / Role",
+      "Preferred Allotment",
+      "Class",
+      "Section",
+      "Directorate Category",
+      "Sponsors",
+      "Past MUN Experience",
       "Status",
       "Delegation Members Roster",
       "Payment Proof URLs",
@@ -39,6 +45,8 @@ export async function GET() {
       const typeLabel =
         d.registrationType === "delegation"
           ? "Delegation"
+          : d.registrationType === "directorate"
+          ? "Directorate"
           : d.registrationType === "observer"
           ? "Observer"
           : d.comingAs === "Observer"
@@ -50,7 +58,7 @@ export async function GET() {
         rosterSummary = d.delegates
           .map(
             (m) =>
-              `[${m.delegateNumber === 1 ? "Head Delegate" : `D${m.delegateNumber}`}: ${m.fullName} | ${m.committee} | ${m.email} | ${m.phone}]`
+              `[${m.delegateNumber === 1 ? "Head Delegate" : `D${m.delegateNumber}`}: ${m.fullName} | ${m.committee}${m.preferredAllotment ? ` (${m.preferredAllotment})` : ""} | ${m.email} | ${m.phone}]`
           )
           .join(" ; ");
       }
@@ -67,6 +75,12 @@ export async function GET() {
         escapeCsv(d.phone),
         escapeCsv(d.institution),
         escapeCsv(d.committee),
+        escapeCsv(d.preferredAllotment || ""),
+        escapeCsv(d.studentClass || ""),
+        escapeCsv(d.section || ""),
+        escapeCsv(d.directorateCategory || ""),
+        escapeCsv(d.sponsors || ""),
+        escapeCsv(d.pastExperience || ""),
         escapeCsv(d.status),
         escapeCsv(rosterSummary),
         escapeCsv(allProofUrls),
@@ -75,7 +89,7 @@ export async function GET() {
       ]);
     }
 
-    const csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\r\n");
+    const csvContent = [headers.map(escapeCsv).join(","), ...rows.map((r) => r.join(","))].join("\r\n");
 
     const filename = `MTLC_MUN_IV_Delegates_${new Date().toISOString().slice(0, 10)}.csv`;
 

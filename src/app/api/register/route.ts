@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    if (rawFiles.length === 0) {
+    if (registrationType !== "directorate" && rawFiles.length === 0) {
       return NextResponse.json(
         { error: "Please attach at least one proof of payment file." },
         { status: 400 }
@@ -237,6 +237,7 @@ export async function POST(req: NextRequest) {
             email: d.email.trim(),
             institution: d.institution?.trim() || sharedInstitution,
             committee: d.committee.trim(),
+            preferredAllotment: d.preferredAllotment?.trim() || undefined,
             isOptional: false,
           });
         } else if (hasAnyValue) {
@@ -273,6 +274,7 @@ export async function POST(req: NextRequest) {
             email: d.email.trim(),
             institution: d.institution?.trim() || sharedInstitution,
             committee: d.committee.trim(),
+            preferredAllotment: d.preferredAllotment?.trim() || undefined,
             isOptional: true,
           });
         }
@@ -340,6 +342,62 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    if (registrationType === "directorate") {
+      const fullName = formData.get("fullName")?.toString()?.trim();
+      const phone = formData.get("phone")?.toString()?.trim();
+      const email = formData.get("email")?.toString()?.trim();
+      const studentClass = formData.get("studentClass")?.toString()?.trim();
+      const section = formData.get("section")?.toString()?.trim();
+      const category = formData.get("category")?.toString()?.trim();
+      const sponsors = formData.get("sponsors")?.toString()?.trim() || "";
+      const pastExperience = formData.get("pastExperience")?.toString()?.trim() || "";
+
+      if (!fullName || fullName.length < 2) {
+        return NextResponse.json({ error: "Applicant name is required." }, { status: 400 });
+      }
+      if (!phone || phone.length < 7) {
+        return NextResponse.json({ error: "Contact no. / WhatsApp is required." }, { status: 400 });
+      }
+      if (!email || !emailRegex.test(email)) {
+        return NextResponse.json({ error: "Valid Email Address is required." }, { status: 400 });
+      }
+      if (!studentClass) {
+        return NextResponse.json({ error: "Class is required." }, { status: 400 });
+      }
+      if (!section) {
+        return NextResponse.json({ error: "Section is required." }, { status: 400 });
+      }
+      if (!category) {
+        return NextResponse.json({ error: "Directorate category is required." }, { status: 400 });
+      }
+
+      const delegateRecord = await createDelegate({
+        fullName,
+        email,
+        phone,
+        institution: `${studentClass} - Sec ${section}`,
+        committee: `Directorate (${category})`,
+        registrationType: "directorate",
+        directorateCategory: category,
+        studentClass,
+        section,
+        sponsors: sponsors || undefined,
+        pastExperience: pastExperience || undefined,
+        paymentProofUrl: paymentProofUrls[0] || "",
+        paymentProofFilename: paymentProofFilenames[0] || "",
+        paymentProofUrls,
+        paymentProofFilenames,
+        paymentProofSize: totalProofSize,
+        notes: `Directorate Application: ${category} | Class: ${studentClass} (${section})${sponsors ? ` | Sponsors: ${sponsors}` : ""}${pastExperience ? ` | Past Exp: ${pastExperience}` : ""}`,
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: "Directorate application submitted successfully.",
+        delegate: delegateRecord,
+      });
+    }
+
     // Default: Private Delegate Registration Form
     const fullName = formData.get("fullName")?.toString()?.trim();
     const phone = formData.get("phone")?.toString()?.trim();
@@ -350,6 +408,7 @@ export async function POST(req: NextRequest) {
       | "Observer";
     const committee =
       formData.get("committee")?.toString()?.trim() || (comingAs === "Observer" ? "Observer" : "");
+    const preferredAllotment = formData.get("preferredAllotment")?.toString()?.trim() || "";
 
     if (!fullName || fullName.length < 2) {
       return NextResponse.json({ error: "Name of delegate is required." }, { status: 400 });
@@ -376,6 +435,7 @@ export async function POST(req: NextRequest) {
       phone,
       institution,
       committee: comingAs === "Observer" ? "Observer" : committee,
+      preferredAllotment: preferredAllotment || undefined,
       registrationType: "private_delegate",
       comingAs,
       paymentProofUrl: paymentProofUrls[0],
@@ -383,7 +443,7 @@ export async function POST(req: NextRequest) {
       paymentProofUrls,
       paymentProofFilenames,
       paymentProofSize: totalProofSize,
-      notes: `Private ${comingAs} from ${institution}. Proof files: ${paymentProofUrls.length}.`,
+      notes: `Private ${comingAs} from ${institution}${preferredAllotment ? ` (Pref Allotment: ${preferredAllotment})` : ""}. Proof files: ${paymentProofUrls.length}.`,
     });
 
     return NextResponse.json({

@@ -1,12 +1,12 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Users, User, Eye, ArrowRight, ShieldCheck, Sparkles, ArrowLeft } from "lucide-react";
+import { Users, User, Eye, ArrowRight, ShieldCheck, Sparkles, ArrowLeft, Award } from "lucide-react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Register Now | MTLC MUN IV",
-  description: "Choose your registration track for MTLC MUN IV: Delegation, Private Delegate, or Observer.",
+  description: "Choose your registration track for MTLC MUN IV: Delegation, Private Delegate, Observer, or Directorate.",
 };
 
 export default function RegisterHubPage() {
@@ -18,7 +18,7 @@ export default function RegisterHubPage() {
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-gold-400/10 rounded-full blur-[100px]" />
       </div>
 
-      <div className="relative max-w-5xl w-full z-10">
+      <div className="relative max-w-7xl w-full z-10">
         {/* Back Link */}
         <div className="mb-8">
           <Link
@@ -46,12 +46,12 @@ export default function RegisterHubPage() {
           </p>
         </div>
 
-        {/* 3 Main Registration Track Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* 4 Main Registration Track Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Card 1: Delegation */}
-          <div className="glass-card rounded-2xl p-6 sm:p-8 flex flex-col justify-between border border-gold-400/30 hover:border-gold-400/70 hover:shadow-gold-glow transition-all duration-300 group relative">
+          <div className="glass-card rounded-2xl p-6 flex flex-col justify-between border border-gold-400/30 hover:border-gold-400/70 hover:shadow-gold-glow transition-all duration-300 group relative">
             <div>
-              <div className="w-12 h-12 rounded-xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-400 mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-400 mb-5 group-hover:scale-110 transition-transform">
                 <Users className="w-6 h-6" />
               </div>
 
@@ -59,15 +59,15 @@ export default function RegisterHubPage() {
                 Teams &amp; Institutions
               </div>
 
-              <h2 className="font-serif text-xl sm:text-2xl font-bold text-stone-100 mb-2">
+              <h2 className="font-serif text-xl font-bold text-stone-100 mb-2">
                 Delegation Registration
               </h2>
 
-              <p className="text-stone-300 text-xs sm:text-sm leading-relaxed mb-6 font-light">
+              <p className="text-stone-300 text-xs leading-relaxed mb-5 font-light">
                 For school, college, and university delegations. Register a designated <strong>Head Delegate</strong> alongside 3 required delegates (and up to 2 optional members).
               </p>
 
-              <ul className="text-xs text-stone-400 space-y-2 mb-8">
+              <ul className="text-xs text-stone-400 space-y-2 mb-6">
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-gold-400" />
                   <span>Head Delegate + 3 to 5 Delegates</span>
@@ -78,14 +78,14 @@ export default function RegisterHubPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-gold-400" />
-                  <span>Attach up to 5 payment proofs (&le; 1 MB)</span>
+                  <span>Attach up to 5 payment proofs</span>
                 </li>
               </ul>
             </div>
 
             <Link
               href="/register/delegation"
-              className="btn-gold w-full py-3.5 px-4 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 shadow-gold-subtle group-hover:shadow-gold-glow transition-all text-center"
+              className="btn-gold w-full py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 shadow-gold-subtle group-hover:shadow-gold-glow transition-all text-center"
             >
               <span>Register Delegation</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -93,9 +93,9 @@ export default function RegisterHubPage() {
           </div>
 
           {/* Card 2: Private Delegate */}
-          <div className="glass-card rounded-2xl p-6 sm:p-8 flex flex-col justify-between border border-gold-400/30 hover:border-gold-400/70 hover:shadow-gold-glow transition-all duration-300 group relative">
+          <div className="glass-card rounded-2xl p-6 flex flex-col justify-between border border-gold-400/30 hover:border-gold-400/70 hover:shadow-gold-glow transition-all duration-300 group relative">
             <div>
-              <div className="w-12 h-12 rounded-xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-400 mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-400 mb-5 group-hover:scale-110 transition-transform">
                 <User className="w-6 h-6" />
               </div>
 
@@ -103,22 +103,22 @@ export default function RegisterHubPage() {
                 Independent Delegates
               </div>
 
-              <h2 className="font-serif text-xl sm:text-2xl font-bold text-stone-100 mb-2">
+              <h2 className="font-serif text-xl font-bold text-stone-100 mb-2">
                 Private Delegate
               </h2>
 
-              <p className="text-stone-300 text-xs sm:text-sm leading-relaxed mb-6 font-light">
+              <p className="text-stone-300 text-xs leading-relaxed mb-5 font-light">
                 Individual delegate registration with direct committee allocation. Choose to participate either as a full <strong>Delegate</strong> or as an <strong>Observer</strong>.
               </p>
 
-              <ul className="text-xs text-stone-400 space-y-2 mb-8">
+              <ul className="text-xs text-stone-400 space-y-2 mb-6">
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-gold-400" />
                   <span>Coming as Delegate or Observer</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-gold-400" />
-                  <span>Choose from UNSC, UNHRC, UNW, DISEC, PNA, CRISIS</span>
+                  <span>Choose from all 6 councils</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-gold-400" />
@@ -129,17 +129,17 @@ export default function RegisterHubPage() {
 
             <Link
               href="/register/private-delegate"
-              className="btn-gold w-full py-3.5 px-4 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 shadow-gold-subtle group-hover:shadow-gold-glow transition-all text-center"
+              className="btn-gold w-full py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 shadow-gold-subtle group-hover:shadow-gold-glow transition-all text-center"
             >
-              <span>Register Private Delegate</span>
+              <span>Register Private</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
 
           {/* Card 3: Observer */}
-          <div className="glass-card rounded-2xl p-6 sm:p-8 flex flex-col justify-between border border-gold-400/30 hover:border-gold-400/70 hover:shadow-gold-glow transition-all duration-300 group relative">
+          <div className="glass-card rounded-2xl p-6 flex flex-col justify-between border border-gold-400/30 hover:border-gold-400/70 hover:shadow-gold-glow transition-all duration-300 group relative">
             <div>
-              <div className="w-12 h-12 rounded-xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-400 mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-400 mb-5 group-hover:scale-110 transition-transform">
                 <Eye className="w-6 h-6" />
               </div>
 
@@ -147,22 +147,22 @@ export default function RegisterHubPage() {
                 Diplomatic Pass
               </div>
 
-              <h2 className="font-serif text-xl sm:text-2xl font-bold text-stone-100 mb-2">
+              <h2 className="font-serif text-xl font-bold text-stone-100 mb-2">
                 Observer Registration
               </h2>
 
-              <p className="text-stone-300 text-xs sm:text-sm leading-relaxed mb-6 font-light">
+              <p className="text-stone-300 text-xs leading-relaxed mb-5 font-light">
                 Fast-track observer pass for visitors, faculty advisors, mentors, and delegates attending general assembly sessions and diplomatic social events.
               </p>
 
-              <ul className="text-xs text-stone-400 space-y-2 mb-8">
+              <ul className="text-xs text-stone-400 space-y-2 mb-6">
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-gold-400" />
-                  <span>Simplified fast-track form</span>
+                  <span>Simplified 3-field fast-track form</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-gold-400" />
-                  <span>Complete conference observation pass</span>
+                  <span>Complete assembly observation pass</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-gold-400" />
@@ -173,9 +173,53 @@ export default function RegisterHubPage() {
 
             <Link
               href="/register/observer"
-              className="btn-gold w-full py-3.5 px-4 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 shadow-gold-subtle group-hover:shadow-gold-glow transition-all text-center"
+              className="btn-gold w-full py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 shadow-gold-subtle group-hover:shadow-gold-glow transition-all text-center"
             >
               <span>Register as Observer</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+          {/* Card 4: Directorate */}
+          <div className="glass-card rounded-2xl p-6 flex flex-col justify-between border border-gold-400/30 hover:border-gold-400/70 hover:shadow-gold-glow transition-all duration-300 group relative">
+            <div>
+              <div className="w-12 h-12 rounded-xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-400 mb-5 group-hover:scale-110 transition-transform">
+                <Award className="w-6 h-6" />
+              </div>
+
+              <div className="inline-block text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-semibold mb-2">
+                Host Team &amp; Directorate
+              </div>
+
+              <h2 className="font-serif text-xl font-bold text-stone-100 mb-2">
+                Directorate Form
+              </h2>
+
+              <p className="text-stone-300 text-xs leading-relaxed mb-5 font-light">
+                Join the executive host committee. Apply for Media, Logistics, Publication, Security, Del Affairs, Secretariat Affairs, or Socials.
+              </p>
+
+              <ul className="text-xs text-stone-400 space-y-2 mb-6">
+                <li className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  <span>7 Directorate categories</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  <span>Class, Section &amp; Experience profile</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  <span>Complimentary • No fee required</span>
+                </li>
+              </ul>
+            </div>
+
+            <Link
+              href="/register/directorate"
+              className="btn-gold w-full py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 shadow-gold-subtle group-hover:shadow-gold-glow transition-all text-center"
+            >
+              <span>Apply for Directorate</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>

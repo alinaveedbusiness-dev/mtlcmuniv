@@ -18,7 +18,16 @@ export interface CommitteeInfo {
   seatCount: number;
 }
 
-export type RegistrationType = "delegation" | "private_delegate" | "observer";
+export type DirectorateCategory =
+  | "Media"
+  | "Logistics"
+  | "Publication"
+  | "Security"
+  | "Del Affairs"
+  | "Secretariat Affairs"
+  | "Socials";
+
+export type RegistrationType = "delegation" | "private_delegate" | "observer" | "directorate";
 
 export interface DelegationMember {
   delegateNumber: number;
@@ -27,6 +36,7 @@ export interface DelegationMember {
   email: string;
   institution: string;
   committee: CommitteeType | string;
+  preferredAllotment?: string;
   isOptional?: boolean;
 }
 
@@ -37,9 +47,15 @@ export interface DelegateRegistration {
   phone: string;
   institution: string;
   committee: CommitteeType | string;
+  preferredAllotment?: string;
   registrationType?: RegistrationType;
   comingAs?: "Delegate" | "Observer";
   delegates?: DelegationMember[];
+  directorateCategory?: DirectorateCategory | string;
+  studentClass?: string;
+  section?: string;
+  sponsors?: string;
+  pastExperience?: string;
   experience?: "Beginner" | "Intermediate" | "Advanced";
   countryPreference1?: string;
   countryPreference2?: string;

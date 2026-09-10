@@ -57,6 +57,16 @@ export const COMMITTEES: CommitteeInfo[] = [
   },
 ];
 
+export const DIRECTORATE_CATEGORIES = [
+  { id: "Media", name: "Media", desc: "Photography, videography, content creation & digital media coverage" },
+  { id: "Logistics", name: "Logistics", desc: "Conference hall operations, materials management & event flow" },
+  { id: "Publication", name: "Publication", desc: "Official communiqués, newsletters, daily reports & print materials" },
+  { id: "Security", name: "Security", desc: "Diplomatic protocol, access control, badging & chamber decorum" },
+  { id: "Del Affairs", name: "Del Affairs", desc: "Delegate liaison, assistance, crisis runners & registration desk" },
+  { id: "Secretariat Affairs", name: "Secretariat Affairs", desc: "Executive board support, dais management & administrative documentation" },
+  { id: "Socials", name: "Socials", desc: "Social night, theme planning, hospitality & delegate entertainment" },
+] as const;
+
 export const DEFAULT_SETTINGS: ConferenceSettings = {
   eventDates: "October 3 - 4 - 5, 2026",
   venue: "The City School MTLC",

@@ -1,5 +1,113 @@
 [
   {
+    "fullName": "Muhammad Hamza",
+    "email": "hamza.directorate@example.com",
+    "phone": "+92 300 7654321",
+    "institution": "A-1 - Sec Gold",
+    "committee": "Directorate (Media)",
+    "registrationType": "directorate",
+    "directorateCategory": "Media",
+    "studentClass": "A-1",
+    "section": "Gold",
+    "sponsors": "Sony Alpha Pakistan & Red Bull",
+    "pastExperience": "Lead Videographer for MTLC MUN III, Vice President Media Club",
+    "paymentProofUrl": "",
+    "paymentProofFilename": "",
+    "paymentProofUrls": [],
+    "paymentProofFilenames": [],
+    "paymentProofSize": 0,
+    "notes": "Directorate Application: Media | Class: A-1 (Gold) | Sponsors: Sony Alpha Pakistan & Red Bull | Past Exp: Lead Videographer for MTLC MUN III, Vice President Media Club",
+    "id": "MTLC-2026-2806",
+    "status": "Pending",
+    "createdAt": "2026-09-10T15:40:13.240Z"
+  },
+  {
+    "fullName": "Head Delegate Tariq (Head Delegate • 4 Total)",
+    "email": "tariq.hd@lgs.edu.pk",
+    "phone": "+92 300 1112233",
+    "institution": "Lahore Grammar School",
+    "committee": "Delegation (4 Seats)",
+    "registrationType": "delegation",
+    "delegates": [
+      {
+        "delegateNumber": 1,
+        "fullName": "Head Delegate Tariq",
+        "phone": "+92 300 1112233",
+        "email": "tariq.hd@lgs.edu.pk",
+        "institution": "Lahore Grammar School",
+        "committee": "UNSC",
+        "preferredAllotment": "France",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 2,
+        "fullName": "Delegate Sana",
+        "phone": "+92 300 2223344",
+        "email": "sana.del@lgs.edu.pk",
+        "institution": "Lahore Grammar School",
+        "committee": "DISEC",
+        "preferredAllotment": "Germany",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 3,
+        "fullName": "Delegate Hamza",
+        "phone": "+92 300 3334455",
+        "email": "hamza.del@lgs.edu.pk",
+        "institution": "Lahore Grammar School",
+        "committee": "UNHRC",
+        "preferredAllotment": "Japan",
+        "isOptional": false
+      },
+      {
+        "delegateNumber": 4,
+        "fullName": "Delegate Maryam",
+        "phone": "+92 300 4445566",
+        "email": "maryam.del@lgs.edu.pk",
+        "institution": "Lahore Grammar School",
+        "committee": "PNA",
+        "preferredAllotment": "Federal Minister for Climate",
+        "isOptional": false
+      }
+    ],
+    "paymentProofUrl": "/uploads/receipt_1788628637077_1_receipt_delegat.png",
+    "paymentProofFilename": "receipt_delegation.png",
+    "paymentProofUrls": [
+      "/uploads/receipt_1788628637077_1_receipt_delegat.png"
+    ],
+    "paymentProofFilenames": [
+      "receipt_delegation.png"
+    ],
+    "paymentProofSize": 17,
+    "notes": "Institutional Delegation of 4 delegates led by Head Delegate Head Delegate Tariq (Lahore Grammar School). Proof files attached: 1.",
+    "id": "MTLC-2026-2925",
+    "status": "Pending",
+    "createdAt": "2026-09-05T17:17:17.087Z"
+  },
+  {
+    "fullName": "Test Diplomat Allotment",
+    "email": "diplomat.allotment@test.com",
+    "phone": "+92 300 7766554",
+    "institution": "Aitchison College",
+    "committee": "UNSC",
+    "preferredAllotment": "United Kingdom",
+    "registrationType": "private_delegate",
+    "comingAs": "Delegate",
+    "paymentProofUrl": "/uploads/receipt_1788628636751_1_receipt_sample.png",
+    "paymentProofFilename": "receipt_sample.png",
+    "paymentProofUrls": [
+      "/uploads/receipt_1788628636751_1_receipt_sample.png"
+    ],
+    "paymentProofFilenames": [
+      "receipt_sample.png"
+    ],
+    "paymentProofSize": 17,
+    "notes": "Private Delegate from Aitchison College (Pref Allotment: United Kingdom). Proof files: 1.",
+    "id": "MTLC-2026-8990",
+    "status": "Pending",
+    "createdAt": "2026-09-05T17:17:16.785Z"
+  },
+  {
     "fullName": "Zaid Khan (Head Delegate • 4 Total)",
     "email": "zaid@gmail.com",
     "phone": "+923001234561",

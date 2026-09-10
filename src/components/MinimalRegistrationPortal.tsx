@@ -21,9 +21,10 @@ import {
   Sparkles,
   Crown,
   ArrowLeft,
+  Briefcase,
 } from "lucide-react";
 import { ConferenceSettings, CommitteeType, RegistrationType } from "@/lib/types";
-import { DEFAULT_SETTINGS } from "@/lib/constants";
+import { DEFAULT_SETTINGS, DIRECTORATE_CATEGORIES } from "@/lib/constants";
 
 interface MinimalRegistrationPortalProps {
   settings?: ConferenceSettings;
@@ -46,6 +47,7 @@ interface DelegateInputState {
   email: string;
   institution: string;
   committee: string;
+  preferredAllotment: string;
 }
 
 const initialDelegate = (): DelegateInputState => ({
@@ -54,6 +56,7 @@ const initialDelegate = (): DelegateInputState => ({
   email: "",
   institution: "",
   committee: "",
+  preferredAllotment: "",
 });
 
 export default function MinimalRegistrationPortal({
@@ -84,6 +87,7 @@ export default function MinimalRegistrationPortal({
     institution: "",
     comingAs: "Delegate" as "Delegate" | "Observer",
     committee: "",
+    preferredAllotment: "",
   });
 
   // Track 3: Observer Registration Form
@@ -91,6 +95,18 @@ export default function MinimalRegistrationPortal({
     fullName: "",
     phone: "",
     email: "",
+  });
+
+  // Track 4: Directorate Application Form
+  const [directorateData, setDirectorateData] = useState({
+    fullName: "",
+    phone: "",
+    email: "",
+    studentClass: "",
+    section: "",
+    category: "",
+    sponsors: "",
+    pastExperience: "",
   });
 
   // Multi-file payment proof state (Max 5 files, Max 1 MB each)
@@ -201,8 +217,8 @@ export default function MinimalRegistrationPortal({
     e.preventDefault();
     setErrorMsg(null);
 
-    // Validate payment proofs
-    if (paymentFiles.length === 0) {
+    // Validate payment proofs (only required for delegate & observer registrations)
+    if (activeTab !== "directorate" && paymentFiles.length === 0) {
       setErrorMsg("Please attach at least one proof of payment file (Max 1 MB per file, up to 5 files).");
       return;
     }
@@ -213,7 +229,7 @@ export default function MinimalRegistrationPortal({
       const data = new FormData();
       data.append("registrationType", activeTab);
 
-      // Append all payment proof files
+      // Append all payment proof files if any
       paymentFiles.forEach((file) => {
         data.append("paymentProof", file);
       });
@@ -252,6 +268,7 @@ export default function MinimalRegistrationPortal({
             email: d.email.trim(),
             institution: resolvedInstitution,
             committee: d.committee,
+            preferredAllotment: d.preferredAllotment ? d.preferredAllotment.trim() : undefined,
             isOptional: idx >= 4,
           }));
 
@@ -273,6 +290,9 @@ export default function MinimalRegistrationPortal({
         data.append("institution", privateDelegate.institution.trim());
         data.append("comingAs", privateDelegate.comingAs);
         data.append("committee", privateDelegate.committee);
+        if (privateDelegate.preferredAllotment) {
+          data.append("preferredAllotment", privateDelegate.preferredAllotment.trim());
+        }
       } else if (activeTab === "observer") {
         if (!observerData.fullName.trim()) throw new Error("Delegate / Observer name is required.");
         if (!observerData.phone.trim()) throw new Error("Contact number is required.");
@@ -281,6 +301,26 @@ export default function MinimalRegistrationPortal({
         data.append("fullName", observerData.fullName.trim());
         data.append("phone", observerData.phone.trim());
         data.append("email", observerData.email.trim());
+      } else if (activeTab === "directorate") {
+        if (!directorateData.fullName.trim()) throw new Error("Full name is required.");
+        if (!directorateData.phone.trim()) throw new Error("Contact number is required.");
+        if (!directorateData.email.trim()) throw new Error("Email address is required.");
+        if (!directorateData.studentClass.trim()) throw new Error("Class is required.");
+        if (!directorateData.section.trim()) throw new Error("Section is required.");
+        if (!directorateData.category) throw new Error("Please select a Directorate Category.");
+
+        data.append("fullName", directorateData.fullName.trim());
+        data.append("phone", directorateData.phone.trim());
+        data.append("email", directorateData.email.trim());
+        data.append("studentClass", directorateData.studentClass.trim());
+        data.append("section", directorateData.section.trim());
+        data.append("category", directorateData.category);
+        if (directorateData.sponsors.trim()) {
+          data.append("sponsors", directorateData.sponsors.trim());
+        }
+        if (directorateData.pastExperience.trim()) {
+          data.append("pastExperience", directorateData.pastExperience.trim());
+        }
       }
 
       const res = await fetch("/api/register", {
@@ -330,11 +370,22 @@ export default function MinimalRegistrationPortal({
       institution: "",
       comingAs: "Delegate",
       committee: "",
+      preferredAllotment: "",
     });
     setObserverData({
       fullName: "",
       phone: "",
       email: "",
+    });
+    setDirectorateData({
+      fullName: "",
+      phone: "",
+      email: "",
+      studentClass: "",
+      section: "",
+      category: "",
+      sponsors: "",
+      pastExperience: "",
     });
     setPaymentFiles([]);
     setErrorMsg(null);
@@ -450,7 +501,7 @@ export default function MinimalRegistrationPortal({
 
           {/* Track Selection Navigation Tabs or Locked Header */}
           {!lockedTrack ? (
-            <div className="grid grid-cols-3 gap-1.5 p-1 rounded-xl bg-[#08150f] border border-[#c5a059]/30">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1 rounded-xl bg-[#08150f] border border-[#c5a059]/30">
               <button
                 type="button"
                 onClick={() => {
@@ -498,6 +549,22 @@ export default function MinimalRegistrationPortal({
                 <Eye className="w-4 h-4 shrink-0" />
                 <span className="truncate">Observer</span>
               </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab("directorate");
+                  setErrorMsg(null);
+                }}
+                className={`py-2.5 px-2 rounded-lg text-xs font-medium transition-all flex flex-col sm:flex-row items-center justify-center gap-1.5 ${
+                  activeTab === "directorate"
+                    ? "bg-[#c5a059] text-[#0a1811] font-bold shadow-md"
+                    : "text-stone-400 hover:text-stone-200"
+                }`}
+              >
+                <Briefcase className="w-4 h-4 shrink-0" />
+                <span className="truncate">Directorate</span>
+              </button>
             </div>
           ) : (
             <div className="p-3.5 rounded-xl bg-[#08150f] border border-[#c5a059]/35 flex items-center justify-between">
@@ -507,6 +574,8 @@ export default function MinimalRegistrationPortal({
                     <Users className="w-4 h-4" />
                   ) : lockedTrack === "private_delegate" ? (
                     <User className="w-4 h-4" />
+                  ) : lockedTrack === "directorate" ? (
+                    <Briefcase className="w-4 h-4" />
                   ) : (
                     <Eye className="w-4 h-4" />
                   )}
@@ -517,6 +586,8 @@ export default function MinimalRegistrationPortal({
                       ? "Delegation Registration"
                       : lockedTrack === "private_delegate"
                       ? "Private Delegate Registration"
+                      : lockedTrack === "directorate"
+                      ? "Directorate Application Form"
                       : "Observer Registration"}
                   </h2>
                   <p className="text-[11px] text-stone-400">
@@ -524,6 +595,8 @@ export default function MinimalRegistrationPortal({
                       ? "Head Delegate + 3 Required & 2 Optional Members"
                       : lockedTrack === "private_delegate"
                       ? "Individual Delegate / Observer Track"
+                      : lockedTrack === "directorate"
+                      ? "Host Team Operations, Media, Logistics & Secretariat Recruitment"
                       : "Diplomatic Pass & Assembly Observer Access"}
                   </p>
                 </div>
@@ -761,6 +834,26 @@ export default function MinimalRegistrationPortal({
                               ))}
                             </select>
                           </div>
+
+                          {/* Preferred Allotment */}
+                          <div className="sm:col-span-2">
+                            <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
+                              Preferred Allotment {isOptional ? "" : "*"}
+                            </label>
+                            <input
+                              type="text"
+                              required={!isOptional && Boolean(member.fullName.trim())}
+                              value={member.preferredAllotment}
+                              onChange={(e) =>
+                                handleDelegationMemberChange(index, "preferredAllotment", e.target.value)
+                              }
+                              placeholder="e.g. United Kingdom, China, or preferred portfolio / country"
+                              className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#d4af37] transition-colors"
+                            />
+                            <p className="text-[10px] text-stone-500 mt-1">
+                              Desired country or portfolio allocation for this delegate in their selected committee.
+                            </p>
+                          </div>
                         </div>
                       </div>
                     );
@@ -900,34 +993,58 @@ export default function MinimalRegistrationPortal({
                     </div>
                   </div>
 
-                  {/* Committees * (UNSC, UNHRC, UNW, DISEC, PNA, CRISIS) */}
+                  {/* Committees * & Preferred Allotment */}
                   {privateDelegate.comingAs === "Delegate" && (
-                    <div>
-                      <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
-                        Committees *
-                      </label>
-                      <select
-                        required
-                        value={privateDelegate.committee}
-                        onChange={(e) =>
-                          setPrivateDelegate((prev) => ({ ...prev, committee: e.target.value }))
-                        }
-                        className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 text-xs focus:outline-none focus:border-[#c5a059] transition-colors cursor-pointer"
-                      >
-                        <option value="" disabled className="bg-[#0a1811] text-stone-500">
-                          Select preferred committee...
-                        </option>
-                        {COMMITTEES.map((comm) => (
-                          <option
-                            key={comm.id}
-                            value={comm.id}
-                            className="bg-[#0a1811] text-stone-200"
-                          >
-                            {comm.id} — {comm.name}
+                    <>
+                      <div>
+                        <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
+                          Committees *
+                        </label>
+                        <select
+                          required
+                          value={privateDelegate.committee}
+                          onChange={(e) =>
+                            setPrivateDelegate((prev) => ({ ...prev, committee: e.target.value }))
+                          }
+                          className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 text-xs focus:outline-none focus:border-[#c5a059] transition-colors cursor-pointer"
+                        >
+                          <option value="" disabled className="bg-[#0a1811] text-stone-500">
+                            Select preferred committee...
                           </option>
-                        ))}
-                      </select>
-                    </div>
+                          {COMMITTEES.map((comm) => (
+                            <option
+                              key={comm.id}
+                              value={comm.id}
+                              className="bg-[#0a1811] text-stone-200"
+                            >
+                              {comm.id} — {comm.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
+                          Preferred Allotment *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={privateDelegate.preferredAllotment}
+                          onChange={(e) =>
+                            setPrivateDelegate((prev) => ({
+                              ...prev,
+                              preferredAllotment: e.target.value,
+                            }))
+                          }
+                          placeholder="e.g. United States, France, or preferred portfolio / country"
+                          className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors"
+                        />
+                        <p className="text-[10px] text-stone-500 mt-1">
+                          Specify your desired country, character, or portfolio allocation for this committee.
+                        </p>
+                      </div>
+                    </>
                   )}
                 </div>
               </div>
@@ -1003,8 +1120,193 @@ export default function MinimalRegistrationPortal({
             )}
 
             {/* ========================================================================= */}
-            {/* PAYMENT DETAILS SECTION & PROOF UPLOAD (SHARED ACROSS TRACKS) */}
+            {/* TRACK 4: DIRECTORATE APPLICATION FORM */}
             {/* ========================================================================= */}
+            {activeTab === "directorate" && (
+              <div className="rounded-xl border border-[#c5a059]/40 bg-[#08150f] p-5 sm:p-6 space-y-5 shadow-sm">
+                <div className="border-b border-[#c5a059]/20 pb-3">
+                  <div className="flex items-center gap-2">
+                    <Briefcase className="w-5 h-5 text-[#d4af37]" />
+                    <h2 className="font-serif text-lg sm:text-xl text-[#f5f5f4] font-normal">
+                      Directorate Application Form
+                    </h2>
+                  </div>
+                  <p className="text-xs text-stone-400 mt-1">
+                    Apply for host team operational positions for MTLC MUN IV. No conference registration fee required.
+                  </p>
+                </div>
+
+                <div className="space-y-4 text-xs">
+                  {/* Name * */}
+                  <div>
+                    <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
+                      Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={directorateData.fullName}
+                      onChange={(e) =>
+                        setDirectorateData((prev) => ({ ...prev, fullName: e.target.value }))
+                      }
+                      placeholder="e.g. Bilal Ahmed"
+                      className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors"
+                    />
+                  </div>
+
+                  {/* Contact Number & Email Address */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
+                        Contact Number / WhatsApp *
+                      </label>
+                      <input
+                        type="tel"
+                        required
+                        value={directorateData.phone}
+                        onChange={(e) =>
+                          setDirectorateData((prev) => ({ ...prev, phone: e.target.value }))
+                        }
+                        placeholder="e.g. +92 300 1234567"
+                        className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors font-mono"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
+                        Email Address *
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        value={directorateData.email}
+                        onChange={(e) =>
+                          setDirectorateData((prev) => ({ ...prev, email: e.target.value }))
+                        }
+                        placeholder="applicant@school.edu"
+                        className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Class & Section */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
+                        Class *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={directorateData.studentClass}
+                        onChange={(e) =>
+                          setDirectorateData((prev) => ({ ...prev, studentClass: e.target.value }))
+                        }
+                        placeholder="e.g. Grade 11, A-1, O-3, Matric"
+                        className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
+                        Section *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={directorateData.section}
+                        onChange={(e) =>
+                          setDirectorateData((prev) => ({ ...prev, section: e.target.value }))
+                        }
+                        placeholder="e.g. A, B, Gold, Red"
+                        className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Directorate Category Dropdown */}
+                  <div>
+                    <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
+                      Directorate Category *
+                    </label>
+                    <select
+                      required
+                      value={directorateData.category}
+                      onChange={(e) =>
+                        setDirectorateData((prev) => ({ ...prev, category: e.target.value }))
+                      }
+                      className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 text-xs focus:outline-none focus:border-[#c5a059] transition-colors cursor-pointer"
+                    >
+                      <option value="" disabled className="bg-[#0a1811] text-stone-500">
+                        Select Directorate Department...
+                      </option>
+                      {DIRECTORATE_CATEGORIES.map((cat) => (
+                        <option
+                          key={cat.id}
+                          value={cat.id}
+                          className="bg-[#0a1811] text-stone-200"
+                        >
+                          {cat.name} — {cat.desc}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Sponsors (If any) */}
+                  <div>
+                    <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
+                      Sponsors (If any)
+                    </label>
+                    <input
+                      type="text"
+                      value={directorateData.sponsors}
+                      onChange={(e) =>
+                        setDirectorateData((prev) => ({ ...prev, sponsors: e.target.value }))
+                      }
+                      placeholder="e.g. Brands, food stalls, corporate connections, or funding partners you can bring"
+                      className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors"
+                    />
+                  </div>
+
+                  {/* Past MUN Experience (If any) */}
+                  <div>
+                    <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
+                      Past MUN Experience (If any)
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={directorateData.pastExperience}
+                      onChange={(e) =>
+                        setDirectorateData((prev) => ({ ...prev, pastExperience: e.target.value }))
+                      }
+                      placeholder="e.g. Previous experience in MUN host teams, logistics, media coverage, or as delegate/secretariat..."
+                      className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors leading-relaxed"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ========================================================================= */}
+            {/* PAYMENT DETAILS SECTION & PROOF UPLOAD (REQUIRED ONLY FOR DELEGATES/OBSERVERS) */}
+            {/* ========================================================================= */}
+            {activeTab === "directorate" ? (
+              <div className="rounded-xl border border-emerald-500/30 bg-[#08150f] p-4 sm:p-5 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+                    <CheckCircle2 className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-serif font-bold text-stone-100">
+                      Host Team Recruitment • No Fee Required
+                    </h4>
+                    <p className="text-xs text-stone-400 mt-0.5">
+                      Directorate applications are complimentary. You do not need to attach bank payment receipts.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
             <div className="rounded-xl border border-[#c5a059]/40 bg-[#08150f] p-5 sm:p-6 space-y-5 shadow-sm">
               <div className="flex items-center justify-between border-b border-[#c5a059]/20 pb-3">
                 <div>
@@ -1210,6 +1512,7 @@ export default function MinimalRegistrationPortal({
                 )}
               </div>
             </div>
+            )}
 
             {/* Submission Button */}
             <div className="pt-2">
@@ -1221,7 +1524,7 @@ export default function MinimalRegistrationPortal({
                 {isSubmitting ? (
                   <>
                     <span className="w-4 h-4 border-2 border-[#0a1811] border-t-transparent rounded-full animate-spin" />
-                    <span>Submitting Registration Dossier...</span>
+                    <span>Submitting Application Dossier...</span>
                   </>
                 ) : (
                   <span>
@@ -1230,6 +1533,8 @@ export default function MinimalRegistrationPortal({
                       ? "Delegation Registration"
                       : activeTab === "private_delegate"
                       ? "Private Delegate Registration"
+                      : activeTab === "directorate"
+                      ? "Directorate Application"
                       : "Observer Registration"}
                   </span>
                 )}

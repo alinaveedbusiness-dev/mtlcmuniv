@@ -22,6 +22,8 @@ import {
   Save,
   RotateCcw,
   User,
+  CreditCard,
+  Award,
 } from "lucide-react";
 import { ConferenceSettings, DelegateRegistration } from "@/lib/types";
 import { COMMITTEES } from "@/lib/constants";
@@ -55,14 +57,31 @@ export default function AdminDashboardClient({
   const [agendasFeedback, setAgendasFeedback] = useState<string | null>(null);
   const [isAgendasExpanded, setIsAgendasExpanded] = useState(true);
 
+  // Treasury & Bank Account Details state
+  const [bankDetails, setBankDetails] = useState({
+    bankName: initialSettings.bankDetails?.bankName || "",
+    accountTitle: initialSettings.bankDetails?.accountTitle || "",
+    accountNumber: initialSettings.bankDetails?.accountNumber || "",
+    iban: initialSettings.bankDetails?.iban || "",
+    easypaisaNumber: initialSettings.bankDetails?.easypaisaNumber || "",
+    easypaisaTitle: initialSettings.bankDetails?.easypaisaTitle || "",
+  });
+  const [isSavingBank, setIsSavingBank] = useState(false);
+  const [bankFeedback, setBankFeedback] = useState<string | null>(null);
+  const [isBankExpanded, setIsBankExpanded] = useState(true);
+
   // Delegates state
   const [delegates, setDelegates] = useState<DelegateRegistration[]>(initialDelegates);
   const [searchQuery, setSearchQuery] = useState("");
-  const [typeFilter, setTypeFilter] = useState<"ALL" | "delegation" | "private_delegate" | "observer">("ALL");
+  const [typeFilter, setTypeFilter] = useState<
+    "ALL" | "delegation" | "private_delegate" | "observer" | "directorate"
+  >("ALL");
   const [statusUpdatingId, setStatusUpdatingId] = useState<string | null>(null);
   const [selectedReceiptDelegate, setSelectedReceiptDelegate] =
     useState<DelegateRegistration | null>(null);
   const [selectedRosterDelegate, setSelectedRosterDelegate] =
+    useState<DelegateRegistration | null>(null);
+  const [selectedDirectorateApplicant, setSelectedDirectorateApplicant] =
     useState<DelegateRegistration | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -81,11 +100,17 @@ export default function AdminDashboardClient({
   const privateDossiersCount = delegates.filter(
     (d) =>
       d.registrationType === "private_delegate" ||
-      (!d.registrationType && d.comingAs !== "Observer" && (!d.delegates || d.delegates.length === 0))
+      (!d.registrationType &&
+        d.comingAs !== "Observer" &&
+        (!d.delegates || d.delegates.length === 0))
   ).length;
 
   const observerDossiersCount = delegates.filter(
     (d) => d.registrationType === "observer" || d.comingAs === "Observer"
+  ).length;
+
+  const directorateDossiersCount = delegates.filter(
+    (d) => d.registrationType === "directorate"
   ).length;
 
   // Handle Logout
@@ -172,6 +197,31 @@ export default function AdminDashboardClient({
     }
   };
 
+  // Save Bank Account Details
+  const handleSaveBankDetails = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSavingBank(true);
+    setBankFeedback(null);
+
+    try {
+      const res = await fetch("/api/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bankDetails }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to update bank details.");
+
+      setBankFeedback("Bank details updated live across all payment slips & registration portals!");
+      setTimeout(() => setBankFeedback(null), 3500);
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Failed to update bank details");
+    } finally {
+      setIsSavingBank(false);
+    }
+  };
+
   // Update Delegate Verification Status
   const handleStatusChange = async (id: string, newStatus: "Pending" | "Approved") => {
     setStatusUpdatingId(id);
@@ -213,10 +263,14 @@ export default function AdminDashboardClient({
   const filteredDelegates = delegates.filter((d) => {
     if (typeFilter !== "ALL") {
       if (typeFilter === "delegation" && d.registrationType !== "delegation") return false;
+      if (typeFilter === "directorate" && d.registrationType !== "directorate") return false;
       if (typeFilter === "observer" && d.registrationType !== "observer" && d.comingAs !== "Observer") return false;
       if (
         typeFilter === "private_delegate" &&
-        (d.registrationType === "delegation" || d.registrationType === "observer" || d.comingAs === "Observer")
+        (d.registrationType === "delegation" ||
+          d.registrationType === "observer" ||
+          d.registrationType === "directorate" ||
+          d.comingAs === "Observer")
       ) {
         return false;
       }
@@ -231,7 +285,11 @@ export default function AdminDashboardClient({
       d.phone.toLowerCase().includes(q) ||
       d.committee.toLowerCase().includes(q) ||
       d.id.toLowerCase().includes(q) ||
-      (d.institution || "").toLowerCase().includes(q);
+      (d.institution || "").toLowerCase().includes(q) ||
+      (d.directorateCategory || "").toLowerCase().includes(q) ||
+      (d.studentClass || "").toLowerCase().includes(q) ||
+      (d.section || "").toLowerCase().includes(q) ||
+      (d.sponsors || "").toLowerCase().includes(q);
 
     const matchRoster = (d.delegates || []).some(
       (sub) =>
@@ -465,8 +523,178 @@ export default function AdminDashboardClient({
           )}
         </section>
 
+        {/* Treasury & Bank Account Numbers Editor Section */}
+        <section className="border border-[#c5a059]/30 rounded-lg p-5 bg-[#08150f] shadow-lg">
+          <div className="flex items-center justify-between gap-4 pb-3 border-b border-[#c5a059]/15">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#07120d] border border-[#c5a059]/30 flex items-center justify-center text-[#c5a059]">
+                <CreditCard className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-xs uppercase tracking-widest text-[#c5a059] font-medium flex items-center gap-2">
+                  <span>Bank &amp; Remittance Accounts</span>
+                  <span className="text-[10px] lowercase px-2 py-0.5 rounded bg-[#c5a059]/15 text-[#c5a059] border border-[#c5a059]/30">
+                    Payment Instructions
+                  </span>
+                </h2>
+                <p className="text-[11px] text-stone-400 mt-0.5">
+                  Change official bank account numbers and mobile wallet details shown to delegates during registration.
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setIsBankExpanded((prev) => !prev)}
+              className="text-stone-400 hover:text-[#c5a059] text-xs flex items-center gap-1 transition-colors px-2.5 py-1 rounded border border-stone-800 hover:border-[#c5a059]/40"
+            >
+              <span>{isBankExpanded ? "Collapse" : "Expand"}</span>
+              {isBankExpanded ? (
+                <ChevronUp className="w-3.5 h-3.5" />
+              ) : (
+                <ChevronDown className="w-3.5 h-3.5" />
+              )}
+            </button>
+          </div>
+
+          {isBankExpanded && (
+            <form onSubmit={handleSaveBankDetails} className="mt-4 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {/* Bank Name */}
+                <div className="bg-[#0a1811] border border-[#c5a059]/20 rounded-lg p-3">
+                  <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
+                    Bank Name
+                  </label>
+                  <input
+                    type="text"
+                    value={bankDetails.bankName}
+                    onChange={(e) =>
+                      setBankDetails((prev) => ({ ...prev, bankName: e.target.value }))
+                    }
+                    placeholder="e.g. Meezan Bank Limited"
+                    className="w-full bg-[#07120d] border border-stone-800 focus:border-[#c5a059] rounded px-3 py-1.5 text-stone-200 text-xs focus:outline-none transition-colors"
+                  />
+                </div>
+
+                {/* Bank Account Title */}
+                <div className="bg-[#0a1811] border border-[#c5a059]/20 rounded-lg p-3">
+                  <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
+                    Account Title
+                  </label>
+                  <input
+                    type="text"
+                    value={bankDetails.accountTitle}
+                    onChange={(e) =>
+                      setBankDetails((prev) => ({ ...prev, accountTitle: e.target.value }))
+                    }
+                    placeholder="e.g. MTLC MUN Secretariat"
+                    className="w-full bg-[#07120d] border border-stone-800 focus:border-[#c5a059] rounded px-3 py-1.5 text-stone-200 text-xs focus:outline-none transition-colors"
+                  />
+                </div>
+
+                {/* Bank Account Number */}
+                <div className="bg-[#0a1811] border border-[#c5a059]/20 rounded-lg p-3">
+                  <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
+                    Account Number
+                  </label>
+                  <input
+                    type="text"
+                    value={bankDetails.accountNumber}
+                    onChange={(e) =>
+                      setBankDetails((prev) => ({ ...prev, accountNumber: e.target.value }))
+                    }
+                    placeholder="e.g. 01020304050607"
+                    className="w-full bg-[#07120d] border border-stone-800 focus:border-[#c5a059] rounded px-3 py-1.5 text-stone-200 text-xs font-mono focus:outline-none transition-colors"
+                  />
+                </div>
+
+                {/* IBAN Number */}
+                <div className="sm:col-span-2 bg-[#0a1811] border border-[#c5a059]/20 rounded-lg p-3">
+                  <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
+                    IBAN Number (International / Raast)
+                  </label>
+                  <input
+                    type="text"
+                    value={bankDetails.iban}
+                    onChange={(e) =>
+                      setBankDetails((prev) => ({ ...prev, iban: e.target.value }))
+                    }
+                    placeholder="e.g. PK36MEZN0001020304050607"
+                    className="w-full bg-[#07120d] border border-stone-800 focus:border-[#c5a059] rounded px-3 py-1.5 text-stone-200 text-xs font-mono focus:outline-none transition-colors"
+                  />
+                </div>
+
+                {/* Easypaisa Number */}
+                <div className="bg-[#0a1811] border border-[#c5a059]/20 rounded-lg p-3">
+                  <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
+                    Mobile Wallet / Easypaisa Number
+                  </label>
+                  <input
+                    type="text"
+                    value={bankDetails.easypaisaNumber}
+                    onChange={(e) =>
+                      setBankDetails((prev) => ({ ...prev, easypaisaNumber: e.target.value }))
+                    }
+                    placeholder="e.g. 0300 1234567"
+                    className="w-full bg-[#07120d] border border-stone-800 focus:border-[#c5a059] rounded px-3 py-1.5 text-stone-200 text-xs font-mono focus:outline-none transition-colors"
+                  />
+                </div>
+
+                {/* Easypaisa Title */}
+                <div className="bg-[#0a1811] border border-[#c5a059]/20 rounded-lg p-3">
+                  <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
+                    Mobile Wallet Account Title
+                  </label>
+                  <input
+                    type="text"
+                    value={bankDetails.easypaisaTitle}
+                    onChange={(e) =>
+                      setBankDetails((prev) => ({ ...prev, easypaisaTitle: e.target.value }))
+                    }
+                    placeholder="e.g. Ali Naveed"
+                    className="w-full bg-[#07120d] border border-stone-800 focus:border-[#c5a059] rounded px-3 py-1.5 text-stone-200 text-xs focus:outline-none transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-[#c5a059]/15">
+                <p className="text-[11px] text-stone-400">
+                  New bank numbers are immediately mirrored on the registration portals with one-click copy buttons.
+                </p>
+
+                <div className="flex items-center gap-3 self-end sm:self-auto">
+                  {bankFeedback && (
+                    <span className="text-xs text-emerald-400 flex items-center gap-1.5 animate-fade-in">
+                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>{bankFeedback}</span>
+                    </span>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={isSavingBank}
+                    className="bg-[#c5a059] hover:bg-[#d4af37] text-[#0a1811] text-xs font-semibold uppercase tracking-wider py-1.5 px-4 rounded transition-colors disabled:opacity-50 flex items-center gap-1.5 shadow-sm"
+                  >
+                    {isSavingBank ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <span>Saving...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Save className="w-3.5 h-3.5" />
+                        <span>Save Bank Accounts</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </form>
+          )}
+        </section>
+
         {/* Quick Delegate Counts Bar */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           <div className="bg-[#08150f] border border-[#d4af37]/40 rounded-xl p-4 shadow-md shadow-[#d4af37]/5">
             <div className="flex items-center justify-between">
               <span className="text-[11px] uppercase tracking-wider text-[#c5a059] font-medium">
@@ -478,7 +706,7 @@ export default function AdminDashboardClient({
               {totalDelegatesCount}
             </div>
             <p className="text-[10px] text-stone-400 mt-0.5">
-              Attending delegates across all tracks
+              Attending delegates
             </p>
           </div>
 
@@ -493,7 +721,7 @@ export default function AdminDashboardClient({
               {delegationDossiersCount}
             </div>
             <p className="text-[10px] text-stone-400 mt-0.5">
-              Teams (4–6 delegates each)
+              Teams (4–6 delegates)
             </p>
           </div>
 
@@ -512,6 +740,21 @@ export default function AdminDashboardClient({
             </p>
           </div>
 
+          <div className="bg-[#08150f] border border-purple-500/30 rounded-xl p-4 shadow-sm">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] uppercase tracking-wider text-purple-300 font-medium">
+                Directorate
+              </span>
+              <Award className="w-4 h-4 text-purple-400" />
+            </div>
+            <div className="text-2xl sm:text-3xl font-serif font-bold text-purple-200 mt-1">
+              {directorateDossiersCount}
+            </div>
+            <p className="text-[10px] text-stone-400 mt-0.5">
+              Host team applicants
+            </p>
+          </div>
+
           <div className="bg-[#08150f] border border-[#c5a059]/25 rounded-xl p-4 shadow-sm">
             <div className="flex items-center justify-between">
               <span className="text-[11px] uppercase tracking-wider text-stone-400 font-medium">
@@ -523,7 +766,7 @@ export default function AdminDashboardClient({
               {delegates.length}
             </div>
             <p className="text-[10px] text-stone-400 mt-0.5">
-              Registration dossiers
+              Total dossiers submitted
             </p>
           </div>
         </div>
@@ -592,6 +835,17 @@ export default function AdminDashboardClient({
                 >
                   Observers ({observerDossiersCount})
                 </button>
+                <button
+                  type="button"
+                  onClick={() => setTypeFilter("directorate")}
+                  className={`px-2.5 py-1 rounded transition-colors ${
+                    typeFilter === "directorate"
+                      ? "bg-purple-600 text-white font-semibold"
+                      : "text-stone-400 hover:text-stone-200"
+                  }`}
+                >
+                  Directorate ({directorateDossiersCount})
+                </button>
               </div>
 
               {/* Search */}
@@ -633,9 +887,15 @@ export default function AdminDashboardClient({
                   filteredDelegates.map((delegate) => {
                     const isApproved =
                       delegate.status === "Approved" || delegate.status === "Verified";
-                    const isDelegation = delegate.registrationType === "delegation" || Boolean(delegate.delegates && delegate.delegates.length > 0);
-                    const isObserver = delegate.registrationType === "observer" || delegate.comingAs === "Observer";
-                    const proofCount = delegate.paymentProofUrls?.length || (delegate.paymentProofUrl ? 1 : 0);
+                    const isDelegation =
+                      delegate.registrationType === "delegation" ||
+                      Boolean(delegate.delegates && delegate.delegates.length > 0);
+                    const isDirectorate = delegate.registrationType === "directorate";
+                    const isObserver =
+                      !isDirectorate &&
+                      (delegate.registrationType === "observer" || delegate.comingAs === "Observer");
+                    const proofCount =
+                      delegate.paymentProofUrls?.length || (delegate.paymentProofUrl ? 1 : 0);
 
                     return (
                       <tr
@@ -648,26 +908,51 @@ export default function AdminDashboardClient({
                             className={`inline-block text-[9px] uppercase tracking-wider px-2 py-0.5 rounded font-semibold border ${
                               isDelegation
                                 ? "bg-amber-950/60 text-amber-300 border-amber-600/40"
+                                : isDirectorate
+                                ? "bg-purple-950/60 text-purple-300 border-purple-600/40"
                                 : isObserver
                                 ? "bg-blue-950/60 text-blue-300 border-blue-600/40"
                                 : "bg-emerald-950/60 text-emerald-300 border-emerald-600/40"
                             }`}
                           >
-                            {isDelegation ? "Delegation" : isObserver ? "Observer" : "Private"}
+                            {isDelegation
+                              ? "Delegation"
+                              : isDirectorate
+                              ? "Directorate"
+                              : isObserver
+                              ? "Observer"
+                              : "Private"}
                           </span>
                           <span className="text-[10px] font-mono text-stone-400 block mt-0.5">
                             {delegate.id}
                           </span>
                         </td>
 
-                        {/* Name & Institution */}
+                        {/* Name & Institution / Class */}
                         <td className="py-3.5 px-3">
                           <span className="font-medium text-stone-100 block">
                             {delegate.fullName}
                           </span>
-                          <span className="text-[11px] text-stone-400 block truncate max-w-[200px]">
-                            {delegate.institution}
-                          </span>
+
+                          {isDirectorate ? (
+                            <div>
+                              <span className="text-[11px] text-stone-400 block">
+                                Class: {delegate.studentClass || "N/A"} • Sec: {delegate.section || "N/A"}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => setSelectedDirectorateApplicant(delegate)}
+                                className="mt-1 text-[11px] text-purple-400 hover:text-purple-300 hover:underline underline-offset-2 inline-flex items-center gap-1 font-medium"
+                              >
+                                <Award className="w-3 h-3" />
+                                <span>View Application Dossier</span>
+                              </button>
+                            </div>
+                          ) : (
+                            <span className="text-[11px] text-stone-400 block truncate max-w-[200px]">
+                              {delegate.institution}
+                            </span>
+                          )}
 
                           {/* If Delegation: View Roster button */}
                           {isDelegation && delegate.delegates && delegate.delegates.length > 0 && (
@@ -688,14 +973,34 @@ export default function AdminDashboardClient({
                           <div className="text-[11px] text-stone-400">{delegate.email}</div>
                         </td>
 
-                        {/* Committee */}
+                        {/* Committee & Preferred Allotment / Category */}
                         <td className="py-3.5 px-3 text-[#c5a059] font-medium whitespace-nowrap">
-                          {delegate.committee}
+                          {isDirectorate ? (
+                            <div>
+                              <span className="inline-block text-[11px] text-purple-300 font-semibold px-2 py-0.5 rounded bg-purple-950/60 border border-purple-600/30">
+                                {delegate.directorateCategory || "Directorate"}
+                              </span>
+                            </div>
+                          ) : (
+                            <>
+                              <div>{delegate.committee}</div>
+                              {delegate.preferredAllotment && (
+                                <div className="text-[10px] text-stone-400 font-normal mt-0.5">
+                                  Pref Allotment: <span className="text-stone-200 font-medium">{delegate.preferredAllotment}</span>
+                                </div>
+                              )}
+                            </>
+                          )}
                         </td>
 
                         {/* Payment Proof link */}
                         <td className="py-3.5 px-3 whitespace-nowrap">
-                          {proofCount > 0 ? (
+                          {isDirectorate ? (
+                            <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-medium px-2 py-0.5 rounded bg-emerald-950/60 border border-emerald-600/30">
+                              <Check className="w-3 h-3" />
+                              <span>Host Team (Free)</span>
+                            </span>
+                          ) : proofCount > 0 ? (
                             <button
                               type="button"
                               onClick={() => setSelectedReceiptDelegate(delegate)}
@@ -844,9 +1149,147 @@ export default function AdminDashboardClient({
                       </span>
                       <span className="text-stone-300 truncate block">{member.email}</span>
                     </div>
+                    {member.preferredAllotment && (
+                      <div className="sm:col-span-2 pt-1 border-t border-stone-800/60 mt-0.5">
+                        <span className="text-stone-500 text-[10px] uppercase tracking-wider block">
+                          Preferred Allotment
+                        </span>
+                        <span className="text-[#d4af37] font-medium">{member.preferredAllotment}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Directorate Application Details Modal */}
+      {selectedDirectorateApplicant && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-fade-in"
+          onClick={() => setSelectedDirectorateApplicant(null)}
+        >
+          <div
+            className="relative w-full max-w-xl bg-[#0a1811] border border-purple-500/40 rounded-xl p-5 sm:p-6 flex flex-col shadow-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-3 mb-4 border-b border-purple-500/20">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400">
+                  <Award className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-serif text-xl text-[#f5f5f4] font-normal flex items-center gap-2">
+                    <span>Directorate Application</span>
+                    <span className="text-xs font-mono px-2 py-0.5 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30">
+                      {selectedDirectorateApplicant.id}
+                    </span>
+                  </h3>
+                  <p className="text-xs text-stone-400 mt-0.5">
+                    Category: <strong className="text-purple-300">{selectedDirectorateApplicant.directorateCategory || "General"}</strong> • Host Team Recruitment
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setSelectedDirectorateApplicant(null)}
+                className="p-1.5 text-stone-400 hover:text-stone-100 transition-colors"
+                title="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 max-h-[75vh] overflow-y-auto pr-1">
+              {/* Profile Overview */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#08150f] border border-purple-500/20 rounded-lg p-3.5">
+                <div>
+                  <span className="text-stone-500 text-[10px] uppercase tracking-wider block">
+                    Full Name
+                  </span>
+                  <span className="text-stone-100 font-medium text-sm">
+                    {selectedDirectorateApplicant.fullName}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-stone-500 text-[10px] uppercase tracking-wider block">
+                    Assigned Department
+                  </span>
+                  <span className="text-purple-300 font-semibold text-sm">
+                    {selectedDirectorateApplicant.directorateCategory || selectedDirectorateApplicant.committee}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-stone-500 text-[10px] uppercase tracking-wider block">
+                    Class
+                  </span>
+                  <span className="text-stone-200">
+                    {selectedDirectorateApplicant.studentClass || "Not specified"}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-stone-500 text-[10px] uppercase tracking-wider block">
+                    Section
+                  </span>
+                  <span className="text-stone-200">
+                    {selectedDirectorateApplicant.section || "Not specified"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Contact Info */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#08150f] border border-[#c5a059]/20 rounded-lg p-3.5">
+                <div>
+                  <span className="text-stone-500 text-[10px] uppercase tracking-wider block">
+                    Contact / WhatsApp
+                  </span>
+                  <span className="text-stone-200 font-mono">
+                    {selectedDirectorateApplicant.phone}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-stone-500 text-[10px] uppercase tracking-wider block">
+                    Email Address
+                  </span>
+                  <span className="text-stone-200 truncate block">
+                    {selectedDirectorateApplicant.email}
+                  </span>
+                </div>
+              </div>
+
+              {/* Sponsors */}
+              <div className="bg-[#08150f] border border-stone-800 rounded-lg p-3.5">
+                <span className="text-stone-500 text-[10px] uppercase tracking-wider block mb-1 font-medium text-[#c5a059]">
+                  Sponsors (If any)
+                </span>
+                <p className="text-stone-200 text-xs leading-relaxed bg-[#0a1811] p-2.5 rounded border border-stone-800/80">
+                  {selectedDirectorateApplicant.sponsors || "No sponsors specified."}
+                </p>
+              </div>
+
+              {/* Past MUN Experience */}
+              <div className="bg-[#08150f] border border-stone-800 rounded-lg p-3.5">
+                <span className="text-stone-500 text-[10px] uppercase tracking-wider block mb-1 font-medium text-[#c5a059]">
+                  Past MUN Experience (If any)
+                </span>
+                <p className="text-stone-200 text-xs leading-relaxed whitespace-pre-wrap bg-[#0a1811] p-2.5 rounded border border-stone-800/80">
+                  {selectedDirectorateApplicant.pastExperience || "No past MUN experience specified."}
+                </p>
+              </div>
+
+              {/* Metadata & Status */}
+              <div className="flex items-center justify-between pt-2 text-[11px] text-stone-400 border-t border-stone-800">
+                <span>Submitted: {new Date(selectedDirectorateApplicant.createdAt).toLocaleString()}</span>
+                <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-semibold ${
+                  selectedDirectorateApplicant.status === "Approved" || selectedDirectorateApplicant.status === "Verified"
+                    ? "bg-emerald-950/80 text-emerald-400 border border-emerald-500/30"
+                    : "bg-amber-950/80 text-amber-400 border border-amber-500/30"
+                }`}>
+                  Status: {selectedDirectorateApplicant.status}
+                </span>
+              </div>
             </div>
           </div>
         </div>
