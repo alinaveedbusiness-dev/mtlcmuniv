@@ -1290,23 +1290,7 @@ export default function MinimalRegistrationPortal({
             {/* ========================================================================= */}
             {/* PAYMENT DETAILS SECTION & PROOF UPLOAD (REQUIRED ONLY FOR DELEGATES/OBSERVERS) */}
             {/* ========================================================================= */}
-            {activeTab === "directorate" ? (
-              <div className="rounded-xl border border-emerald-500/30 bg-[#08150f] p-4 sm:p-5 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
-                    <CheckCircle2 className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-serif font-bold text-stone-100">
-                      Host Team Recruitment • No Fee Required
-                    </h4>
-                    <p className="text-xs text-stone-400 mt-0.5">
-                      Directorate applications are complimentary. You do not need to attach bank payment receipts.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ) : (
+            {activeTab !== "directorate" && (
             <div className="rounded-xl border border-[#c5a059]/40 bg-[#08150f] p-5 sm:p-6 space-y-5 shadow-sm">
               <div className="flex items-center justify-between border-b border-[#c5a059]/20 pb-3">
                 <div>
