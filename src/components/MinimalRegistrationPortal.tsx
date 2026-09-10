@@ -103,7 +103,6 @@ export default function MinimalRegistrationPortal({
     phone: "",
     email: "",
     studentClass: "",
-    section: "",
     category: "",
     sponsors: "",
     pastExperience: "",
@@ -306,14 +305,12 @@ export default function MinimalRegistrationPortal({
         if (!directorateData.phone.trim()) throw new Error("Contact number is required.");
         if (!directorateData.email.trim()) throw new Error("Email address is required.");
         if (!directorateData.studentClass.trim()) throw new Error("Class is required.");
-        if (!directorateData.section.trim()) throw new Error("Section is required.");
         if (!directorateData.category) throw new Error("Please select a Directorate Category.");
 
         data.append("fullName", directorateData.fullName.trim());
         data.append("phone", directorateData.phone.trim());
         data.append("email", directorateData.email.trim());
         data.append("studentClass", directorateData.studentClass.trim());
-        data.append("section", directorateData.section.trim());
         data.append("category", directorateData.category);
         if (directorateData.sponsors.trim()) {
           data.append("sponsors", directorateData.sponsors.trim());
@@ -382,7 +379,6 @@ export default function MinimalRegistrationPortal({
       phone: "",
       email: "",
       studentClass: "",
-      section: "",
       category: "",
       sponsors: "",
       pastExperience: "",
@@ -1189,39 +1185,21 @@ export default function MinimalRegistrationPortal({
                     </div>
                   </div>
 
-                  {/* Class & Section */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
-                        Class *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={directorateData.studentClass}
-                        onChange={(e) =>
-                          setDirectorateData((prev) => ({ ...prev, studentClass: e.target.value }))
-                        }
-                        placeholder="e.g. Grade 11, A-1, O-3, Matric"
-                        className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
-                        Section *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={directorateData.section}
-                        onChange={(e) =>
-                          setDirectorateData((prev) => ({ ...prev, section: e.target.value }))
-                        }
-                        placeholder="e.g. A, B, Gold, Red"
-                        className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors"
-                      />
-                    </div>
+                  {/* Class */}
+                  <div>
+                    <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
+                      Class *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={directorateData.studentClass}
+                      onChange={(e) =>
+                        setDirectorateData((prev) => ({ ...prev, studentClass: e.target.value }))
+                      }
+                      placeholder="e.g. Grade 11, A-1, O-3, Matric"
+                      className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors"
+                    />
                   </div>
 
                   {/* Directorate Category Dropdown */}

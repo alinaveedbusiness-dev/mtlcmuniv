@@ -288,7 +288,6 @@ export default function AdminDashboardClient({
       (d.institution || "").toLowerCase().includes(q) ||
       (d.directorateCategory || "").toLowerCase().includes(q) ||
       (d.studentClass || "").toLowerCase().includes(q) ||
-      (d.section || "").toLowerCase().includes(q) ||
       (d.sponsors || "").toLowerCase().includes(q);
 
     const matchRoster = (d.delegates || []).some(
@@ -937,7 +936,7 @@ export default function AdminDashboardClient({
                           {isDirectorate ? (
                             <div>
                               <span className="text-[11px] text-stone-400 block">
-                                Class: {delegate.studentClass || "N/A"} • Sec: {delegate.section || "N/A"}
+                                Class: {delegate.studentClass || "N/A"}
                               </span>
                               <button
                                 type="button"
@@ -1221,20 +1220,12 @@ export default function AdminDashboardClient({
                     {selectedDirectorateApplicant.directorateCategory || selectedDirectorateApplicant.committee}
                   </span>
                 </div>
-                <div>
+                <div className="sm:col-span-2">
                   <span className="text-stone-500 text-[10px] uppercase tracking-wider block">
                     Class
                   </span>
                   <span className="text-stone-200">
                     {selectedDirectorateApplicant.studentClass || "Not specified"}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-stone-500 text-[10px] uppercase tracking-wider block">
-                    Section
-                  </span>
-                  <span className="text-stone-200">
-                    {selectedDirectorateApplicant.section || "Not specified"}
                   </span>
                 </div>
               </div>

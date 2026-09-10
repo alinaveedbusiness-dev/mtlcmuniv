@@ -206,7 +206,7 @@ export default function RegisterHubPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                  <span>Class, Section &amp; Experience profile</span>
+                  <span>Class &amp; Experience profile</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />

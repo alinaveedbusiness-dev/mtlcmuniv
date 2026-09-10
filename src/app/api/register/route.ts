@@ -347,7 +347,6 @@ export async function POST(req: NextRequest) {
       const phone = formData.get("phone")?.toString()?.trim();
       const email = formData.get("email")?.toString()?.trim();
       const studentClass = formData.get("studentClass")?.toString()?.trim();
-      const section = formData.get("section")?.toString()?.trim();
       const category = formData.get("category")?.toString()?.trim();
       const sponsors = formData.get("sponsors")?.toString()?.trim() || "";
       const pastExperience = formData.get("pastExperience")?.toString()?.trim() || "";
@@ -364,9 +363,6 @@ export async function POST(req: NextRequest) {
       if (!studentClass) {
         return NextResponse.json({ error: "Class is required." }, { status: 400 });
       }
-      if (!section) {
-        return NextResponse.json({ error: "Section is required." }, { status: 400 });
-      }
       if (!category) {
         return NextResponse.json({ error: "Directorate category is required." }, { status: 400 });
       }
@@ -375,12 +371,11 @@ export async function POST(req: NextRequest) {
         fullName,
         email,
         phone,
-        institution: `${studentClass} - Sec ${section}`,
+        institution: studentClass,
         committee: `Directorate (${category})`,
         registrationType: "directorate",
         directorateCategory: category,
         studentClass,
-        section,
         sponsors: sponsors || undefined,
         pastExperience: pastExperience || undefined,
         paymentProofUrl: paymentProofUrls[0] || "",
@@ -388,7 +383,7 @@ export async function POST(req: NextRequest) {
         paymentProofUrls,
         paymentProofFilenames,
         paymentProofSize: totalProofSize,
-        notes: `Directorate Application: ${category} | Class: ${studentClass} (${section})${sponsors ? ` | Sponsors: ${sponsors}` : ""}${pastExperience ? ` | Past Exp: ${pastExperience}` : ""}`,
+        notes: `Directorate Application: ${category} | Class: ${studentClass}${sponsors ? ` | Sponsors: ${sponsors}` : ""}${pastExperience ? ` | Past Exp: ${pastExperience}` : ""}`,
       });
 
       return NextResponse.json({
