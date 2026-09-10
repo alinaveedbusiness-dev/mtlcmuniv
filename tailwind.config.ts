@@ -30,7 +30,7 @@ const config: Config = {
       },
       fontFamily: {
         serif: ["var(--font-cinzel)", "Cinzel", "Cormorant Garamond", "Playfair Display", "serif"],
-        sans: ["var(--font-inter)", "Inter", "Montserrat", "sans-serif"],
+        sans: ["var(--font-montserrat)", "Montserrat", "sans-serif"],
         display: ["var(--font-cormorant)", "Cormorant Garamond", "serif"],
       },
       backgroundImage: {
