@@ -19,7 +19,6 @@ import {
   ChevronUp,
   CreditCard,
   Sparkles,
-  Crown,
   ArrowLeft,
   Briefcase,
 } from "lucide-react";
@@ -702,7 +701,6 @@ export default function MinimalRegistrationPortal({
                       >
                         <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#c5a059]/15">
                           <div className="flex items-center gap-2">
-                            {isHeadDelegate && <Crown className="w-4 h-4 text-[#d4af37]" />}
                             <span className={`font-serif text-sm sm:text-base tracking-wide ${isHeadDelegate ? "text-[#d4af37] font-semibold" : "text-[#f5f5f4] font-medium"}`}>
                               {isHeadDelegate ? "Head Delegate" : `Delegate ${delegateNum}`}
                             </span>
