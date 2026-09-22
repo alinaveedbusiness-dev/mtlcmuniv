@@ -217,6 +217,8 @@ export async function POST(req: NextRequest) {
         }
       }
 
+      const rawPreferredAllotment = (formData.get("preferredAllotment") as string)?.trim() || "";
+
       // Validate optional delegates 5 and 6 if partially filled
       const cleanedRoster: DelegationMember[] = [];
       for (let i = 0; i < Math.min(parsedDelegates.length, 6); i++) {
@@ -237,7 +239,7 @@ export async function POST(req: NextRequest) {
             email: d.email.trim(),
             institution: d.institution?.trim() || sharedInstitution,
             committee: d.committee.trim(),
-            preferredAllotment: d.preferredAllotment?.trim() || undefined,
+            preferredAllotment: d.preferredAllotment?.trim() || rawPreferredAllotment || undefined,
             isOptional: false,
           });
         } else if (hasAnyValue) {
@@ -274,7 +276,7 @@ export async function POST(req: NextRequest) {
             email: d.email.trim(),
             institution: d.institution?.trim() || sharedInstitution,
             committee: d.committee.trim(),
-            preferredAllotment: d.preferredAllotment?.trim() || undefined,
+            preferredAllotment: d.preferredAllotment?.trim() || rawPreferredAllotment || undefined,
             isOptional: true,
           });
         }
@@ -287,6 +289,7 @@ export async function POST(req: NextRequest) {
         phone: lead.phone,
         institution: lead.institution,
         committee: `Delegation (${cleanedRoster.length} Seats)`,
+        preferredAllotment: rawPreferredAllotment || undefined,
         registrationType: "delegation",
         delegates: cleanedRoster,
         paymentProofUrl: paymentProofUrls[0],
@@ -294,7 +297,7 @@ export async function POST(req: NextRequest) {
         paymentProofUrls,
         paymentProofFilenames,
         paymentProofSize: totalProofSize,
-        notes: `${isPrivateDelegation ? "Private Delegation" : "Institutional Delegation"} of ${cleanedRoster.length} delegates led by Head Delegate ${lead.fullName} (${lead.institution}). Proof files attached: ${paymentProofUrls.length}.`,
+        notes: `${isPrivateDelegation ? "Private Delegation" : "Institutional Delegation"} of ${cleanedRoster.length} delegates led by Head Delegate ${lead.fullName} (${lead.institution}).${rawPreferredAllotment ? ` Preferred Allotment: ${rawPreferredAllotment}.` : ""} Proof files attached: ${paymentProofUrls.length}.`,
       });
 
       return NextResponse.json({

@@ -21,6 +21,9 @@ import {
   Sparkles,
   ArrowLeft,
   Briefcase,
+  Calendar,
+  Clock,
+  Tag,
 } from "lucide-react";
 import { ConferenceSettings, CommitteeType, RegistrationType } from "@/lib/types";
 import { DEFAULT_SETTINGS, DIRECTORATE_CATEGORIES } from "@/lib/constants";
@@ -66,9 +69,18 @@ export default function MinimalRegistrationPortal({
   // Active track
   const [activeTab, setActiveTab] = useState<RegistrationType>(lockedTrack || "delegation");
 
+  // Fee values from conference settings
+  const earlyBirdDelegateFee = settings.earlyBirdDelegateFee || "PKR 3,500 / Delegate";
+  const earlyBirdDelegationFee = settings.earlyBirdDelegationFee || "PKR 14,000 / Delegation";
+  const earlyBirdDeadline = settings.earlyBirdDeadline || "October 10, 2026";
+  const regularDelegateFee = settings.regularDelegateFee || settings.registrationFee || "PKR 4,500 / Delegate";
+  const regularDelegationFee = settings.regularDelegationFee || "PKR 18,000 / Delegation";
+  const regularDeadline = settings.registrationDeadline || "October 20, 2026";
+
   // Track 1: Delegation Form (Head Delegate + 3 required + 2 optional)
   const [delegationType, setDelegationType] = useState<"institutional" | "private">("institutional");
   const [delegationInstitution, setDelegationInstitution] = useState("");
+  const [delegationPreferredAllotment, setDelegationPreferredAllotment] = useState("");
   const [delegationMembers, setDelegationMembers] = useState<DelegateInputState[]>([
     initialDelegate(), // Delegate 1 (Head Delegate)
     initialDelegate(), // Delegate 2
@@ -266,12 +278,15 @@ export default function MinimalRegistrationPortal({
             email: d.email.trim(),
             institution: resolvedInstitution,
             committee: d.committee,
-            preferredAllotment: d.preferredAllotment ? d.preferredAllotment.trim() : undefined,
+            preferredAllotment: delegationPreferredAllotment.trim() || undefined,
             isOptional: idx >= 4,
           }));
 
         data.append("delegationCategory", delegationType);
         data.append("institution", resolvedInstitution);
+        if (delegationPreferredAllotment.trim()) {
+          data.append("preferredAllotment", delegationPreferredAllotment.trim());
+        }
         data.append("delegatesData", JSON.stringify(validRoster));
       } else if (activeTab === "private_delegate") {
         if (!privateDelegate.fullName.trim()) throw new Error("Name of delegate is required.");
@@ -605,6 +620,100 @@ export default function MinimalRegistrationPortal({
                   </p>
                 </div>
 
+                {/* Fee & Deadline Schedule Banner (Delegation) */}
+                <div className="rounded-xl border border-[#d4af37]/40 bg-gradient-to-br from-[#0c1f15] via-[#08150f] to-[#06120b] p-4 sm:p-5 shadow-lg shadow-[#d4af37]/5 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#c5a059]/20">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-lg bg-[#c5a059]/20 border border-[#d4af37]/40 flex items-center justify-center text-[#d4af37]">
+                        <CreditCard className="w-3.5 h-3.5" />
+                      </div>
+                      <div>
+                        <h3 className="font-serif text-sm sm:text-base font-semibold text-stone-100">
+                          Official Fee Structure &amp; Deadlines
+                        </h3>
+                        <p className="text-[10px] sm:text-[11px] text-stone-400">
+                          Applicable for institutional and private delegations (4–6 delegates)
+                        </p>
+                      </div>
+                    </div>
+                    <span className="text-[10px] uppercase tracking-wider px-2.5 py-1 rounded bg-[#d4af37]/15 text-[#d4af37] border border-[#d4af37]/30 font-semibold self-start sm:self-auto">
+                      Tiered Rates Live
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 text-xs">
+                    {/* Early Bird Tier */}
+                    <div className="p-3.5 rounded-lg bg-[#08150f] border border-emerald-500/30 space-y-2.5">
+                      <div className="flex items-center justify-between pb-1.5 border-b border-emerald-500/20">
+                        <span className="font-serif font-semibold text-emerald-300 text-xs sm:text-sm flex items-center gap-1.5">
+                          <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                          Early Bird Registration
+                        </span>
+                        <span className="text-[10px] text-emerald-400/90 font-mono font-medium">
+                          Discounted Tier
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 pt-0.5">
+                        <div>
+                          <span className="text-[10px] uppercase tracking-wider text-stone-400 block font-medium">
+                            Early Bird Delegate Fee
+                          </span>
+                          <span className="font-serif font-bold text-stone-100 text-xs sm:text-sm text-emerald-200">
+                            {earlyBirdDelegateFee}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-[10px] uppercase tracking-wider text-stone-400 block font-medium">
+                            Early Bird Delegation Fee
+                          </span>
+                          <span className="font-serif font-bold text-stone-100 text-xs sm:text-sm text-emerald-200">
+                            {earlyBirdDelegationFee}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="pt-1.5 border-t border-emerald-500/15 flex items-center gap-1.5 text-[11px] text-emerald-300/90 font-mono">
+                        <Clock className="w-3 h-3 text-emerald-400 shrink-0" />
+                        <span>Early Bird Deadline: <strong className="text-emerald-200">{earlyBirdDeadline}</strong></span>
+                      </div>
+                    </div>
+
+                    {/* Regular Tier */}
+                    <div className="p-3.5 rounded-lg bg-[#08150f] border border-[#c5a059]/30 space-y-2.5">
+                      <div className="flex items-center justify-between pb-1.5 border-b border-[#c5a059]/20">
+                        <span className="font-serif font-semibold text-[#d4af37] text-xs sm:text-sm flex items-center gap-1.5">
+                          <Tag className="w-3.5 h-3.5 text-[#d4af37]" />
+                          Regular Registration
+                        </span>
+                        <span className="text-[10px] text-stone-400 font-mono">
+                          Standard Fee Tier
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 pt-0.5">
+                        <div>
+                          <span className="text-[10px] uppercase tracking-wider text-stone-400 block font-medium">
+                            Delegate Fee
+                          </span>
+                          <span className="font-serif font-bold text-stone-100 text-xs sm:text-sm text-[#f5f5f4]">
+                            {regularDelegateFee}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-[10px] uppercase tracking-wider text-stone-400 block font-medium">
+                            Delegation Fee
+                          </span>
+                          <span className="font-serif font-bold text-stone-100 text-xs sm:text-sm text-[#f5f5f4]">
+                            {regularDelegationFee}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="pt-1.5 border-t border-[#c5a059]/15 flex items-center gap-1.5 text-[11px] text-stone-300 font-mono">
+                        <Calendar className="w-3 h-3 text-[#c5a059] shrink-0" />
+                        <span>Registration Deadline: <strong className="text-[#f5f5f4]">{regularDeadline}</strong></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Delegation Category Selector (Institutional vs Private) */}
                 <div className="rounded-xl border border-[#c5a059]/30 bg-[#08150f] p-4 sm:p-5 shadow-sm space-y-3">
                   <div className="flex items-center justify-between">
@@ -681,6 +790,34 @@ export default function MinimalRegistrationPortal({
                   </div>
                 )}
 
+                {/* Preferred Allotment for Delegation (Asked ONCE at delegation level) */}
+                <div className="rounded-xl border border-[#c5a059]/40 bg-[#08150f] p-4 sm:p-5 shadow-sm space-y-2">
+                  <div className="flex items-center gap-2 pb-2 mb-1 border-b border-[#c5a059]/15">
+                    <Sparkles className="w-4 h-4 text-[#d4af37]" />
+                    <span className="font-serif text-sm sm:text-base text-[#d4af37] font-semibold tracking-wide">
+                      Preferred Allotment
+                    </span>
+                    <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-[#c5a059]/15 text-[#c5a059] border border-[#c5a059]/30 font-medium ml-auto">
+                      Delegation Level
+                    </span>
+                  </div>
+                  <div>
+                    <label className="block uppercase tracking-wider text-stone-300 font-medium mb-1.5 text-[11px]">
+                      Delegation Preferred Portfolios / Countries
+                    </label>
+                    <input
+                      type="text"
+                      value={delegationPreferredAllotment}
+                      onChange={(e) => setDelegationPreferredAllotment(e.target.value)}
+                      placeholder="e.g. United States, United Kingdom, France, China (or preferred countries / portfolios for your delegation)"
+                      className="w-full bg-[#0a1811] border border-[#c5a059]/30 rounded px-3.5 py-2.5 text-stone-100 placeholder-stone-600 text-xs sm:text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+                    />
+                    <p className="text-[11px] text-stone-400 mt-1.5">
+                      Specify preferred country or portfolio allocations once for the entire delegation. Dais allocations will be assigned accordingly.
+                    </p>
+                  </div>
+                </div>
+
                 {/* Delegate Cards (1 to 6) */}
                 <div className="space-y-5">
                   {delegationMembers.map((member, index) => {
@@ -706,7 +843,7 @@ export default function MinimalRegistrationPortal({
                             </span>
                             {isHeadDelegate ? (
                               <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-[#d4af37]/20 text-[#d4af37] border border-[#d4af37]/40 font-semibold">
-                                Required • Lead
+                                Required
                               </span>
                             ) : isOptional ? (
                               <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-stone-800 text-stone-400 border border-stone-700">
@@ -718,11 +855,6 @@ export default function MinimalRegistrationPortal({
                               </span>
                             )}
                           </div>
-                          {isHeadDelegate && (
-                            <span className="hidden sm:inline-block text-[11px] text-stone-400 italic">
-                              Lead Delegation Representative
-                            </span>
-                          )}
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
@@ -804,26 +936,6 @@ export default function MinimalRegistrationPortal({
                               ))}
                             </select>
                           </div>
-
-                          {/* Preferred Allotment */}
-                          <div className="sm:col-span-2">
-                            <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
-                              Preferred Allotment {isOptional ? "" : "*"}
-                            </label>
-                            <input
-                              type="text"
-                              required={!isOptional && Boolean(member.fullName.trim())}
-                              value={member.preferredAllotment}
-                              onChange={(e) =>
-                                handleDelegationMemberChange(index, "preferredAllotment", e.target.value)
-                              }
-                              placeholder="e.g. United Kingdom, China, or preferred portfolio / country"
-                              className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#d4af37] transition-colors"
-                            />
-                            <p className="text-[10px] text-stone-500 mt-1">
-                              Desired country or portfolio allocation for this delegate in their selected committee.
-                            </p>
-                          </div>
                         </div>
                       </div>
                     );
@@ -844,6 +956,64 @@ export default function MinimalRegistrationPortal({
                   <p className="text-xs text-stone-400">
                     Individual delegate credentials and preferred committee assignment
                   </p>
+                </div>
+
+                {/* Fee & Deadline Schedule Banner (Private Delegate - Only Delegate Fee) */}
+                <div className="rounded-xl border border-[#d4af37]/40 bg-gradient-to-br from-[#0c1f15] via-[#08150f] to-[#06120b] p-4 sm:p-5 shadow-lg shadow-[#d4af37]/5 space-y-3.5">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#c5a059]/20">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-lg bg-[#c5a059]/20 border border-[#d4af37]/40 flex items-center justify-center text-[#d4af37]">
+                        <CreditCard className="w-3.5 h-3.5" />
+                      </div>
+                      <div>
+                        <h3 className="font-serif text-sm sm:text-base font-semibold text-stone-100">
+                          Delegate Registration Fee
+                        </h3>
+                        <p className="text-[10px] sm:text-[11px] text-stone-400">
+                          Official individual delegate credentials &amp; committee entry
+                        </p>
+                      </div>
+                    </div>
+                    <span className="text-[10px] uppercase tracking-wider px-2.5 py-1 rounded bg-[#d4af37]/15 text-[#d4af37] border border-[#d4af37]/30 font-semibold self-start sm:self-auto">
+                      Individual Pass
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                    {/* Early Bird Delegate Fee */}
+                    <div className="p-3 rounded-lg bg-[#08150f] border border-emerald-500/30 flex items-center justify-between">
+                      <div>
+                        <span className="text-[10px] uppercase tracking-wider text-emerald-400 block font-medium flex items-center gap-1">
+                          <Sparkles className="w-3 h-3" />
+                          Early Bird Delegate Fee
+                        </span>
+                        <span className="font-serif font-bold text-emerald-200 text-sm sm:text-base">
+                          {earlyBirdDelegateFee}
+                        </span>
+                      </div>
+                      <div className="text-right text-[10px] text-emerald-300/80 font-mono">
+                        <span className="block text-stone-400 text-[9px] uppercase">Deadline</span>
+                        <strong className="text-emerald-200">{earlyBirdDeadline}</strong>
+                      </div>
+                    </div>
+
+                    {/* Regular Delegate Fee */}
+                    <div className="p-3 rounded-lg bg-[#08150f] border border-[#c5a059]/30 flex items-center justify-between">
+                      <div>
+                        <span className="text-[10px] uppercase tracking-wider text-[#d4af37] block font-medium flex items-center gap-1">
+                          <Tag className="w-3 h-3" />
+                          Delegate Fee (Regular)
+                        </span>
+                        <span className="font-serif font-bold text-stone-100 text-sm sm:text-base">
+                          {regularDelegateFee}
+                        </span>
+                      </div>
+                      <div className="text-right text-[10px] text-stone-300 font-mono">
+                        <span className="block text-stone-400 text-[9px] uppercase">Deadline</span>
+                        <strong className="text-[#f5f5f4]">{regularDeadline}</strong>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="space-y-4 text-xs">

@@ -73,6 +73,12 @@ export interface ConferenceSettings {
   eventDates: string;
   venue: string;
   registrationFee: string;
+  earlyBirdDelegateFee?: string;
+  earlyBirdDelegationFee?: string;
+  earlyBirdDeadline?: string;
+  regularDelegateFee?: string;
+  regularDelegationFee?: string;
+  registrationDeadline?: string;
   bankDetails: {
     bankName: string;
     accountTitle: string;

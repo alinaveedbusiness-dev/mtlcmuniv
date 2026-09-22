@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Settings, Save, Check, AlertCircle, Loader2, Sparkles, BookOpen } from "lucide-react";
+import { Settings, Save, Check, AlertCircle, Loader2, Sparkles, BookOpen, CreditCard } from "lucide-react";
 import { ConferenceSettings } from "@/lib/types";
 import { COMMITTEES } from "@/lib/constants";
 
@@ -14,6 +14,24 @@ export default function SettingsForm({ initialSettings, onSettingsSaved }: Setti
   const [eventDates, setEventDates] = useState(initialSettings.eventDates);
   const [venue, setVenue] = useState(initialSettings.venue);
   const [registrationFee, setRegistrationFee] = useState(initialSettings.registrationFee);
+  const [earlyBirdDelegateFee, setEarlyBirdDelegateFee] = useState(
+    initialSettings.earlyBirdDelegateFee || "PKR 3,500 / Delegate"
+  );
+  const [earlyBirdDelegationFee, setEarlyBirdDelegationFee] = useState(
+    initialSettings.earlyBirdDelegationFee || "PKR 14,000 / Delegation"
+  );
+  const [earlyBirdDeadline, setEarlyBirdDeadline] = useState(
+    initialSettings.earlyBirdDeadline || "October 10, 2026"
+  );
+  const [regularDelegateFee, setRegularDelegateFee] = useState(
+    initialSettings.regularDelegateFee || initialSettings.registrationFee || "PKR 4,500 / Delegate"
+  );
+  const [regularDelegationFee, setRegularDelegationFee] = useState(
+    initialSettings.regularDelegationFee || "PKR 18,000 / Delegation"
+  );
+  const [registrationDeadline, setRegistrationDeadline] = useState(
+    initialSettings.registrationDeadline || "October 20, 2026"
+  );
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(initialSettings.isRegistrationOpen);
   const [announcement, setAnnouncement] = useState(initialSettings.announcement || "");
 
@@ -49,7 +67,13 @@ export default function SettingsForm({ initialSettings, onSettingsSaved }: Setti
       const payload: Partial<ConferenceSettings> = {
         eventDates,
         venue,
-        registrationFee,
+        registrationFee: regularDelegateFee || registrationFee,
+        earlyBirdDelegateFee,
+        earlyBirdDelegationFee,
+        earlyBirdDeadline,
+        regularDelegateFee,
+        regularDelegationFee,
+        registrationDeadline,
         isRegistrationOpen,
         announcement,
         bankDetails: {
@@ -164,32 +188,129 @@ export default function SettingsForm({ initialSettings, onSettingsSaved }: Setti
           </div>
         </div>
 
-        {/* Venue & Fee */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-stone-300 font-semibold mb-2">
-              Conference Venue
-            </label>
-            <input
-              type="text"
-              value={venue}
-              onChange={(e) => setVenue(e.target.value)}
-              placeholder="Venue name & city"
-              className="w-full px-4 py-2.5 rounded-lg bg-emerald-950/80 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-sm"
-            />
+        {/* Conference Venue */}
+        <div>
+          <label className="block text-xs uppercase tracking-wider text-stone-300 font-semibold mb-2">
+            Conference Venue
+          </label>
+          <input
+            type="text"
+            value={venue}
+            onChange={(e) => setVenue(e.target.value)}
+            placeholder="Venue name & city"
+            className="w-full px-4 py-2.5 rounded-lg bg-emerald-950/80 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-sm"
+          />
+        </div>
+
+        {/* Fee Structure & Deadlines */}
+        <div className="rounded-xl border border-gold-400/25 bg-emerald-950/40 p-4 sm:p-5 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-gold-400/20 gap-2">
+            <div className="flex items-center gap-2">
+              <CreditCard className="w-4 h-4 text-gold-400" />
+              <h4 className="font-serif text-sm sm:text-base font-semibold text-gold-300">
+                Registration Fee Structure &amp; Deadlines
+              </h4>
+            </div>
+            <span className="text-[11px] text-stone-400">
+              Displayed dynamically on Delegation and Private Delegate registration portals
+            </span>
           </div>
 
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-stone-300 font-semibold mb-2">
-              Delegate Registration Fee
-            </label>
-            <input
-              type="text"
-              value={registrationFee}
-              onChange={(e) => setRegistrationFee(e.target.value)}
-              placeholder="e.g. PKR 4,500 / Delegate"
-              className="w-full px-4 py-2.5 rounded-lg bg-emerald-950/80 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-sm"
-            />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Early Bird Tier */}
+            <div className="p-4 rounded-lg bg-emerald-950/70 border border-emerald-500/25 space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-emerald-500/20">
+                <span className="text-xs uppercase tracking-wider font-semibold text-emerald-300 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                  Early Bird Registration Tier
+                </span>
+              </div>
+              <div>
+                <label className="block text-[11px] uppercase tracking-wider text-stone-300 mb-1">
+                  Early Bird Delegate Fee
+                </label>
+                <input
+                  type="text"
+                  value={earlyBirdDelegateFee}
+                  onChange={(e) => setEarlyBirdDelegateFee(e.target.value)}
+                  placeholder="e.g. PKR 3,500 / Delegate"
+                  className="w-full px-3 py-2 rounded bg-emerald-900/60 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-xs"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] uppercase tracking-wider text-stone-300 mb-1">
+                  Early Bird Delegation Fee
+                </label>
+                <input
+                  type="text"
+                  value={earlyBirdDelegationFee}
+                  onChange={(e) => setEarlyBirdDelegationFee(e.target.value)}
+                  placeholder="e.g. PKR 14,000 / Delegation"
+                  className="w-full px-3 py-2 rounded bg-emerald-900/60 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-xs"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] uppercase tracking-wider text-stone-300 mb-1">
+                  Early Bird Deadline
+                </label>
+                <input
+                  type="text"
+                  value={earlyBirdDeadline}
+                  onChange={(e) => setEarlyBirdDeadline(e.target.value)}
+                  placeholder="e.g. October 10, 2026"
+                  className="w-full px-3 py-2 rounded bg-emerald-900/60 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-xs"
+                />
+              </div>
+            </div>
+
+            {/* Regular Tier */}
+            <div className="p-4 rounded-lg bg-emerald-950/70 border border-gold-400/25 space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-gold-400/20">
+                <span className="text-xs uppercase tracking-wider font-semibold text-gold-300 flex items-center gap-1.5">
+                  <BookOpen className="w-3.5 h-3.5 text-gold-400" />
+                  Regular Registration Tier
+                </span>
+              </div>
+              <div>
+                <label className="block text-[11px] uppercase tracking-wider text-stone-300 mb-1">
+                  Regular Delegate Fee
+                </label>
+                <input
+                  type="text"
+                  value={regularDelegateFee}
+                  onChange={(e) => {
+                    setRegularDelegateFee(e.target.value);
+                    setRegistrationFee(e.target.value);
+                  }}
+                  placeholder="e.g. PKR 4,500 / Delegate"
+                  className="w-full px-3 py-2 rounded bg-emerald-900/60 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-xs"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] uppercase tracking-wider text-stone-300 mb-1">
+                  Regular Delegation Fee
+                </label>
+                <input
+                  type="text"
+                  value={regularDelegationFee}
+                  onChange={(e) => setRegularDelegationFee(e.target.value)}
+                  placeholder="e.g. PKR 18,000 / Delegation"
+                  className="w-full px-3 py-2 rounded bg-emerald-900/60 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-xs"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] uppercase tracking-wider text-stone-300 mb-1">
+                  Regular Registration Deadline
+                </label>
+                <input
+                  type="text"
+                  value={registrationDeadline}
+                  onChange={(e) => setRegistrationDeadline(e.target.value)}
+                  placeholder="e.g. October 20, 2026"
+                  className="w-full px-3 py-2 rounded bg-emerald-900/60 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-xs"
+                />
+              </div>
+            </div>
           </div>
         </div>
 

@@ -71,6 +71,12 @@ export const DEFAULT_SETTINGS: ConferenceSettings = {
   eventDates: "October 23 - 24 - 25, 2026",
   venue: "The City School MTLC",
   registrationFee: "PKR 4,500 / Delegate",
+  earlyBirdDelegateFee: "PKR 3,500 / Delegate",
+  earlyBirdDelegationFee: "PKR 14,000 / Delegation",
+  earlyBirdDeadline: "October 10, 2026",
+  regularDelegateFee: "PKR 4,500 / Delegate",
+  regularDelegationFee: "PKR 18,000 / Delegation",
+  registrationDeadline: "October 20, 2026",
   bankDetails: {
     bankName: "Meezan Bank Islamic Banking",
     accountTitle: "MTLC Model United Nations Society",
