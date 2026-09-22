@@ -432,49 +432,25 @@ export default function MinimalRegistrationPortal({
           </div>
 
           <h2 className="font-serif text-2xl sm:text-3xl text-[#f5f5f4] font-normal">
-            Diplomatic Dossier Submitted
+            Your Application Has Been Submitted
           </h2>
 
           <p className="text-sm text-stone-300 leading-relaxed max-w-lg mx-auto">
-            Your registration has been successfully recorded under reference credentials.
+            Your registration has been successfully received by the MTLC MUN IV Secretariat.
           </p>
 
-          <div className="border border-[#c5a059]/30 bg-[#0a1811] rounded-lg py-3 px-6 inline-block my-2 shadow-inner">
-            <span className="text-[10px] uppercase tracking-widest text-[#c5a059] block font-medium">
-              Official Tracking Code
-            </span>
-            <span className="font-mono text-xl sm:text-2xl text-[#f5f5f4] font-bold tracking-wider">
-              {registeredResult.id}
-            </span>
-          </div>
-
-          <div className="text-xs text-stone-400 max-w-md mx-auto space-y-1">
-            <p>
-              <span className="text-stone-300 font-medium">Registration Track:</span>{" "}
-              <span className="capitalize text-[#c5a059]">
-                {registeredResult.registrationType.replace("_", " ")}
-              </span>
-            </p>
-            {registeredResult.delegateCount && (
-              <p>
-                <span className="text-stone-300 font-medium">Roster Capacity:</span>{" "}
-                <span className="text-[#c5a059]">{registeredResult.delegateCount} Delegates</span>
-              </p>
-            )}
-            <p className="text-[11px] text-stone-500 pt-2">
-              The MTLC MUN Secretariat will verify the attached payment proofs against bank records and issue formal allocation letters.
-            </p>
-          </div>
+          <p className="text-xs text-stone-400 max-w-md mx-auto">
+            Thank you for registering. The Secretariat is reviewing your details and will get in touch with you shortly regarding confirmation and next steps.
+          </p>
 
           <div className="pt-4">
-            <button
-              type="button"
-              onClick={handleReset}
-              className="btn-gold px-6 py-2.5 rounded text-xs font-bold uppercase tracking-widest inline-flex items-center gap-2"
+            <Link
+              href="/"
+              className="btn-gold px-8 py-3 rounded text-xs font-bold uppercase tracking-widest inline-flex items-center gap-2"
             >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Submit Another Registration</span>
-            </button>
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Go Back to Home</span>
+            </Link>
           </div>
         </div>
       ) : (
