@@ -59,20 +59,9 @@ export default async function HomePage() {
                     Delegation Form
                   </h3>
 
-                  <p className="text-stone-300 text-xs leading-relaxed mb-4 font-light">
+                  <p className="text-stone-300 text-xs leading-relaxed mb-6 font-light">
                     For institutional teams. Register a designated <strong>Head Delegate</strong> plus 3 required delegates (and up to 2 optional delegates).
                   </p>
-
-                  <div className="space-y-1 text-xs text-stone-400 mb-5 border-t border-gold-400/15 pt-2.5">
-                    <div className="flex items-center justify-between">
-                      <span>Roster</span>
-                      <span className="text-stone-200">Head + 3–5</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Committees</span>
-                      <span className="text-stone-200">All 6 Councils</span>
-                    </div>
-                  </div>
                 </div>
 
                 <Link
@@ -95,20 +84,9 @@ export default async function HomePage() {
                     Private Delegate Form
                   </h3>
 
-                  <p className="text-stone-300 text-xs leading-relaxed mb-4 font-light">
+                  <p className="text-stone-300 text-xs leading-relaxed mb-6 font-light">
                     For independent candidates. Choose to participate either as a full <strong>Delegate</strong> or as an <strong>Observer</strong>.
                   </p>
-
-                  <div className="space-y-1 text-xs text-stone-400 mb-5 border-t border-gold-400/15 pt-2.5">
-                    <div className="flex items-center justify-between">
-                      <span>Type</span>
-                      <span className="text-stone-200">Delegate / Observer</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Committees</span>
-                      <span className="text-stone-200">Direct Selection</span>
-                    </div>
-                  </div>
                 </div>
 
                 <Link
@@ -131,20 +109,9 @@ export default async function HomePage() {
                     Observer Form
                   </h3>
 
-                  <p className="text-stone-300 text-xs leading-relaxed mb-4 font-light">
+                  <p className="text-stone-300 text-xs leading-relaxed mb-6 font-light">
                     Fast-track pass for visitors, faculty advisors, mentors, and guests attending assembly proceedings and social events.
                   </p>
-
-                  <div className="space-y-1 text-xs text-stone-400 mb-5 border-t border-gold-400/15 pt-2.5">
-                    <div className="flex items-center justify-between">
-                      <span>Form</span>
-                      <span className="text-stone-200">3 Quick Fields</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Access</span>
-                      <span className="text-stone-200">Conclave Pass</span>
-                    </div>
-                  </div>
                 </div>
 
                 <Link
@@ -167,20 +134,9 @@ export default async function HomePage() {
                     Directorate Form
                   </h3>
 
-                  <p className="text-stone-300 text-xs leading-relaxed mb-4 font-light">
+                  <p className="text-stone-300 text-xs leading-relaxed mb-6 font-light">
                     Join the MTLC MUN IV organizing committee. Apply for Media, Logistics, Publication, Security, Del Affairs, Secretariat Affairs, or Socials.
                   </p>
-
-                  <div className="space-y-1 text-xs text-stone-400 mb-5 border-t border-gold-400/15 pt-2.5">
-                    <div className="flex items-center justify-between">
-                      <span>Departments</span>
-                      <span className="text-stone-200">7 Tracks</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Application</span>
-                      <span className="text-stone-200 text-emerald-400 font-medium">Complimentary</span>
-                    </div>
-                  </div>
                 </div>
 
                 <Link
