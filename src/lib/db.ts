@@ -1,22 +1,98 @@
 import fs from "fs/promises";
 import path from "path";
+import os from "os";
 import { ConferenceSettings, DelegateRegistration, AdminStats } from "./types";
 import { DEFAULT_SETTINGS } from "./constants";
+import {
+  isTiDBConfigured,
+  getTiDBAllDelegates,
+  insertTiDBDelegate,
+  updateTiDBDelegateStatus,
+  deleteTiDBDelegate,
+  clearTiDBDelegates,
+  getTiDBSettings,
+  updateTiDBSettings,
+} from "./tidb";
 
 const DATA_DIR = path.join(process.cwd(), "src", "data");
 const SETTINGS_FILE = path.join(DATA_DIR, "settings.json");
 const DELEGATES_FILE = path.join(DATA_DIR, "delegates.json");
 
-// In-memory fallback caches for serverless environments with read-only filesystems
+// Serverless /tmp fallback paths
+const TMP_SETTINGS_FILE = path.join(os.tmpdir(), "mtlc_settings.json");
+const TMP_DELEGATES_FILE = path.join(os.tmpdir(), "mtlc_delegates.json");
+
+// In-memory fallback caches
 let inMemorySettings: ConferenceSettings | null = null;
 let inMemoryDelegates: DelegateRegistration[] | null = null;
+
+// Cloud KV configuration helper (Upstash Redis / Vercel KV REST API)
+function getCloudKVConfig() {
+  const url =
+    process.env.KV_REST_API_URL ||
+    process.env.UPSTASH_REDIS_REST_URL ||
+    process.env.UPSTASH_URL ||
+    "";
+  const token =
+    process.env.KV_REST_API_TOKEN ||
+    process.env.UPSTASH_REDIS_REST_TOKEN ||
+    process.env.UPSTASH_TOKEN ||
+    "";
+
+  if (url && token) {
+    return { url: url.replace(/\/$/, ""), token };
+  }
+  return null;
+}
+
+export function getStorageStatus(): { isCloudConnected: boolean; provider: string } {
+  if (isTiDBConfigured()) {
+    return { isCloudConnected: true, provider: "TiDB Cloud Serverless (Distributed MySQL)" };
+  }
+  const config = getCloudKVConfig();
+  if (config) {
+    return { isCloudConnected: true, provider: "Upstash Redis / Vercel KV" };
+  }
+  return {
+    isCloudConnected: false,
+    provider: "Local Filesystem (Requires TiDB or Cloud DB for Git/Vercel persistence)",
+  };
+}
+
+// Execute command on Upstash Redis / Vercel KV REST API
+async function executeCloudKV<T>(command: (string | number)[]): Promise<T | null> {
+  const config = getCloudKVConfig();
+  if (!config) return null;
+
+  try {
+    const res = await fetch(config.url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${config.token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(command),
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      console.warn(`[CloudKV] Command failed with status ${res.status}`);
+      return null;
+    }
+
+    const data = await res.json();
+    return data.result as T;
+  } catch (err) {
+    console.warn("[CloudKV] Network or API error:", err);
+    return null;
+  }
+}
 
 async function safeWriteFile(filePath: string, content: string): Promise<boolean> {
   try {
     await fs.writeFile(filePath, content, "utf-8");
     return true;
   } catch {
-    // Read-only filesystem or serverless execution; in-memory state will persist for instance lifetime
     return false;
   }
 }
@@ -38,97 +114,63 @@ async function ensureDataFiles() {
   try {
     await fs.access(DELEGATES_FILE);
   } catch {
-    // Initialize with a couple of high-quality sample registrations for instant demonstration
-    const initialDelegates: DelegateRegistration[] = [
-      {
-        id: "MTLC-2026-1042",
-        fullName: "Zainab Fatima Khan",
-        email: "zainab.fatima@diplomacy.edu.pk",
-        phone: "+92 301 5551234",
-        institution: "Lahore University of Management Sciences",
-        committee: "UNSC",
-        experience: "Advanced",
-        countryPreference1: "United Kingdom",
-        countryPreference2: "France",
-        paymentProofUrl: "/images/logo.png",
-        paymentProofFilename: "receipt_zainab_1042.png",
-        paymentProofSize: 245120,
-        status: "Verified",
-        createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-        notes: "Assigned Delegate of United Kingdom. Fee verified via Meezan Bank transfer.",
-      },
-      {
-        id: "MTLC-2026-1043",
-        fullName: "Hamza Tariq Qureshi",
-        email: "hamza.tariq@aitchison.edu.pk",
-        phone: "+92 321 4448765",
-        institution: "Aitchison College, Lahore",
-        committee: "DISEC",
-        experience: "Intermediate",
-        countryPreference1: "Germany",
-        countryPreference2: "Japan",
-        paymentProofUrl: "/images/logo.png",
-        paymentProofFilename: "receipt_hamza_1043.png",
-        paymentProofSize: 312500,
-        status: "Pending",
-        createdAt: new Date(Date.now() - 86400000 * 1).toISOString(),
-        notes: "Pending transaction slip re-confirmation with bank statement.",
-      },
-      {
-        id: "MTLC-2026-1044",
-        fullName: "Ayesha Noor Malik",
-        email: "ayesha.malik@nust.edu.pk",
-        phone: "+92 333 8889922",
-        institution: "NUST Islamabad",
-        committee: "PNA",
-        experience: "Advanced",
-        countryPreference1: "Leader of Opposition",
-        countryPreference2: "Federal Minister of Finance",
-        paymentProofUrl: "/images/logo.png",
-        paymentProofFilename: "receipt_ayesha_1044.png",
-        paymentProofSize: 198400,
-        status: "Verified",
-        createdAt: new Date(Date.now() - 3600000 * 5).toISOString(),
-        notes: "Portfolio confirmed: Leader of the Opposition.",
-      },
-      {
-        id: "MTLC-2026-1045",
-        fullName: "Bilal Ahmed Siddiqui",
-        email: "bilal.siddiqui@iba.edu.pk",
-        phone: "+92 345 7771144",
-        institution: "IBA Karachi",
-        committee: "UNHRC",
-        experience: "Beginner",
-        countryPreference1: "Switzerland",
-        countryPreference2: "Norway",
-        paymentProofUrl: "/images/logo.png",
-        paymentProofFilename: "receipt_bilal_1045.png",
-        paymentProofSize: 421000,
-        status: "Pending",
-        createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
-      }
-    ];
-    await fs.writeFile(DELEGATES_FILE, JSON.stringify(initialDelegates, null, 2), "utf-8");
+    await safeWriteFile(DELEGATES_FILE, JSON.stringify([], null, 2));
   }
 }
 
+// ==========================================
 // Settings operations
+// ==========================================
+
 export async function getSettings(): Promise<ConferenceSettings> {
+  // 1. Try TiDB Serverless if configured
+  if (isTiDBConfigured()) {
+    const tidbSettings = await getTiDBSettings();
+    if (tidbSettings) {
+      const merged: ConferenceSettings = { ...DEFAULT_SETTINGS, ...tidbSettings };
+      inMemorySettings = merged;
+      return merged;
+    }
+  }
+
+  // 2. Try Cloud KV if configured
+  const cloudData = await executeCloudKV<string>(["GET", "mtlc_settings"]);
+  if (cloudData) {
+    try {
+      const parsed = typeof cloudData === "string" ? JSON.parse(cloudData) : cloudData;
+      const merged: ConferenceSettings = { ...DEFAULT_SETTINGS, ...parsed };
+      inMemorySettings = merged;
+      return merged;
+    } catch {
+      // Continue to fallbacks
+    }
+  }
+
+  // 3. In-memory fallback
   if (inMemorySettings) return inMemorySettings;
+
   await ensureDataFiles();
+
+  // 4. Try reading from primary settings file
   try {
     const raw = await fs.readFile(SETTINGS_FILE, "utf-8");
     const parsed: ConferenceSettings = { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
     inMemorySettings = parsed;
     return parsed;
-  } catch (err) {
-    console.error("Error reading settings:", err);
-    return DEFAULT_SETTINGS;
+  } catch {
+    // 5. Try reading from serverless /tmp fallback
+    try {
+      const tmpRaw = await fs.readFile(TMP_SETTINGS_FILE, "utf-8");
+      const parsed: ConferenceSettings = { ...DEFAULT_SETTINGS, ...JSON.parse(tmpRaw) };
+      inMemorySettings = parsed;
+      return parsed;
+    } catch {
+      return DEFAULT_SETTINGS;
+    }
   }
 }
 
 export async function updateSettings(updates: Partial<ConferenceSettings>): Promise<ConferenceSettings> {
-  await ensureDataFiles();
   const current = await getSettings();
   const updated: ConferenceSettings = {
     ...current,
@@ -145,23 +187,80 @@ export async function updateSettings(updates: Partial<ConferenceSettings>): Prom
   };
 
   inMemorySettings = updated;
-  await safeWriteFile(SETTINGS_FILE, JSON.stringify(updated, null, 2));
+  const jsonStr = JSON.stringify(updated, null, 2);
+
+  // 1. Persist to TiDB if configured
+  if (isTiDBConfigured()) {
+    await updateTiDBSettings(updated);
+  }
+
+  // 2. Update Cloud KV if configured
+  await executeCloudKV(["SET", "mtlc_settings", jsonStr]);
+
+  // 3. Mirror to local file and /tmp
+  await safeWriteFile(SETTINGS_FILE, jsonStr);
+  await safeWriteFile(TMP_SETTINGS_FILE, jsonStr);
+
   return updated;
 }
 
+// ==========================================
 // Delegates operations
+// ==========================================
+
 export async function getAllDelegates(): Promise<DelegateRegistration[]> {
+  // 1. Try TiDB Serverless first
+  if (isTiDBConfigured()) {
+    const tidbDelegates = await getTiDBAllDelegates();
+    if (tidbDelegates !== null) {
+      inMemoryDelegates = tidbDelegates;
+      return tidbDelegates;
+    }
+  }
+
+  // 2. Try Cloud KV
+  const cloudData = await executeCloudKV<string>(["GET", "mtlc_delegates"]);
+  if (cloudData) {
+    try {
+      const parsed = typeof cloudData === "string" ? JSON.parse(cloudData) : cloudData;
+      if (Array.isArray(parsed)) {
+        inMemoryDelegates = parsed;
+        return parsed;
+      }
+    } catch {
+      // Continue to fallbacks
+    }
+  }
+
+  // 3. Return in-memory if already loaded
   if (inMemoryDelegates) return inMemoryDelegates;
+
   await ensureDataFiles();
+
+  // 4. Try reading primary local file
   try {
     const raw = await fs.readFile(DELEGATES_FILE, "utf-8");
     const parsed = JSON.parse(raw) as DelegateRegistration[];
-    inMemoryDelegates = parsed;
-    return parsed;
-  } catch (err) {
-    console.error("Error reading delegates:", err);
-    return [];
+    if (Array.isArray(parsed)) {
+      inMemoryDelegates = parsed;
+      return parsed;
+    }
+  } catch {
+    // 5. Try reading /tmp file for serverless environments
+    try {
+      const tmpRaw = await fs.readFile(TMP_DELEGATES_FILE, "utf-8");
+      const parsed = JSON.parse(tmpRaw) as DelegateRegistration[];
+      if (Array.isArray(parsed)) {
+        inMemoryDelegates = parsed;
+        return parsed;
+      }
+    } catch {
+      // Return empty list
+    }
   }
+
+  inMemoryDelegates = [];
+  return [];
 }
 
 export async function getDelegates(filters?: {
@@ -208,7 +307,6 @@ export async function getDelegateById(id: string): Promise<DelegateRegistration 
 export async function createDelegate(
   data: Omit<DelegateRegistration, "id" | "createdAt" | "status">
 ): Promise<DelegateRegistration> {
-  await ensureDataFiles();
   const delegates = await getAllDelegates();
 
   // Generate unique ID like MTLC-2026-1046
@@ -231,7 +329,21 @@ export async function createDelegate(
 
   delegates.unshift(newDelegate);
   inMemoryDelegates = delegates;
-  await safeWriteFile(DELEGATES_FILE, JSON.stringify(delegates, null, 2));
+
+  const jsonStr = JSON.stringify(delegates, null, 2);
+
+  // 1. Persist to TiDB
+  if (isTiDBConfigured()) {
+    await insertTiDBDelegate(newDelegate);
+  }
+
+  // 2. Persist to Cloud KV
+  await executeCloudKV(["SET", "mtlc_delegates", jsonStr]);
+
+  // 3. Persist to local filesystem and serverless /tmp
+  await safeWriteFile(DELEGATES_FILE, jsonStr);
+  await safeWriteFile(TMP_DELEGATES_FILE, jsonStr);
+
   return newDelegate;
 }
 
@@ -240,7 +352,6 @@ export async function updateDelegateStatus(
   status: "Pending" | "Verified" | "Approved" | "Rejected",
   notes?: string
 ): Promise<DelegateRegistration | null> {
-  await ensureDataFiles();
   const delegates = await getAllDelegates();
   const index = delegates.findIndex((d) => d.id.toLowerCase() === id.toLowerCase());
 
@@ -252,19 +363,63 @@ export async function updateDelegateStatus(
   }
 
   inMemoryDelegates = delegates;
-  await safeWriteFile(DELEGATES_FILE, JSON.stringify(delegates, null, 2));
+  const jsonStr = JSON.stringify(delegates, null, 2);
+
+  // 1. Persist to TiDB
+  if (isTiDBConfigured()) {
+    await updateTiDBDelegateStatus(id, status, notes);
+  }
+
+  // 2. Persist to Cloud KV
+  await executeCloudKV(["SET", "mtlc_delegates", jsonStr]);
+
+  // 3. Persist to local file and /tmp
+  await safeWriteFile(DELEGATES_FILE, jsonStr);
+  await safeWriteFile(TMP_DELEGATES_FILE, jsonStr);
+
   return delegates[index];
 }
 
 export async function deleteDelegate(id: string): Promise<boolean> {
-  await ensureDataFiles();
   const delegates = await getAllDelegates();
   const filtered = delegates.filter((d) => d.id.toLowerCase() !== id.toLowerCase());
 
   if (filtered.length === delegates.length) return false;
 
   inMemoryDelegates = filtered;
-  await safeWriteFile(DELEGATES_FILE, JSON.stringify(filtered, null, 2));
+  const jsonStr = JSON.stringify(filtered, null, 2);
+
+  // 1. Delete from TiDB
+  if (isTiDBConfigured()) {
+    await deleteTiDBDelegate(id);
+  }
+
+  // 2. Persist to Cloud KV
+  await executeCloudKV(["SET", "mtlc_delegates", jsonStr]);
+
+  // 3. Persist to local file and /tmp
+  await safeWriteFile(DELEGATES_FILE, jsonStr);
+  await safeWriteFile(TMP_DELEGATES_FILE, jsonStr);
+
+  return true;
+}
+
+export async function clearAllDelegates(): Promise<boolean> {
+  inMemoryDelegates = [];
+  const jsonStr = JSON.stringify([], null, 2);
+
+  // 1. Clear TiDB
+  if (isTiDBConfigured()) {
+    await clearTiDBDelegates();
+  }
+
+  // 2. Clear Cloud KV
+  await executeCloudKV(["SET", "mtlc_delegates", jsonStr]);
+
+  // 3. Clear local file and /tmp
+  await safeWriteFile(DELEGATES_FILE, jsonStr);
+  await safeWriteFile(TMP_DELEGATES_FILE, jsonStr);
+
   return true;
 }
 

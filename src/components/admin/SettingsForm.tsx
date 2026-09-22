@@ -34,6 +34,7 @@ export default function SettingsForm({ initialSettings, onSettingsSaved }: Setti
     return init;
   });
 
+  const [adminPassword, setAdminPassword] = useState("");
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -61,6 +62,10 @@ export default function SettingsForm({ initialSettings, onSettingsSaved }: Setti
         },
         committeeAgendas,
       };
+
+      if (adminPassword.trim()) {
+        payload.adminPassword = adminPassword.trim();
+      }
 
       const res = await fetch("/api/settings", {
         method: "PUT",
@@ -200,6 +205,23 @@ export default function SettingsForm({ initialSettings, onSettingsSaved }: Setti
             placeholder="Special broadcast message displayed at top of portal..."
             className="w-full px-4 py-2.5 rounded-lg bg-emerald-950/80 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-sm"
           />
+        </div>
+
+        {/* Secretariat Admin Password */}
+        <div>
+          <label className="block text-xs uppercase tracking-wider text-stone-300 font-semibold mb-2">
+            Secretariat Admin Access Password
+          </label>
+          <input
+            type="text"
+            value={adminPassword}
+            onChange={(e) => setAdminPassword(e.target.value)}
+            placeholder="Change admin password (leave empty to keep current: MTLCMUN2026(1))"
+            className="w-full px-4 py-2.5 rounded-lg bg-emerald-950/80 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-sm"
+          />
+          <p className="text-[11px] text-stone-400 mt-1">
+            Current default password: <code className="text-gold-400 font-mono">MTLCMUN2026(1)</code>. Enter a new password to update it.
+          </p>
         </div>
 
         {/* Bank & Remittance Credentials */}

@@ -81,7 +81,7 @@ export const DEFAULT_SETTINGS: ConferenceSettings = {
   },
   isRegistrationOpen: true,
   announcement: "Registrations for MTLC MUN IV (October 23 - 24 - 25, 2026) are now live! Secure your committee allocations.",
-  adminPassword: "legacy2026",
+  adminPassword: "MTLCMUN2026(1)",
   committeeAgendas: {
     UNSC: "Addressing Escalating Geopolitical Flashpoints and Autonomous Warfare in Maritime Corridors",
     UNHRC: "Safeguarding Civil Liberties, Digital Privacy, and Protections for Displaced Populations",

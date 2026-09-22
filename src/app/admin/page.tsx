@@ -1,7 +1,7 @@
 import React from "react";
 import { redirect } from "next/navigation";
 import { verifyAdminSession } from "@/lib/auth";
-import { getSettings, getAllDelegates } from "@/lib/db";
+import { getSettings, getAllDelegates, getStorageStatus } from "@/lib/db";
 import AdminDashboardClient from "@/components/admin/AdminDashboardClient";
 
 export const dynamic = "force-dynamic";
@@ -13,15 +13,17 @@ export default async function AdminPage() {
     redirect("/admin/login");
   }
 
-  const [settings, delegates] = await Promise.all([
+  const [settings, delegates, storageStatus] = await Promise.all([
     getSettings(),
     getAllDelegates(),
+    getStorageStatus(),
   ]);
 
   return (
     <AdminDashboardClient
       initialSettings={settings}
       initialDelegates={delegates}
+      storageStatus={storageStatus}
     />
   );
 }

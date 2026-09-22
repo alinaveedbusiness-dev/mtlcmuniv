@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDelegates, getAdminStats } from "@/lib/db";
+import { getDelegates, getAdminStats, getStorageStatus } from "@/lib/db";
 import { verifyAdminSession } from "@/lib/auth";
 
 export async function GET(req: NextRequest) {
@@ -16,11 +16,13 @@ export async function GET(req: NextRequest) {
 
     const delegates = await getDelegates({ search, status, committee });
     const stats = await getAdminStats();
+    const storageStatus = getStorageStatus();
 
     return NextResponse.json({
       success: true,
       delegates,
       stats,
+      storageStatus,
     });
   } catch (err) {
     console.error("GET /api/admin/delegates error:", err);

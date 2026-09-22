@@ -24,6 +24,8 @@ import {
   User,
   CreditCard,
   Award,
+  AlertTriangle,
+  Database,
 } from "lucide-react";
 import { ConferenceSettings, DelegateRegistration } from "@/lib/types";
 import { COMMITTEES } from "@/lib/constants";
@@ -32,13 +34,22 @@ import ReceiptModal from "./ReceiptModal";
 interface AdminDashboardClientProps {
   initialSettings: ConferenceSettings;
   initialDelegates: DelegateRegistration[];
+  storageStatus?: { isCloudConnected: boolean; provider: string };
 }
 
 export default function AdminDashboardClient({
   initialSettings,
   initialDelegates,
+  storageStatus,
 }: AdminDashboardClientProps) {
   const router = useRouter();
+
+  const [currentStorageStatus, setCurrentStorageStatus] = useState(
+    storageStatus || { isCloudConnected: false, provider: "Local Filesystem" }
+  );
+  const [showClearModal, setShowClearModal] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
+  const [clearFeedback, setClearFeedback] = useState<string | null>(null);
 
   // Conference Dates state
   const [eventDates, setEventDates] = useState(initialSettings.eventDates || "");
@@ -132,11 +143,35 @@ export default function AdminDashboardClient({
       if (res.ok) {
         const data = await res.json();
         setDelegates(data.delegates || []);
+        if (data.storageStatus) {
+          setCurrentStorageStatus(data.storageStatus);
+        }
       }
     } catch {
       router.refresh();
     } finally {
       setIsRefreshing(false);
+    }
+  };
+
+  // Handle Purging / Clearing All Delegates
+  const handleClearAllDelegates = async () => {
+    setIsClearing(true);
+    try {
+      const res = await fetch("/api/admin/delegates/clear", { method: "POST" });
+      if (res.ok) {
+        setDelegates([]);
+        setShowClearModal(false);
+        setClearFeedback("All delegate and category registrations have been purged.");
+        setTimeout(() => setClearFeedback(null), 4000);
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to clear registrations.");
+      }
+    } catch {
+      alert("Network error while clearing registrations.");
+    } finally {
+      setIsClearing(false);
     }
   };
 
@@ -328,6 +363,34 @@ export default function AdminDashboardClient({
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Storage status indicator pill */}
+            {currentStorageStatus.isCloudConnected ? (
+              <span
+                className="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-medium bg-emerald-950/80 text-emerald-400 border border-emerald-500/30"
+                title={`${currentStorageStatus.provider}: Registrations persist across Git/Vercel serverless deployments.`}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>{currentStorageStatus.provider.includes("TiDB") ? "TiDB Cloud Connected" : "Cloud DB Synced"}</span>
+              </span>
+            ) : (
+              <span
+                className="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-medium bg-amber-950/80 text-amber-300 border border-amber-500/30"
+                title="Local / Ephemeral Storage. Add TIDB_DATABASE_URL or DATABASE_URL in Vercel for permanent cloud persistence."
+              >
+                <Database className="w-3 h-3 text-amber-400" />
+                <span>Local Storage Mode</span>
+              </span>
+            )}
+
+            <button
+              onClick={() => setShowClearModal(true)}
+              className="flex items-center gap-1.5 text-xs text-red-400/90 hover:text-red-300 transition-colors py-1.5 px-3 rounded border border-red-500/30 hover:border-red-500/60 bg-red-950/20"
+              title="Purge all registrations (reset roster)"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Purge Roster</span>
+            </button>
+
             <a
               href="/api/admin/export"
               className="flex items-center gap-1.5 text-xs text-[#c5a059] hover:text-[#d4af37] transition-colors py-1.5 px-3 rounded border border-[#c5a059]/30 hover:border-[#c5a059]"
@@ -359,6 +422,29 @@ export default function AdminDashboardClient({
 
       {/* Main Control Panel */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-6 py-8 space-y-8">
+        {/* Storage Persistence Advisory Banner (when not connected to Cloud KV / TiDB) */}
+        {!currentStorageStatus.isCloudConnected && (
+          <div className="bg-amber-950/40 border border-amber-500/40 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-amber-200">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold text-amber-300">
+                  Notice for Git / Vercel Serverless Deployments:
+                </p>
+                <p className="text-amber-200/80 mt-0.5">
+                  The website is currently operating in local storage mode. On serverless platforms (e.g. Vercel), the filesystem is read-only and stateless. To permanently store live delegate submissions, add your TiDB Serverless connection string (<code className="bg-amber-950 px-1 py-0.5 rounded text-amber-300">TIDB_DATABASE_URL</code> or <code className="bg-amber-950 px-1 py-0.5 rounded text-amber-300">DATABASE_URL</code>) to your project Environment Variables. Tables are auto-created on first run.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {clearFeedback && (
+          <div className="bg-emerald-950/60 border border-emerald-500/40 rounded-lg p-3 text-xs text-emerald-300 flex items-center gap-2">
+            <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span>{clearFeedback}</span>
+          </div>
+        )}
         {/* Date Editor */}
         <section className="border border-[#c5a059]/30 rounded-lg p-5 bg-[#08150f] shadow-lg">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -1292,6 +1378,58 @@ export default function AdminDashboardClient({
           delegate={selectedReceiptDelegate}
           onClose={() => setSelectedReceiptDelegate(null)}
         />
+      )}
+
+      {/* Purge / Clear Confirmation Modal */}
+      {showClearModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-[#0a1811] border border-red-500/40 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <div className="flex items-center gap-3 text-red-400 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-red-950/80 border border-red-500/40 flex items-center justify-center">
+                <Trash2 className="w-5 h-5 text-red-400" />
+              </div>
+              <div>
+                <h3 className="font-serif text-lg text-stone-100 font-semibold">
+                  Purge All Registrations
+                </h3>
+                <span className="text-[11px] text-red-400/80">Permanent Secretariat Action</span>
+              </div>
+            </div>
+
+            <p className="text-stone-300 text-xs leading-relaxed mb-6">
+              Are you sure you want to remove all current delegates and category registrations? This will reset the delegate roster to 0 and permanently remove all dossiers from the active database.
+            </p>
+
+            <div className="flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setShowClearModal(false)}
+                disabled={isClearing}
+                className="px-4 py-2 rounded-lg text-xs font-medium text-stone-400 hover:text-stone-200 border border-stone-800 hover:border-stone-700 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleClearAllDelegates}
+                disabled={isClearing}
+                className="px-4 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider bg-red-600 hover:bg-red-500 text-white transition-colors flex items-center gap-1.5 disabled:opacity-50"
+              >
+                {isClearing ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Purging...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Confirm Purge</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

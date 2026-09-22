@@ -29,6 +29,6 @@ export async function clearAdminSession() {
 
 export async function validateAdminPassword(password: string): Promise<boolean> {
   const settings = await getSettings();
-  const validPassword = settings.adminPassword || process.env.ADMIN_PASSWORD || "legacy2026";
+  const validPassword = settings.adminPassword || process.env.ADMIN_PASSWORD || "MTLCMUN2026(1)";
   return password.trim() === validPassword.trim();
 }
