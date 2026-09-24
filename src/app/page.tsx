@@ -55,13 +55,9 @@ export default async function HomePage() {
                     <Users className="w-5 h-5" />
                   </div>
 
-                  <h3 className="font-serif text-lg font-bold text-stone-100 mb-2">
+                  <h3 className="font-serif text-lg font-bold text-stone-100 mb-6">
                     Delegation Form
                   </h3>
-
-                  <p className="text-stone-300 text-xs leading-relaxed mb-6 font-light">
-                    For institutional teams. Register a designated <strong>Head Delegate</strong> plus 3 required delegates (and up to 2 optional delegates).
-                  </p>
                 </div>
 
                 <Link
@@ -80,13 +76,9 @@ export default async function HomePage() {
                     <User className="w-5 h-5" />
                   </div>
 
-                  <h3 className="font-serif text-lg font-bold text-stone-100 mb-2">
+                  <h3 className="font-serif text-lg font-bold text-stone-100 mb-6">
                     Private Delegate Form
                   </h3>
-
-                  <p className="text-stone-300 text-xs leading-relaxed mb-6 font-light">
-                    For independent candidates. Choose to participate either as a full <strong>Delegate</strong> or as an <strong>Observer</strong>.
-                  </p>
                 </div>
 
                 <Link
@@ -105,13 +97,9 @@ export default async function HomePage() {
                     <Eye className="w-5 h-5" />
                   </div>
 
-                  <h3 className="font-serif text-lg font-bold text-stone-100 mb-2">
+                  <h3 className="font-serif text-lg font-bold text-stone-100 mb-6">
                     Observer Form
                   </h3>
-
-                  <p className="text-stone-300 text-xs leading-relaxed mb-6 font-light">
-                    Fast-track pass for visitors, faculty advisors, mentors, and guests attending assembly proceedings and social events.
-                  </p>
                 </div>
 
                 <Link
@@ -130,13 +118,9 @@ export default async function HomePage() {
                     <Award className="w-5 h-5" />
                   </div>
 
-                  <h3 className="font-serif text-lg font-bold text-stone-100 mb-2">
+                  <h3 className="font-serif text-lg font-bold text-stone-100 mb-6">
                     Directorate Form
                   </h3>
-
-                  <p className="text-stone-300 text-xs leading-relaxed mb-6 font-light">
-                    Join the MTLC MUN IV organizing committee. Apply for Media, Logistics, Publication, Security, Del Affairs, Registration, Marketing, or Socials.
-                  </p>
                 </div>
 
                 <Link

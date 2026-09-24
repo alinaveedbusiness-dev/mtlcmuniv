@@ -435,11 +435,7 @@ export default function MinimalRegistrationPortal({
         </h1>
 
         <p className="text-xs uppercase tracking-[0.28em] text-[#c5a059] font-medium mt-1">
-          Legacy Edition • Diplomatic Registration
-        </p>
-
-        <p className="font-serif text-[11px] sm:text-xs uppercase tracking-[0.3em] text-stone-400 mt-2.5">
-          DIALOGUE. DIPLOMACY. IMPACT.
+          Legacy Edition
         </p>
 
         {settings?.eventDates && (
@@ -490,7 +486,7 @@ export default function MinimalRegistrationPortal({
                 className="inline-flex items-center gap-1.5 text-xs text-[#c5a059] hover:text-[#d4af37] transition-colors group font-medium"
               >
                 <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
-                <span>Return to Home &amp; All Forms</span>
+                <span>Return to Home</span>
               </Link>
               <div className="text-[11px] uppercase tracking-widest text-[#d4af37] font-serif font-semibold">
                 MTLC MUN IV
@@ -498,116 +494,42 @@ export default function MinimalRegistrationPortal({
             </div>
           )}
 
-          {/* Track Selection Navigation Tabs or Locked Header */}
-          {!lockedTrack ? (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1 rounded-xl bg-[#08150f] border border-[#c5a059]/30">
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveTab("delegation");
-                  setErrorMsg(null);
-                }}
-                className={`py-2.5 px-2 rounded-lg text-xs font-medium transition-all flex flex-col sm:flex-row items-center justify-center gap-1.5 ${
-                  activeTab === "delegation"
-                    ? "bg-[#c5a059] text-[#0a1811] font-bold shadow-md"
-                    : "text-stone-400 hover:text-stone-200"
-                }`}
-              >
-                <Users className="w-4 h-4 shrink-0" />
-                <span className="truncate">Delegation</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveTab("private_delegate");
-                  setErrorMsg(null);
-                }}
-                className={`py-2.5 px-2 rounded-lg text-xs font-medium transition-all flex flex-col sm:flex-row items-center justify-center gap-1.5 ${
-                  activeTab === "private_delegate"
-                    ? "bg-[#c5a059] text-[#0a1811] font-bold shadow-md"
-                    : "text-stone-400 hover:text-stone-200"
-                }`}
-              >
-                <User className="w-4 h-4 shrink-0" />
-                <span className="truncate">Private Delegate</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveTab("observer");
-                  setErrorMsg(null);
-                }}
-                className={`py-2.5 px-2 rounded-lg text-xs font-medium transition-all flex flex-col sm:flex-row items-center justify-center gap-1.5 ${
-                  activeTab === "observer"
-                    ? "bg-[#c5a059] text-[#0a1811] font-bold shadow-md"
-                    : "text-stone-400 hover:text-stone-200"
-                }`}
-              >
-                <Eye className="w-4 h-4 shrink-0" />
-                <span className="truncate">Observer</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveTab("directorate");
-                  setErrorMsg(null);
-                }}
-                className={`py-2.5 px-2 rounded-lg text-xs font-medium transition-all flex flex-col sm:flex-row items-center justify-center gap-1.5 ${
-                  activeTab === "directorate"
-                    ? "bg-[#c5a059] text-[#0a1811] font-bold shadow-md"
-                    : "text-stone-400 hover:text-stone-200"
-                }`}
-              >
-                <Briefcase className="w-4 h-4 shrink-0" />
-                <span className="truncate">Directorate</span>
-              </button>
-            </div>
-          ) : (
-            <div className="p-3.5 rounded-xl bg-[#08150f] border border-[#c5a059]/35 flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-[#c5a059]/20 border border-[#c5a059]/40 flex items-center justify-center text-[#d4af37]">
-                  {lockedTrack === "delegation" ? (
-                    <Users className="w-4 h-4" />
-                  ) : lockedTrack === "private_delegate" ? (
-                    <User className="w-4 h-4" />
-                  ) : lockedTrack === "directorate" ? (
-                    <Briefcase className="w-4 h-4" />
-                  ) : (
-                    <Eye className="w-4 h-4" />
-                  )}
-                </div>
-                <div>
-                  <h2 className="text-sm sm:text-base font-serif font-bold text-stone-100">
-                    {lockedTrack === "delegation"
-                      ? "Delegation Registration"
-                      : lockedTrack === "private_delegate"
-                      ? "Private Delegate Registration"
-                      : lockedTrack === "directorate"
-                      ? "Directorate Application Form"
-                      : "Observer Registration"}
-                  </h2>
-                  <p className="text-[11px] text-stone-400">
-                    {lockedTrack === "delegation"
-                      ? "Head Delegate + 3 Required & 2 Optional Members"
-                      : lockedTrack === "private_delegate"
-                      ? "Individual Delegate / Observer Track"
-                      : lockedTrack === "directorate"
-                      ? "Host Team Operations, Media, Logistics & Secretariat Recruitment"
-                      : "Diplomatic Pass & Assembly Observer Access"}
-                  </p>
-                </div>
+          {/* Form Header Banner */}
+          <div className="p-3.5 rounded-xl bg-[#08150f] border border-[#c5a059]/35 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#c5a059]/20 border border-[#c5a059]/40 flex items-center justify-center text-[#d4af37]">
+                {(lockedTrack || activeTab) === "delegation" ? (
+                  <Users className="w-4 h-4" />
+                ) : (lockedTrack || activeTab) === "private_delegate" ? (
+                  <User className="w-4 h-4" />
+                ) : (lockedTrack || activeTab) === "directorate" ? (
+                  <Briefcase className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
               </div>
-              <Link
-                href="/#register"
-                className="hidden sm:inline-flex text-[11px] text-[#c5a059] hover:text-[#d4af37] underline underline-offset-4"
-              >
-                Switch Form
-              </Link>
+              <div>
+                <h2 className="text-sm sm:text-base font-serif font-bold text-stone-100">
+                  {(lockedTrack || activeTab) === "delegation"
+                    ? "Delegation Registration"
+                    : (lockedTrack || activeTab) === "private_delegate"
+                    ? "Private Delegate Registration"
+                    : (lockedTrack || activeTab) === "directorate"
+                    ? "Directorate Application Form"
+                    : "Observer Registration"}
+                </h2>
+                <p className="text-[11px] text-stone-400">
+                  {(lockedTrack || activeTab) === "delegation"
+                    ? "Head Delegate + 3 Required & 2 Optional Members"
+                    : (lockedTrack || activeTab) === "private_delegate"
+                    ? "Individual Delegate / Observer Track"
+                    : (lockedTrack || activeTab) === "directorate"
+                    ? "Host Team Operations, Media, Logistics & Recruitment"
+                    : "Diplomatic Pass & Assembly Observer Access"}
+                </p>
+              </div>
             </div>
-          )}
+          </div>
 
           {/* Registration Form Wrapper */}
           <form onSubmit={handleSubmit} className="space-y-6">
