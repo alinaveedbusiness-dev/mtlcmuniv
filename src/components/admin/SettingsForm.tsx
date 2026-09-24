@@ -32,6 +32,12 @@ export default function SettingsForm({ initialSettings, onSettingsSaved }: Setti
   const [registrationDeadline, setRegistrationDeadline] = useState(
     initialSettings.registrationDeadline || "October 20, 2026"
   );
+  const [privateDelegateFee, setPrivateDelegateFee] = useState(
+    initialSettings.privateDelegateFee ||
+      initialSettings.regularDelegateFee ||
+      initialSettings.registrationFee ||
+      "PKR 4,500 / Delegate"
+  );
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(initialSettings.isRegistrationOpen);
   const [announcement, setAnnouncement] = useState(initialSettings.announcement || "");
 
@@ -74,6 +80,7 @@ export default function SettingsForm({ initialSettings, onSettingsSaved }: Setti
         regularDelegateFee,
         regularDelegationFee,
         registrationDeadline,
+        privateDelegateFee,
         isRegistrationOpen,
         announcement,
         bankDetails: {
@@ -307,6 +314,18 @@ export default function SettingsForm({ initialSettings, onSettingsSaved }: Setti
                   value={registrationDeadline}
                   onChange={(e) => setRegistrationDeadline(e.target.value)}
                   placeholder="e.g. October 20, 2026"
+                  className="w-full px-3 py-2 rounded bg-emerald-900/60 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-xs"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] uppercase tracking-wider text-stone-300 mb-1">
+                  Private Delegate Fee (Regular)
+                </label>
+                <input
+                  type="text"
+                  value={privateDelegateFee}
+                  onChange={(e) => setPrivateDelegateFee(e.target.value)}
+                  placeholder="e.g. PKR 4,500 / Delegate"
                   className="w-full px-3 py-2 rounded bg-emerald-900/60 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-xs"
                 />
               </div>

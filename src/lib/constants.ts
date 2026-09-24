@@ -77,6 +77,7 @@ export const DEFAULT_SETTINGS: ConferenceSettings = {
   regularDelegateFee: "PKR 4,500 / Delegate",
   regularDelegationFee: "PKR 18,000 / Delegation",
   registrationDeadline: "October 20, 2026",
+  privateDelegateFee: "PKR 4,500 / Delegate",
   bankDetails: {
     bankName: "Meezan Bank Islamic Banking",
     accountTitle: "MTLC Model United Nations Society",

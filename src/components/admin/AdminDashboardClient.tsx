@@ -26,6 +26,9 @@ import {
   Award,
   AlertTriangle,
   Database,
+  Tag,
+  Sparkles,
+  Clock,
 } from "lucide-react";
 import { ConferenceSettings, DelegateRegistration } from "@/lib/types";
 import { COMMITTEES } from "@/lib/constants";
@@ -55,6 +58,35 @@ export default function AdminDashboardClient({
   const [eventDates, setEventDates] = useState(initialSettings.eventDates || "");
   const [isSavingDate, setIsSavingDate] = useState(false);
   const [dateFeedback, setDateFeedback] = useState<string | null>(null);
+
+  // Fee Structure & Deadlines state
+  const [earlyBirdDelegateFee, setEarlyBirdDelegateFee] = useState(
+    initialSettings.earlyBirdDelegateFee || "PKR 3,500 / Delegate"
+  );
+  const [earlyBirdDelegationFee, setEarlyBirdDelegationFee] = useState(
+    initialSettings.earlyBirdDelegationFee || "PKR 14,000 / Delegation"
+  );
+  const [earlyBirdDeadline, setEarlyBirdDeadline] = useState(
+    initialSettings.earlyBirdDeadline || "October 10, 2026"
+  );
+  const [regularDelegateFee, setRegularDelegateFee] = useState(
+    initialSettings.regularDelegateFee || initialSettings.registrationFee || "PKR 4,500 / Delegate"
+  );
+  const [regularDelegationFee, setRegularDelegationFee] = useState(
+    initialSettings.regularDelegationFee || "PKR 18,000 / Delegation"
+  );
+  const [registrationDeadline, setRegistrationDeadline] = useState(
+    initialSettings.registrationDeadline || "October 20, 2026"
+  );
+  const [privateDelegateFee, setPrivateDelegateFee] = useState(
+    initialSettings.privateDelegateFee ||
+      initialSettings.regularDelegateFee ||
+      initialSettings.registrationFee ||
+      "PKR 4,500 / Delegate"
+  );
+  const [isSavingFees, setIsSavingFees] = useState(false);
+  const [feesFeedback, setFeesFeedback] = useState<string | null>(null);
+  const [isFeesExpanded, setIsFeesExpanded] = useState(true);
 
   // Committee Agendas state
   const [agendas, setAgendas] = useState<Record<string, string>>(() => {
@@ -229,6 +261,40 @@ export default function AdminDashboardClient({
       setAgendasFeedback("Failed to update committee agendas.");
     } finally {
       setIsSavingAgendas(false);
+    }
+  };
+
+  // Save Fee Structure & Registration Deadlines
+  const handleSaveFees = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSavingFees(true);
+    setFeesFeedback(null);
+
+    try {
+      const res = await fetch("/api/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          earlyBirdDelegateFee: earlyBirdDelegateFee.trim(),
+          earlyBirdDelegationFee: earlyBirdDelegationFee.trim(),
+          earlyBirdDeadline: earlyBirdDeadline.trim(),
+          regularDelegateFee: regularDelegateFee.trim(),
+          regularDelegationFee: regularDelegationFee.trim(),
+          registrationDeadline: registrationDeadline.trim(),
+          privateDelegateFee: privateDelegateFee.trim(),
+          registrationFee: regularDelegateFee.trim(),
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to update fee settings.");
+
+      setFeesFeedback("Fee structure and deadlines updated live across all registration forms!");
+      setTimeout(() => setFeesFeedback(null), 3500);
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Failed to update fee structure");
+    } finally {
+      setIsSavingFees(false);
     }
   };
 
@@ -484,6 +550,246 @@ export default function AdminDashboardClient({
               <Check className="w-3.5 h-3.5" />
               <span>{dateFeedback}</span>
             </p>
+          )}
+        </section>
+
+        {/* Conference Fees & Deadlines Editor Section */}
+        <section className="border border-[#c5a059]/30 rounded-lg p-5 bg-[#08150f] shadow-lg">
+          <div className="flex items-center justify-between gap-4 pb-3 border-b border-[#c5a059]/15">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#07120d] border border-[#c5a059]/30 flex items-center justify-center text-[#c5a059]">
+                <Tag className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-xs uppercase tracking-widest text-[#c5a059] font-medium flex items-center gap-2">
+                  <span>Registration Fees &amp; Deadlines</span>
+                  <span className="text-[10px] lowercase px-2 py-0.5 rounded bg-[#c5a059]/15 text-[#c5a059] border border-[#c5a059]/30">
+                    Live Fee Engine
+                  </span>
+                </h2>
+                <p className="text-[11px] text-stone-400 mt-0.5">
+                  Configure Early Bird, Regular delegation &amp; delegate fees, and private delegate fees shown across registration forms.
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setIsFeesExpanded((prev) => !prev)}
+              className="text-stone-400 hover:text-[#c5a059] text-xs flex items-center gap-1 transition-colors px-2.5 py-1 rounded border border-stone-800 hover:border-[#c5a059]/40"
+            >
+              <span>{isFeesExpanded ? "Collapse" : "Expand"}</span>
+              {isFeesExpanded ? (
+                <ChevronUp className="w-3.5 h-3.5" />
+              ) : (
+                <ChevronDown className="w-3.5 h-3.5" />
+              )}
+            </button>
+          </div>
+
+          {isFeesExpanded && (
+            <form onSubmit={handleSaveFees} className="mt-4 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Early Bird Tier */}
+                <div className="bg-[#0a1811] border border-emerald-500/25 rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between pb-2 border-b border-emerald-500/15">
+                    <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      Early Bird Tier
+                    </span>
+                    <span className="text-[10px] text-emerald-300/80 font-mono bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">
+                      Discounted
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
+                      Early Bird Delegate Fee
+                    </label>
+                    <input
+                      type="text"
+                      value={earlyBirdDelegateFee}
+                      onChange={(e) => setEarlyBirdDelegateFee(e.target.value)}
+                      placeholder="e.g. PKR 3,500 / Delegate"
+                      className="w-full bg-[#07120d] border border-stone-800 focus:border-emerald-500 rounded px-3 py-1.5 text-stone-100 text-xs focus:outline-none transition-colors"
+                    />
+                    <span className="text-[10px] text-stone-500 mt-1 block">
+                      Shown on delegation &amp; private delegate forms
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
+                      Early Bird Delegation Fee
+                    </label>
+                    <input
+                      type="text"
+                      value={earlyBirdDelegationFee}
+                      onChange={(e) => setEarlyBirdDelegationFee(e.target.value)}
+                      placeholder="e.g. PKR 14,000 / Delegation"
+                      className="w-full bg-[#07120d] border border-stone-800 focus:border-emerald-500 rounded px-3 py-1.5 text-stone-100 text-xs focus:outline-none transition-colors"
+                    />
+                    <span className="text-[10px] text-stone-500 mt-1 block">
+                      Base registration fee for delegation teams
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
+                      Early Bird Deadline
+                    </label>
+                    <input
+                      type="text"
+                      value={earlyBirdDeadline}
+                      onChange={(e) => setEarlyBirdDeadline(e.target.value)}
+                      placeholder="e.g. October 10, 2026"
+                      className="w-full bg-[#07120d] border border-stone-800 focus:border-emerald-500 rounded px-3 py-1.5 text-stone-100 text-xs focus:outline-none transition-colors"
+                    />
+                    <span className="text-[10px] text-stone-500 mt-1 block">
+                      Cutoff date for early bird pricing
+                    </span>
+                  </div>
+                </div>
+
+                {/* Regular Delegation Tier */}
+                <div className="bg-[#0a1811] border border-[#c5a059]/25 rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between pb-2 border-b border-[#c5a059]/15">
+                    <span className="text-xs font-semibold text-[#d4af37] uppercase tracking-wider flex items-center gap-1.5">
+                      <Tag className="w-3.5 h-3.5" />
+                      Regular Tier
+                    </span>
+                    <span className="text-[10px] text-stone-400 font-mono bg-stone-900 px-2 py-0.5 rounded border border-stone-800">
+                      Standard
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
+                      Regular Delegate Fee
+                    </label>
+                    <input
+                      type="text"
+                      value={regularDelegateFee}
+                      onChange={(e) => setRegularDelegateFee(e.target.value)}
+                      placeholder="e.g. PKR 4,500 / Delegate"
+                      className="w-full bg-[#07120d] border border-stone-800 focus:border-[#c5a059] rounded px-3 py-1.5 text-stone-100 text-xs focus:outline-none transition-colors"
+                    />
+                    <span className="text-[10px] text-stone-500 mt-1 block">
+                      Standard delegate fee for delegation members
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
+                      Regular Delegation Fee
+                    </label>
+                    <input
+                      type="text"
+                      value={regularDelegationFee}
+                      onChange={(e) => setRegularDelegationFee(e.target.value)}
+                      placeholder="e.g. PKR 18,000 / Delegation"
+                      className="w-full bg-[#07120d] border border-stone-800 focus:border-[#c5a059] rounded px-3 py-1.5 text-stone-100 text-xs focus:outline-none transition-colors"
+                    />
+                    <span className="text-[10px] text-stone-500 mt-1 block">
+                      Standard base fee for delegations
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
+                      Registration Deadline
+                    </label>
+                    <input
+                      type="text"
+                      value={registrationDeadline}
+                      onChange={(e) => setRegistrationDeadline(e.target.value)}
+                      placeholder="e.g. October 20, 2026"
+                      className="w-full bg-[#07120d] border border-stone-800 focus:border-[#c5a059] rounded px-3 py-1.5 text-stone-100 text-xs focus:outline-none transition-colors"
+                    />
+                    <span className="text-[10px] text-stone-500 mt-1 block">
+                      Final conference registration deadline
+                    </span>
+                  </div>
+                </div>
+
+                {/* Private Delegate Form Pricing */}
+                <div className="bg-[#0a1811] border border-amber-500/25 rounded-lg p-4 space-y-3 flex flex-col justify-between">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between pb-2 border-b border-amber-500/15">
+                      <span className="text-xs font-semibold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <User className="w-3.5 h-3.5" />
+                        Private Delegate Form
+                      </span>
+                      <span className="text-[10px] text-amber-300/80 font-mono bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/30">
+                        Individual
+                      </span>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
+                        Private Delegate Fee (Regular)
+                      </label>
+                      <input
+                        type="text"
+                        value={privateDelegateFee}
+                        onChange={(e) => setPrivateDelegateFee(e.target.value)}
+                        placeholder="e.g. PKR 4,500 / Delegate"
+                        className="w-full bg-[#07120d] border border-stone-800 focus:border-amber-500 rounded px-3 py-1.5 text-stone-100 text-xs focus:outline-none transition-colors"
+                      />
+                      <span className="text-[10px] text-stone-500 mt-1 block">
+                        Direct fee displayed on /register/private-delegate
+                      </span>
+                    </div>
+
+                    <div className="p-3 rounded-lg bg-[#07120d] border border-stone-800/80 text-[11px] text-stone-400 space-y-1.5">
+                      <p className="font-semibold text-stone-300 flex items-center gap-1">
+                        <Clock className="w-3 h-3 text-[#c5a059]" />
+                        Form Display Guide:
+                      </p>
+                      <p className="leading-relaxed">
+                        • <strong>Delegation Portal</strong> displays all 6 Early Bird &amp; Regular fees with their deadlines.
+                      </p>
+                      <p className="leading-relaxed">
+                        • <strong>Private Delegate Portal</strong> displays Early Bird Delegate Fee and this Private Delegate Fee.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-[#c5a059]/15">
+                <p className="text-[11px] text-stone-400">
+                  Fee updates reflect instantly across public registration forms and fee banners.
+                </p>
+
+                <div className="flex items-center gap-3 self-end sm:self-auto">
+                  {feesFeedback && (
+                    <span className="text-xs text-emerald-400 flex items-center gap-1.5 animate-fade-in">
+                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>{feesFeedback}</span>
+                    </span>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={isSavingFees}
+                    className="bg-[#c5a059] hover:bg-[#d4af37] text-[#0a1811] text-xs font-semibold uppercase tracking-wider py-1.5 px-4 rounded transition-colors disabled:opacity-50 flex items-center gap-1.5 shadow-sm"
+                  >
+                    {isSavingFees ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <span>Saving...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Save className="w-3.5 h-3.5" />
+                        <span>Save Fee Structure</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </form>
           )}
         </section>
 

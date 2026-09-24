@@ -76,6 +76,7 @@ export default function MinimalRegistrationPortal({
   const regularDelegateFee = settings.regularDelegateFee || settings.registrationFee || "PKR 4,500 / Delegate";
   const regularDelegationFee = settings.regularDelegationFee || "PKR 18,000 / Delegation";
   const regularDeadline = settings.registrationDeadline || "October 20, 2026";
+  const privateDelegateFee = settings.privateDelegateFee || regularDelegateFee;
 
   // Track 1: Delegation Form (Head Delegate + 3 required + 2 optional)
   const [delegationType, setDelegationType] = useState<"institutional" | "private">("institutional");
@@ -1017,7 +1018,7 @@ export default function MinimalRegistrationPortal({
                           Delegate Fee (Regular)
                         </span>
                         <span className="font-serif font-bold text-stone-100 text-sm sm:text-base">
-                          {regularDelegateFee}
+                          {privateDelegateFee}
                         </span>
                       </div>
                       <div className="text-right text-[10px] text-stone-300 font-mono">

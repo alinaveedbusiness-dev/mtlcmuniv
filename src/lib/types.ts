@@ -81,6 +81,7 @@ export interface ConferenceSettings {
   regularDelegateFee?: string;
   regularDelegationFee?: string;
   registrationDeadline?: string;
+  privateDelegateFee?: string;
   bankDetails: {
     bankName: string;
     accountTitle: string;
