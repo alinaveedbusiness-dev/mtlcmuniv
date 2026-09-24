@@ -21,9 +21,6 @@ import {
   Sparkles,
   ArrowLeft,
   Briefcase,
-  Calendar,
-  Clock,
-  Tag,
 } from "lucide-react";
 import { ConferenceSettings, CommitteeType, RegistrationType } from "@/lib/types";
 import { DEFAULT_SETTINGS, DIRECTORATE_CATEGORIES } from "@/lib/constants";
@@ -295,16 +292,15 @@ export default function MinimalRegistrationPortal({
         if (!privateDelegate.fullName.trim()) throw new Error("Name of delegate is required.");
         if (!privateDelegate.phone.trim()) throw new Error("Contact no. is required.");
         if (!privateDelegate.email.trim()) throw new Error("Email Address is required.");
-        if (!privateDelegate.institution.trim()) throw new Error("Institute of delegate is required.");
-        if (privateDelegate.comingAs === "Delegate" && !privateDelegate.committee) {
+        if (!privateDelegate.committee) {
           throw new Error("Please select your preferred committee.");
         }
 
         data.append("fullName", privateDelegate.fullName.trim());
         data.append("phone", privateDelegate.phone.trim());
         data.append("email", privateDelegate.email.trim());
-        data.append("institution", privateDelegate.institution.trim());
-        data.append("comingAs", privateDelegate.comingAs);
+        data.append("institution", "Private Delegate");
+        data.append("comingAs", "Delegate");
         data.append("committee", privateDelegate.committee);
         if (privateDelegate.preferredAllotment) {
           data.append("preferredAllotment", privateDelegate.preferredAllotment.trim());
@@ -541,13 +537,12 @@ export default function MinimalRegistrationPortal({
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 text-xs">
                     {/* Early Bird Tier */}
-                    <div className="p-3.5 rounded-lg bg-[#08150f] border border-emerald-500/30 space-y-2.5">
-                      <div className="flex items-center justify-between pb-1.5 border-b border-emerald-500/20">
-                        <span className="font-serif font-semibold text-emerald-300 text-xs sm:text-sm flex items-center gap-1.5">
-                          <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                    <div className="p-3.5 rounded-lg bg-[#08150f] border border-[#c5a059]/30 space-y-2.5">
+                      <div className="flex items-center justify-between pb-1.5 border-b border-[#c5a059]/20">
+                        <span className="font-serif font-semibold text-[#d4af37] text-xs sm:text-sm">
                           Early Bird Registration
                         </span>
-                        <span className="text-[10px] text-emerald-400/90 font-mono font-medium">
+                        <span className="text-[10px] text-stone-400 font-mono">
                           Discounted Tier
                         </span>
                       </div>
@@ -556,7 +551,7 @@ export default function MinimalRegistrationPortal({
                           <span className="text-[10px] uppercase tracking-wider text-stone-400 block font-medium">
                             Early Bird Delegate Fee
                           </span>
-                          <span className="font-serif font-bold text-stone-100 text-xs sm:text-sm text-emerald-200">
+                          <span className="font-serif font-bold text-stone-100 text-xs sm:text-sm text-[#f5f5f4]">
                             {earlyBirdDelegateFee}
                           </span>
                         </div>
@@ -564,22 +559,20 @@ export default function MinimalRegistrationPortal({
                           <span className="text-[10px] uppercase tracking-wider text-stone-400 block font-medium">
                             Early Bird Delegation Fee
                           </span>
-                          <span className="font-serif font-bold text-stone-100 text-xs sm:text-sm text-emerald-200">
+                          <span className="font-serif font-bold text-stone-100 text-xs sm:text-sm text-[#f5f5f4]">
                             {earlyBirdDelegationFee}
                           </span>
                         </div>
                       </div>
-                      <div className="pt-1.5 border-t border-emerald-500/15 flex items-center gap-1.5 text-[11px] text-emerald-300/90 font-mono">
-                        <Clock className="w-3 h-3 text-emerald-400 shrink-0" />
-                        <span>Early Bird Deadline: <strong className="text-emerald-200">{earlyBirdDeadline}</strong></span>
+                      <div className="pt-1.5 border-t border-[#c5a059]/15 flex items-center gap-1.5 text-[11px] text-stone-300 font-mono">
+                        <span>Early Bird Deadline: <strong className="text-[#f5f5f4]">{earlyBirdDeadline}</strong></span>
                       </div>
                     </div>
 
                     {/* Regular Tier */}
                     <div className="p-3.5 rounded-lg bg-[#08150f] border border-[#c5a059]/30 space-y-2.5">
                       <div className="flex items-center justify-between pb-1.5 border-b border-[#c5a059]/20">
-                        <span className="font-serif font-semibold text-[#d4af37] text-xs sm:text-sm flex items-center gap-1.5">
-                          <Tag className="w-3.5 h-3.5 text-[#d4af37]" />
+                        <span className="font-serif font-semibold text-[#d4af37] text-xs sm:text-sm">
                           Regular Registration
                         </span>
                         <span className="text-[10px] text-stone-400 font-mono">
@@ -605,7 +598,6 @@ export default function MinimalRegistrationPortal({
                         </div>
                       </div>
                       <div className="pt-1.5 border-t border-[#c5a059]/15 flex items-center gap-1.5 text-[11px] text-stone-300 font-mono">
-                        <Calendar className="w-3 h-3 text-[#c5a059] shrink-0" />
                         <span>Registration Deadline: <strong className="text-[#f5f5f4]">{regularDeadline}</strong></span>
                       </div>
                     </div>
@@ -879,27 +871,25 @@ export default function MinimalRegistrationPortal({
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     {/* Early Bird Delegate Fee */}
-                    <div className="p-3 rounded-lg bg-[#08150f] border border-emerald-500/30 flex items-center justify-between">
+                    <div className="p-3 rounded-lg bg-[#08150f] border border-[#c5a059]/30 flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] uppercase tracking-wider text-emerald-400 block font-medium flex items-center gap-1">
-                          <Sparkles className="w-3 h-3" />
+                        <span className="text-[10px] uppercase tracking-wider text-[#d4af37] block font-medium">
                           Early Bird Delegate Fee
                         </span>
-                        <span className="font-serif font-bold text-emerald-200 text-sm sm:text-base">
+                        <span className="font-serif font-bold text-stone-100 text-sm sm:text-base">
                           {earlyBirdDelegateFee}
                         </span>
                       </div>
-                      <div className="text-right text-[10px] text-emerald-300/80 font-mono">
+                      <div className="text-right text-[10px] text-stone-300 font-mono">
                         <span className="block text-stone-400 text-[9px] uppercase">Deadline</span>
-                        <strong className="text-emerald-200">{earlyBirdDeadline}</strong>
+                        <strong className="text-[#f5f5f4]">{earlyBirdDeadline}</strong>
                       </div>
                     </div>
 
                     {/* Regular Delegate Fee */}
                     <div className="p-3 rounded-lg bg-[#08150f] border border-[#c5a059]/30 flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] uppercase tracking-wider text-[#d4af37] block font-medium flex items-center gap-1">
-                          <Tag className="w-3 h-3" />
+                        <span className="text-[10px] uppercase tracking-wider text-[#d4af37] block font-medium">
                           Delegate Fee (Regular)
                         </span>
                         <span className="font-serif font-bold text-stone-100 text-sm sm:text-base">
@@ -966,124 +956,56 @@ export default function MinimalRegistrationPortal({
                     />
                   </div>
 
-                  {/* Institute of delegate * */}
+                  {/* Committees * */}
                   <div>
                     <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
-                      Institute of delegate *
+                      Committees *
+                    </label>
+                    <select
+                      required
+                      value={privateDelegate.committee}
+                      onChange={(e) =>
+                        setPrivateDelegate((prev) => ({ ...prev, committee: e.target.value }))
+                      }
+                      className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 text-xs focus:outline-none focus:border-[#c5a059] transition-colors cursor-pointer"
+                    >
+                      <option value="" disabled className="bg-[#0a1811] text-stone-500">
+                        Select preferred committee...
+                      </option>
+                      {COMMITTEES.map((comm) => (
+                        <option
+                          key={comm.id}
+                          value={comm.id}
+                          className="bg-[#0a1811] text-stone-200"
+                        >
+                          {comm.id} — {comm.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Preferred Allotment */}
+                  <div>
+                    <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
+                      Preferred Allotment *
                     </label>
                     <input
                       type="text"
                       required
-                      value={privateDelegate.institution}
+                      value={privateDelegate.preferredAllotment}
                       onChange={(e) =>
-                        setPrivateDelegate((prev) => ({ ...prev, institution: e.target.value }))
+                        setPrivateDelegate((prev) => ({
+                          ...prev,
+                          preferredAllotment: e.target.value,
+                        }))
                       }
-                      placeholder="e.g. Aitchison College / LUMS / Independent"
+                      placeholder="e.g. United States, France, or preferred portfolio / country"
                       className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors"
                     />
+                    <p className="text-[10px] text-stone-500 mt-1">
+                      Specify your desired country, character, or portfolio allocation for this committee.
+                    </p>
                   </div>
-
-                  {/* Coming as * (Delegate / Observer) */}
-                  <div>
-                    <label className="block uppercase tracking-wider text-stone-400 font-medium mb-2 text-[11px]">
-                      Coming as *
-                    </label>
-                    <div className="grid grid-cols-2 gap-3">
-                      <label
-                        className={`border rounded-lg p-3 flex items-center gap-2.5 cursor-pointer transition-all ${
-                          privateDelegate.comingAs === "Delegate"
-                            ? "bg-[#c5a059]/15 border-[#c5a059] text-[#f5f5f4]"
-                            : "bg-[#0a1811] border-stone-800 text-stone-400 hover:border-stone-700"
-                        }`}
-                      >
-                        <input
-                          type="radio"
-                          name="comingAs"
-                          value="Delegate"
-                          checked={privateDelegate.comingAs === "Delegate"}
-                          onChange={() =>
-                            setPrivateDelegate((prev) => ({ ...prev, comingAs: "Delegate" }))
-                          }
-                          className="accent-[#c5a059]"
-                        />
-                        <span className="font-medium text-xs">Delegate</span>
-                      </label>
-
-                      <label
-                        className={`border rounded-lg p-3 flex items-center gap-2.5 cursor-pointer transition-all ${
-                          privateDelegate.comingAs === "Observer"
-                            ? "bg-[#c5a059]/15 border-[#c5a059] text-[#f5f5f4]"
-                            : "bg-[#0a1811] border-stone-800 text-stone-400 hover:border-stone-700"
-                        }`}
-                      >
-                        <input
-                          type="radio"
-                          name="comingAs"
-                          value="Observer"
-                          checked={privateDelegate.comingAs === "Observer"}
-                          onChange={() =>
-                            setPrivateDelegate((prev) => ({ ...prev, comingAs: "Observer" }))
-                          }
-                          className="accent-[#c5a059]"
-                        />
-                        <span className="font-medium text-xs">Observer</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* Committees * & Preferred Allotment */}
-                  {privateDelegate.comingAs === "Delegate" && (
-                    <>
-                      <div>
-                        <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
-                          Committees *
-                        </label>
-                        <select
-                          required
-                          value={privateDelegate.committee}
-                          onChange={(e) =>
-                            setPrivateDelegate((prev) => ({ ...prev, committee: e.target.value }))
-                          }
-                          className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 text-xs focus:outline-none focus:border-[#c5a059] transition-colors cursor-pointer"
-                        >
-                          <option value="" disabled className="bg-[#0a1811] text-stone-500">
-                            Select preferred committee...
-                          </option>
-                          {COMMITTEES.map((comm) => (
-                            <option
-                              key={comm.id}
-                              value={comm.id}
-                              className="bg-[#0a1811] text-stone-200"
-                            >
-                              {comm.id} — {comm.name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
-                          Preferred Allotment *
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={privateDelegate.preferredAllotment}
-                          onChange={(e) =>
-                            setPrivateDelegate((prev) => ({
-                              ...prev,
-                              preferredAllotment: e.target.value,
-                            }))
-                          }
-                          placeholder="e.g. United States, France, or preferred portfolio / country"
-                          className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors"
-                        />
-                        <p className="text-[10px] text-stone-500 mt-1">
-                          Specify your desired country, character, or portfolio allocation for this committee.
-                        </p>
-                      </div>
-                    </>
-                  )}
                 </div>
               </div>
             )}

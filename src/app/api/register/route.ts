@@ -416,12 +416,9 @@ export async function POST(req: NextRequest) {
     const fullName = formData.get("fullName")?.toString()?.trim();
     const phone = formData.get("phone")?.toString()?.trim();
     const email = formData.get("email")?.toString()?.trim();
-    const institution = formData.get("institution")?.toString()?.trim();
-    const comingAs = (formData.get("comingAs")?.toString()?.trim() || "Delegate") as
-      | "Delegate"
-      | "Observer";
-    const committee =
-      formData.get("committee")?.toString()?.trim() || (comingAs === "Observer" ? "Observer" : "");
+    const institution = formData.get("institution")?.toString()?.trim() || "Private Delegate";
+    const comingAs = "Delegate" as const;
+    const committee = formData.get("committee")?.toString()?.trim() || "";
     const preferredAllotment = formData.get("preferredAllotment")?.toString()?.trim() || "";
 
     if (!fullName || fullName.length < 2) {
@@ -433,10 +430,7 @@ export async function POST(req: NextRequest) {
     if (!email || !emailRegex.test(email)) {
       return NextResponse.json({ error: "Valid Email Address is required." }, { status: 400 });
     }
-    if (!institution) {
-      return NextResponse.json({ error: "Institute of delegate is required." }, { status: 400 });
-    }
-    if (comingAs === "Delegate" && (!committee || !VALID_COMMITTEES.includes(committee))) {
+    if (!committee || !VALID_COMMITTEES.includes(committee)) {
       return NextResponse.json(
         { error: `Please select a valid Committee (${VALID_COMMITTEES.join(", ")}).` },
         { status: 400 }
@@ -448,7 +442,7 @@ export async function POST(req: NextRequest) {
       email,
       phone,
       institution,
-      committee: comingAs === "Observer" ? "Observer" : committee,
+      committee,
       preferredAllotment: preferredAllotment || undefined,
       registrationType: "private_delegate",
       comingAs,
