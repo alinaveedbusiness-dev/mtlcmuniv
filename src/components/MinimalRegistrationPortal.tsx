@@ -494,43 +494,6 @@ export default function MinimalRegistrationPortal({
             </div>
           )}
 
-          {/* Form Header Banner */}
-          <div className="p-3.5 rounded-xl bg-[#08150f] border border-[#c5a059]/35 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#c5a059]/20 border border-[#c5a059]/40 flex items-center justify-center text-[#d4af37]">
-                {(lockedTrack || activeTab) === "delegation" ? (
-                  <Users className="w-4 h-4" />
-                ) : (lockedTrack || activeTab) === "private_delegate" ? (
-                  <User className="w-4 h-4" />
-                ) : (lockedTrack || activeTab) === "directorate" ? (
-                  <Briefcase className="w-4 h-4" />
-                ) : (
-                  <Eye className="w-4 h-4" />
-                )}
-              </div>
-              <div>
-                <h2 className="text-sm sm:text-base font-serif font-bold text-stone-100">
-                  {(lockedTrack || activeTab) === "delegation"
-                    ? "Delegation Registration"
-                    : (lockedTrack || activeTab) === "private_delegate"
-                    ? "Private Delegate Registration"
-                    : (lockedTrack || activeTab) === "directorate"
-                    ? "Directorate Application Form"
-                    : "Observer Registration"}
-                </h2>
-                <p className="text-[11px] text-stone-400">
-                  {(lockedTrack || activeTab) === "delegation"
-                    ? "Head Delegate + 3 Required & 2 Optional Members"
-                    : (lockedTrack || activeTab) === "private_delegate"
-                    ? "Individual Delegate / Observer Track"
-                    : (lockedTrack || activeTab) === "directorate"
-                    ? "Host Team Operations, Media, Logistics & Recruitment"
-                    : "Diplomatic Pass & Assembly Observer Access"}
-                </p>
-              </div>
-            </div>
-          </div>
-
           {/* Registration Form Wrapper */}
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Error Message Alert */}
@@ -1206,9 +1169,6 @@ export default function MinimalRegistrationPortal({
                       Directorate Application Form
                     </h2>
                   </div>
-                  <p className="text-xs text-stone-400 mt-1">
-                    Apply for host team operational positions for MTLC MUN IV. No conference registration fee required.
-                  </p>
                 </div>
 
                 <div className="space-y-4 text-xs">
