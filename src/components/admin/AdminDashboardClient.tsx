@@ -1336,6 +1336,26 @@ export default function AdminDashboardClient({
                 </div>
               </div>
 
+              {/* Why Suited for Category */}
+              <div className="bg-[#08150f] border border-stone-800 rounded-lg p-3.5">
+                <span className="text-stone-500 text-[10px] uppercase tracking-wider block mb-1 font-medium text-[#c5a059]">
+                  Why do you think you are suited for this category?
+                </span>
+                <p className="text-stone-200 text-xs leading-relaxed whitespace-pre-wrap bg-[#0a1811] p-2.5 rounded border border-stone-800/80">
+                  {selectedDirectorateApplicant.whySuited || "Not specified."}
+                </p>
+              </div>
+
+              {/* Animal Question */}
+              <div className="bg-[#08150f] border border-stone-800 rounded-lg p-3.5">
+                <span className="text-stone-500 text-[10px] uppercase tracking-wider block mb-1 font-medium text-[#c5a059]">
+                  If you were an animal what animal would you be?
+                </span>
+                <p className="text-stone-200 text-xs leading-relaxed whitespace-pre-wrap bg-[#0a1811] p-2.5 rounded border border-stone-800/80">
+                  {selectedDirectorateApplicant.spiritAnimal || "Not specified."}
+                </p>
+              </div>
+
               {/* Sponsors */}
               <div className="bg-[#08150f] border border-stone-800 rounded-lg p-3.5">
                 <span className="text-stone-500 text-[10px] uppercase tracking-wider block mb-1 font-medium text-[#c5a059]">

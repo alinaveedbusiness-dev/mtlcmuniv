@@ -56,6 +56,8 @@ export interface DelegateRegistration {
   section?: string;
   sponsors?: string;
   pastExperience?: string;
+  spiritAnimal?: string;
+  whySuited?: string;
   experience?: "Beginner" | "Intermediate" | "Advanced";
   countryPreference1?: string;
   countryPreference2?: string;

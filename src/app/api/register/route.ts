@@ -353,6 +353,8 @@ export async function POST(req: NextRequest) {
       const category = formData.get("category")?.toString()?.trim();
       const sponsors = formData.get("sponsors")?.toString()?.trim() || "";
       const pastExperience = formData.get("pastExperience")?.toString()?.trim() || "";
+      const whySuited = formData.get("whySuited")?.toString()?.trim() || "";
+      const spiritAnimal = formData.get("spiritAnimal")?.toString()?.trim() || "";
 
       if (!fullName || fullName.length < 2) {
         return NextResponse.json({ error: "Applicant name is required." }, { status: 400 });
@@ -369,6 +371,18 @@ export async function POST(req: NextRequest) {
       if (!category) {
         return NextResponse.json({ error: "Directorate category is required." }, { status: 400 });
       }
+      if (!whySuited) {
+        return NextResponse.json(
+          { error: "Please answer: Why do you think you are suited for this category?" },
+          { status: 400 }
+        );
+      }
+      if (!spiritAnimal) {
+        return NextResponse.json(
+          { error: "Please answer: If you were an animal what animal would you be?" },
+          { status: 400 }
+        );
+      }
 
       const delegateRecord = await createDelegate({
         fullName,
@@ -379,6 +393,8 @@ export async function POST(req: NextRequest) {
         registrationType: "directorate",
         directorateCategory: category,
         studentClass,
+        whySuited,
+        spiritAnimal,
         sponsors: sponsors || undefined,
         pastExperience: pastExperience || undefined,
         paymentProofUrl: paymentProofUrls[0] || "",
@@ -386,7 +402,7 @@ export async function POST(req: NextRequest) {
         paymentProofUrls,
         paymentProofFilenames,
         paymentProofSize: totalProofSize,
-        notes: `Directorate Application: ${category} | Class: ${studentClass}${sponsors ? ` | Sponsors: ${sponsors}` : ""}${pastExperience ? ` | Past Exp: ${pastExperience}` : ""}`,
+        notes: `Directorate Application: ${category} | Class: ${studentClass}${whySuited ? ` | Suited: ${whySuited}` : ""}${spiritAnimal ? ` | Animal: ${spiritAnimal}` : ""}${sponsors ? ` | Sponsors: ${sponsors}` : ""}${pastExperience ? ` | Past Exp: ${pastExperience}` : ""}`,
       });
 
       return NextResponse.json({

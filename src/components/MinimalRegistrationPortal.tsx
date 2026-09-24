@@ -117,6 +117,8 @@ export default function MinimalRegistrationPortal({
     category: "",
     sponsors: "",
     pastExperience: "",
+    spiritAnimal: "",
+    whySuited: "",
   });
 
   // Multi-file payment proof state (Max 5 files, Max 1 MB each)
@@ -320,12 +322,20 @@ export default function MinimalRegistrationPortal({
         if (!directorateData.email.trim()) throw new Error("Email address is required.");
         if (!directorateData.studentClass.trim()) throw new Error("Class is required.");
         if (!directorateData.category) throw new Error("Please select a Directorate Category.");
+        if (!directorateData.whySuited.trim()) {
+          throw new Error("Please answer: Why do you think you are suited for this category?");
+        }
+        if (!directorateData.spiritAnimal.trim()) {
+          throw new Error("Please answer: If you were an animal what animal would you be?");
+        }
 
         data.append("fullName", directorateData.fullName.trim());
         data.append("phone", directorateData.phone.trim());
         data.append("email", directorateData.email.trim());
         data.append("studentClass", directorateData.studentClass.trim());
         data.append("category", directorateData.category);
+        data.append("whySuited", directorateData.whySuited.trim());
+        data.append("spiritAnimal", directorateData.spiritAnimal.trim());
         if (directorateData.sponsors.trim()) {
           data.append("sponsors", directorateData.sponsors.trim());
         }
@@ -396,6 +406,8 @@ export default function MinimalRegistrationPortal({
       category: "",
       sponsors: "",
       pastExperience: "",
+      spiritAnimal: "",
+      whySuited: "",
     });
     setPaymentFiles([]);
     setErrorMsg(null);
@@ -1372,6 +1384,40 @@ export default function MinimalRegistrationPortal({
                         </option>
                       ))}
                     </select>
+                  </div>
+
+                  {/* Why do you think you are suited for this category? */}
+                  <div>
+                    <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
+                      Why do you think you are suited for this category? *
+                    </label>
+                    <textarea
+                      rows={3}
+                      required
+                      value={directorateData.whySuited}
+                      onChange={(e) =>
+                        setDirectorateData((prev) => ({ ...prev, whySuited: e.target.value }))
+                      }
+                      placeholder="Explain your relevant strengths, key skills, past work, and why you are the best fit for this department..."
+                      className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#d4af37] transition-colors leading-relaxed"
+                    />
+                  </div>
+
+                  {/* If you were an animal what animal would you be? */}
+                  <div>
+                    <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
+                      If you were an animal what animal would you be? *
+                    </label>
+                    <textarea
+                      rows={2}
+                      required
+                      value={directorateData.spiritAnimal}
+                      onChange={(e) =>
+                        setDirectorateData((prev) => ({ ...prev, spiritAnimal: e.target.value }))
+                      }
+                      placeholder="e.g. An eagle for strategic vision and calm execution, a wolf for team loyalty and crisis handling..."
+                      className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#d4af37] transition-colors leading-relaxed"
+                    />
                   </div>
 
                   {/* Sponsors (If any) */}
