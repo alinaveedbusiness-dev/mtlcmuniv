@@ -24,7 +24,8 @@ export type DirectorateCategory =
   | "Publication"
   | "Security"
   | "Del Affairs"
-  | "Secretariat Affairs"
+  | "Registration"
+  | "Marketing"
   | "Socials";
 
 export type RegistrationType = "delegation" | "private_delegate" | "observer" | "directorate";

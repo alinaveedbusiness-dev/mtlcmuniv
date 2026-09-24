@@ -196,13 +196,13 @@ export default function RegisterHubPage() {
               </h2>
 
               <p className="text-stone-300 text-xs leading-relaxed mb-5 font-light">
-                Join the executive host committee. Apply for Media, Logistics, Publication, Security, Del Affairs, Secretariat Affairs, or Socials.
+                Join the executive host committee. Apply for Media, Logistics, Publication, Security, Del Affairs, Registration, Marketing, or Socials.
               </p>
 
               <ul className="text-xs text-stone-400 space-y-2 mb-6">
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                  <span>7 Directorate categories</span>
+                  <span>8 Directorate categories</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />

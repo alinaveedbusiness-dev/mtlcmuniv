@@ -1381,7 +1381,7 @@ export default function MinimalRegistrationPortal({
                           value={cat.id}
                           className="bg-[#0a1811] text-stone-200"
                         >
-                          {cat.name} — {cat.desc}
+                          {cat.name}
                         </option>
                       ))}
                     </select>

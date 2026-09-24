@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Directorate Application | MTLC MUN IV",
-  description: "Official Host Team & Directorate Recruitment for MTLC MUN IV. Apply for Media, Logistics, Publication, Security, Del Affairs, Secretariat Affairs, and Socials.",
+  description: "Official Host Team & Directorate Recruitment for MTLC MUN IV. Apply for Media, Logistics, Publication, Security, Del Affairs, Registration, Marketing, and Socials.",
 };
 
 export default async function DirectorateRegistrationPage() {

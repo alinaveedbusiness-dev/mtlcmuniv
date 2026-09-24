@@ -135,7 +135,7 @@ export default async function HomePage() {
                   </h3>
 
                   <p className="text-stone-300 text-xs leading-relaxed mb-6 font-light">
-                    Join the MTLC MUN IV organizing committee. Apply for Media, Logistics, Publication, Security, Del Affairs, Secretariat Affairs, or Socials.
+                    Join the MTLC MUN IV organizing committee. Apply for Media, Logistics, Publication, Security, Del Affairs, Registration, Marketing, or Socials.
                   </p>
                 </div>
 

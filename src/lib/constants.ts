@@ -63,7 +63,8 @@ export const DIRECTORATE_CATEGORIES = [
   { id: "Publication", name: "Publication", desc: "Official communiqués, newsletters, daily reports & print materials" },
   { id: "Security", name: "Security", desc: "Diplomatic protocol, access control, badging & chamber decorum" },
   { id: "Del Affairs", name: "Del Affairs", desc: "Delegate liaison, assistance, crisis runners & registration desk" },
-  { id: "Secretariat Affairs", name: "Secretariat Affairs", desc: "Executive board support, dais management & administrative documentation" },
+  { id: "Registration", name: "Registration", desc: "Delegate check-in, credentialing, kit distribution & badge accreditation" },
+  { id: "Marketing", name: "Marketing", desc: "Brand promotion, institutional outreach & delegate recruitment campaigns" },
   { id: "Socials", name: "Socials", desc: "Social night, theme planning, hospitality & delegate entertainment" },
 ] as const;
 
