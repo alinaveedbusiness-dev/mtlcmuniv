@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    if (registrationType !== "directorate" && rawFiles.length === 0) {
+    if (rawFiles.length === 0) {
       return NextResponse.json(
         { error: "Please attach at least one proof of payment file." },
         { status: 400 }
@@ -346,70 +346,10 @@ export async function POST(req: NextRequest) {
     }
 
     if (registrationType === "directorate") {
-      const fullName = formData.get("fullName")?.toString()?.trim();
-      const phone = formData.get("phone")?.toString()?.trim();
-      const email = formData.get("email")?.toString()?.trim();
-      const studentClass = formData.get("studentClass")?.toString()?.trim();
-      const category = formData.get("category")?.toString()?.trim();
-      const sponsors = formData.get("sponsors")?.toString()?.trim() || "";
-      const pastExperience = formData.get("pastExperience")?.toString()?.trim() || "";
-      const whySuited = formData.get("whySuited")?.toString()?.trim() || "";
-      const spiritAnimal = formData.get("spiritAnimal")?.toString()?.trim() || "";
-
-      if (!fullName || fullName.length < 2) {
-        return NextResponse.json({ error: "Applicant name is required." }, { status: 400 });
-      }
-      if (!phone || phone.length < 7) {
-        return NextResponse.json({ error: "Contact no. / WhatsApp is required." }, { status: 400 });
-      }
-      if (!email || !emailRegex.test(email)) {
-        return NextResponse.json({ error: "Valid Email Address is required." }, { status: 400 });
-      }
-      if (!studentClass) {
-        return NextResponse.json({ error: "Class is required." }, { status: 400 });
-      }
-      if (!category) {
-        return NextResponse.json({ error: "Directorate category is required." }, { status: 400 });
-      }
-      if (!whySuited) {
-        return NextResponse.json(
-          { error: "Please answer: Why do you think you are suited for this category?" },
-          { status: 400 }
-        );
-      }
-      if (!spiritAnimal) {
-        return NextResponse.json(
-          { error: "Please answer: If you were an animal what animal would you be?" },
-          { status: 400 }
-        );
-      }
-
-      const delegateRecord = await createDelegate({
-        fullName,
-        email,
-        phone,
-        institution: studentClass,
-        committee: `Directorate (${category})`,
-        registrationType: "directorate",
-        directorateCategory: category,
-        studentClass,
-        whySuited,
-        spiritAnimal,
-        sponsors: sponsors || undefined,
-        pastExperience: pastExperience || undefined,
-        paymentProofUrl: paymentProofUrls[0] || "",
-        paymentProofFilename: paymentProofFilenames[0] || "",
-        paymentProofUrls,
-        paymentProofFilenames,
-        paymentProofSize: totalProofSize,
-        notes: `Directorate Application: ${category} | Class: ${studentClass}${whySuited ? ` | Suited: ${whySuited}` : ""}${spiritAnimal ? ` | Animal: ${spiritAnimal}` : ""}${sponsors ? ` | Sponsors: ${sponsors}` : ""}${pastExperience ? ` | Past Exp: ${pastExperience}` : ""}`,
-      });
-
-      return NextResponse.json({
-        success: true,
-        message: "Directorate application submitted successfully.",
-        delegate: delegateRecord,
-      });
+      return NextResponse.json(
+        { error: "Directorate applications have officially closed." },
+        { status: 400 }
+      );
     }
 
     // Default: Private Delegate Registration Form

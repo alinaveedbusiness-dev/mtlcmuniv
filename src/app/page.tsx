@@ -4,7 +4,7 @@ import Hero from "@/components/Hero";
 import CommitteesSection from "@/components/CommitteesSection";
 import Footer from "@/components/Footer";
 import { getSettings } from "@/lib/db";
-import { Users, User, Eye, ArrowRight, Award } from "lucide-react";
+import { Users, User, Eye, ArrowRight } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +22,7 @@ export default async function HomePage() {
         <CommitteesSection settings={settings} />
 
         {/* ========================================================================= */}
-        {/* REGISTER NOW SECTION - 4 DEDICATED TRACKS */}
+        {/* REGISTER NOW SECTION - 3 DEDICATED TRACKS */}
         {/* ========================================================================= */}
         <section
           id="register"
@@ -46,8 +46,8 @@ export default async function HomePage() {
               </p>
             </div>
 
-            {/* 4 Prominent Registration Buttons & Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* 3 Prominent Registration Buttons & Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
               {/* Card 1: Delegation Registration */}
               <div className="glass-card rounded-2xl p-6 flex flex-col justify-between border border-gold-400/30 hover:border-gold-400/70 hover:shadow-gold-glow transition-all duration-300 group">
                 <div>
@@ -107,27 +107,6 @@ export default async function HomePage() {
                   className="btn-gold w-full py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-1.5 shadow-gold-subtle group-hover:shadow-gold-glow transition-all text-center"
                 >
                   <span>Register Observer</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-
-              {/* Card 4: Directorate Form */}
-              <div className="glass-card rounded-2xl p-6 flex flex-col justify-between border border-gold-400/30 hover:border-gold-400/70 hover:shadow-gold-glow transition-all duration-300 group">
-                <div>
-                  <div className="w-11 h-11 rounded-xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-400 mb-4 group-hover:scale-105 transition-transform">
-                    <Award className="w-5 h-5" />
-                  </div>
-
-                  <h3 className="font-serif text-lg font-bold text-stone-100 mb-6">
-                    Directorate Form
-                  </h3>
-                </div>
-
-                <Link
-                  href="/register/directorate"
-                  className="btn-gold w-full py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-1.5 shadow-gold-subtle group-hover:shadow-gold-glow transition-all text-center"
-                >
-                  <span>Apply Directorate</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>

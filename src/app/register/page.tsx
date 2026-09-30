@@ -1,12 +1,12 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Users, User, Eye, ArrowRight, ShieldCheck, Sparkles, ArrowLeft, Award } from "lucide-react";
+import { Users, User, Eye, ArrowRight, ShieldCheck, Sparkles, ArrowLeft } from "lucide-react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Register Now | MTLC MUN IV",
-  description: "Choose your registration track for MTLC MUN IV: Delegation, Private Delegate, Observer, or Directorate.",
+  description: "Choose your registration track for MTLC MUN IV: Delegation, Private Delegate, or Observer.",
 };
 
 export default function RegisterHubPage() {
@@ -46,8 +46,8 @@ export default function RegisterHubPage() {
           </p>
         </div>
 
-        {/* 4 Main Registration Track Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* 3 Main Registration Track Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {/* Card 1: Delegation */}
           <div className="glass-card rounded-2xl p-6 flex flex-col justify-between border border-gold-400/30 hover:border-gold-400/70 hover:shadow-gold-glow transition-all duration-300 group relative">
             <div>
@@ -176,50 +176,6 @@ export default function RegisterHubPage() {
               className="btn-gold w-full py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 shadow-gold-subtle group-hover:shadow-gold-glow transition-all text-center"
             >
               <span>Register as Observer</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-
-          {/* Card 4: Directorate */}
-          <div className="glass-card rounded-2xl p-6 flex flex-col justify-between border border-gold-400/30 hover:border-gold-400/70 hover:shadow-gold-glow transition-all duration-300 group relative">
-            <div>
-              <div className="w-12 h-12 rounded-xl bg-gold-400/10 border border-gold-400/30 flex items-center justify-center text-gold-400 mb-5 group-hover:scale-110 transition-transform">
-                <Award className="w-6 h-6" />
-              </div>
-
-              <div className="inline-block text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-semibold mb-2">
-                Host Team &amp; Directorate
-              </div>
-
-              <h2 className="font-serif text-xl font-bold text-stone-100 mb-2">
-                Directorate Form
-              </h2>
-
-              <p className="text-stone-300 text-xs leading-relaxed mb-5 font-light">
-                Join the executive host committee. Apply for Media, Logistics, Publication, Security, Del Affairs, Registration, Marketing, or Socials.
-              </p>
-
-              <ul className="text-xs text-stone-400 space-y-2 mb-6">
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                  <span>8 Directorate categories</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                  <span>Class &amp; Experience profile</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                  <span>Complimentary • No fee required</span>
-                </li>
-              </ul>
-            </div>
-
-            <Link
-              href="/register/directorate"
-              className="btn-gold w-full py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 shadow-gold-subtle group-hover:shadow-gold-glow transition-all text-center"
-            >
-              <span>Apply for Directorate</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>

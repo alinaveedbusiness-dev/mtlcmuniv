@@ -20,10 +20,9 @@ import {
   CreditCard,
   Sparkles,
   ArrowLeft,
-  Briefcase,
 } from "lucide-react";
 import { ConferenceSettings, CommitteeType, RegistrationType } from "@/lib/types";
-import { DEFAULT_SETTINGS, DIRECTORATE_CATEGORIES } from "@/lib/constants";
+import { DEFAULT_SETTINGS } from "@/lib/constants";
 
 interface MinimalRegistrationPortalProps {
   settings?: ConferenceSettings;
@@ -106,18 +105,7 @@ export default function MinimalRegistrationPortal({
     email: "",
   });
 
-  // Track 4: Directorate Application Form
-  const [directorateData, setDirectorateData] = useState({
-    fullName: "",
-    phone: "",
-    email: "",
-    studentClass: "",
-    category: "",
-    sponsors: "",
-    pastExperience: "",
-    spiritAnimal: "",
-    whySuited: "",
-  });
+
 
   // Multi-file payment proof state (Max 5 files, Max 1 MB each)
   const [paymentFiles, setPaymentFiles] = useState<File[]>([]);
@@ -227,8 +215,8 @@ export default function MinimalRegistrationPortal({
     e.preventDefault();
     setErrorMsg(null);
 
-    // Validate payment proofs (only required for delegate & observer registrations)
-    if (activeTab !== "directorate" && paymentFiles.length === 0) {
+    // Validate payment proofs
+    if (paymentFiles.length === 0) {
       setErrorMsg("Please attach at least one proof of payment file (Max 1 MB per file, up to 5 files).");
       return;
     }
@@ -313,32 +301,7 @@ export default function MinimalRegistrationPortal({
         data.append("fullName", observerData.fullName.trim());
         data.append("phone", observerData.phone.trim());
         data.append("email", observerData.email.trim());
-      } else if (activeTab === "directorate") {
-        if (!directorateData.fullName.trim()) throw new Error("Full name is required.");
-        if (!directorateData.phone.trim()) throw new Error("Contact number is required.");
-        if (!directorateData.email.trim()) throw new Error("Email address is required.");
-        if (!directorateData.studentClass.trim()) throw new Error("Class is required.");
-        if (!directorateData.category) throw new Error("Please select a Directorate Category.");
-        if (!directorateData.whySuited.trim()) {
-          throw new Error("Please answer: Why do you think you are suited for this category?");
-        }
-        if (!directorateData.spiritAnimal.trim()) {
-          throw new Error("Please answer: If you were an animal what animal would you be?");
-        }
 
-        data.append("fullName", directorateData.fullName.trim());
-        data.append("phone", directorateData.phone.trim());
-        data.append("email", directorateData.email.trim());
-        data.append("studentClass", directorateData.studentClass.trim());
-        data.append("category", directorateData.category);
-        data.append("whySuited", directorateData.whySuited.trim());
-        data.append("spiritAnimal", directorateData.spiritAnimal.trim());
-        if (directorateData.sponsors.trim()) {
-          data.append("sponsors", directorateData.sponsors.trim());
-        }
-        if (directorateData.pastExperience.trim()) {
-          data.append("pastExperience", directorateData.pastExperience.trim());
-        }
       }
 
       const res = await fetch("/api/register", {
@@ -395,17 +358,7 @@ export default function MinimalRegistrationPortal({
       phone: "",
       email: "",
     });
-    setDirectorateData({
-      fullName: "",
-      phone: "",
-      email: "",
-      studentClass: "",
-      category: "",
-      sponsors: "",
-      pastExperience: "",
-      spiritAnimal: "",
-      whySuited: "",
-    });
+
     setPaymentFiles([]);
     setErrorMsg(null);
     setRegisteredResult(null);
@@ -1080,190 +1033,8 @@ export default function MinimalRegistrationPortal({
             )}
 
             {/* ========================================================================= */}
-            {/* TRACK 4: DIRECTORATE APPLICATION FORM */}
+            {/* PAYMENT DETAILS SECTION & PROOF UPLOAD */}
             {/* ========================================================================= */}
-            {activeTab === "directorate" && (
-              <div className="rounded-xl border border-[#c5a059]/40 bg-[#08150f] p-5 sm:p-6 space-y-5 shadow-sm">
-                <div className="border-b border-[#c5a059]/20 pb-3">
-                  <div className="flex items-center gap-2">
-                    <Briefcase className="w-5 h-5 text-[#d4af37]" />
-                    <h2 className="font-serif text-lg sm:text-xl text-[#f5f5f4] font-normal">
-                      Directorate Application Form
-                    </h2>
-                  </div>
-                </div>
-
-                <div className="space-y-4 text-xs">
-                  {/* Name * */}
-                  <div>
-                    <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
-                      Name *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={directorateData.fullName}
-                      onChange={(e) =>
-                        setDirectorateData((prev) => ({ ...prev, fullName: e.target.value }))
-                      }
-                      placeholder="e.g. Bilal Ahmed"
-                      className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors"
-                    />
-                  </div>
-
-                  {/* Contact Number & Email Address */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
-                        Contact Number / WhatsApp *
-                      </label>
-                      <input
-                        type="tel"
-                        required
-                        value={directorateData.phone}
-                        onChange={(e) =>
-                          setDirectorateData((prev) => ({ ...prev, phone: e.target.value }))
-                        }
-                        placeholder="e.g. +92 300 1234567"
-                        className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors font-mono"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
-                        Email Address *
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        value={directorateData.email}
-                        onChange={(e) =>
-                          setDirectorateData((prev) => ({ ...prev, email: e.target.value }))
-                        }
-                        placeholder="applicant@school.edu"
-                        className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Class */}
-                  <div>
-                    <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
-                      Class *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={directorateData.studentClass}
-                      onChange={(e) =>
-                        setDirectorateData((prev) => ({ ...prev, studentClass: e.target.value }))
-                      }
-                      placeholder="e.g. Grade 11, A-1, O-3, Matric"
-                      className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors"
-                    />
-                  </div>
-
-                  {/* Directorate Category Dropdown */}
-                  <div>
-                    <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
-                      Directorate Category *
-                    </label>
-                    <select
-                      required
-                      value={directorateData.category}
-                      onChange={(e) =>
-                        setDirectorateData((prev) => ({ ...prev, category: e.target.value }))
-                      }
-                      className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 text-xs focus:outline-none focus:border-[#c5a059] transition-colors cursor-pointer"
-                    >
-                      <option value="" disabled className="bg-[#0a1811] text-stone-500">
-                        Select Directorate Department...
-                      </option>
-                      {DIRECTORATE_CATEGORIES.map((cat) => (
-                        <option
-                          key={cat.id}
-                          value={cat.id}
-                          className="bg-[#0a1811] text-stone-200"
-                        >
-                          {cat.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Why do you think you are suited for this category? */}
-                  <div>
-                    <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
-                      Why do you think you are suited for this category? *
-                    </label>
-                    <textarea
-                      rows={3}
-                      required
-                      value={directorateData.whySuited}
-                      onChange={(e) =>
-                        setDirectorateData((prev) => ({ ...prev, whySuited: e.target.value }))
-                      }
-                      placeholder="Explain your relevant strengths, key skills, past work, and why you are the best fit for this department..."
-                      className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#d4af37] transition-colors leading-relaxed"
-                    />
-                  </div>
-
-                  {/* If you were an animal what animal would you be? */}
-                  <div>
-                    <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
-                      If you were an animal what animal would you be? *
-                    </label>
-                    <textarea
-                      rows={2}
-                      required
-                      value={directorateData.spiritAnimal}
-                      onChange={(e) =>
-                        setDirectorateData((prev) => ({ ...prev, spiritAnimal: e.target.value }))
-                      }
-                      placeholder="e.g. An eagle for strategic vision and calm execution, a wolf for team loyalty and crisis handling..."
-                      className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#d4af37] transition-colors leading-relaxed"
-                    />
-                  </div>
-
-                  {/* Sponsors (If any) */}
-                  <div>
-                    <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
-                      Sponsors (If any)
-                    </label>
-                    <input
-                      type="text"
-                      value={directorateData.sponsors}
-                      onChange={(e) =>
-                        setDirectorateData((prev) => ({ ...prev, sponsors: e.target.value }))
-                      }
-                      placeholder="e.g. Brands, food stalls, corporate connections, or funding partners you can bring"
-                      className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors"
-                    />
-                  </div>
-
-                  {/* Past MUN Experience (If any) */}
-                  <div>
-                    <label className="block uppercase tracking-wider text-stone-400 font-medium mb-1.5 text-[11px]">
-                      Past MUN Experience (If any)
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={directorateData.pastExperience}
-                      onChange={(e) =>
-                        setDirectorateData((prev) => ({ ...prev, pastExperience: e.target.value }))
-                      }
-                      placeholder="e.g. Previous experience in MUN host teams, logistics, media coverage, or as delegate/secretariat..."
-                      className="w-full bg-[#0a1811] border border-[#c5a059]/25 rounded px-3.5 py-2 text-stone-100 placeholder-stone-600 text-xs focus:outline-none focus:border-[#c5a059] transition-colors leading-relaxed"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* ========================================================================= */}
-            {/* PAYMENT DETAILS SECTION & PROOF UPLOAD (REQUIRED ONLY FOR DELEGATES/OBSERVERS) */}
-            {/* ========================================================================= */}
-            {activeTab !== "directorate" && (
             <div className="rounded-xl border border-[#c5a059]/40 bg-[#08150f] p-5 sm:p-6 space-y-5 shadow-sm">
               <div className="flex items-center justify-between border-b border-[#c5a059]/20 pb-3">
                 <div>
@@ -1469,7 +1240,6 @@ export default function MinimalRegistrationPortal({
                 )}
               </div>
             </div>
-            )}
 
             {/* Submission Button */}
             <div className="pt-2">
@@ -1490,8 +1260,6 @@ export default function MinimalRegistrationPortal({
                       ? "Delegation Registration"
                       : activeTab === "private_delegate"
                       ? "Private Delegate Registration"
-                      : activeTab === "directorate"
-                      ? "Directorate Application"
                       : "Observer Registration"}
                   </span>
                 )}

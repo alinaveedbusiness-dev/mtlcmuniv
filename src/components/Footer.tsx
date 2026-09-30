@@ -62,11 +62,6 @@ export default function Footer() {
                   Observer Registration
                 </Link>
               </li>
-              <li>
-                <Link href="/register/directorate" className="text-stone-400 hover:text-gold-300 transition-colors">
-                  Directorate Application
-                </Link>
-              </li>
             </ul>
           </div>
 
