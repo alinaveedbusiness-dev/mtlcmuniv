@@ -41,13 +41,17 @@ export default function SettingsForm({ initialSettings, onSettingsSaved }: Setti
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(initialSettings.isRegistrationOpen);
   const [announcement, setAnnouncement] = useState(initialSettings.announcement || "");
 
+  const [privateDelegateEarlyBirdFee, setPrivateDelegateEarlyBirdFee] = useState(
+    initialSettings.privateDelegateEarlyBirdFee || "PKR 3,500 / Delegate"
+  );
+  const [observerFee, setObserverFee] = useState(
+    initialSettings.observerFee || "PKR 2,500 / Observer"
+  );
+
   // Bank details
   const [bankName, setBankName] = useState(initialSettings.bankDetails?.bankName || "");
   const [accountTitle, setAccountTitle] = useState(initialSettings.bankDetails?.accountTitle || "");
   const [accountNumber, setAccountNumber] = useState(initialSettings.bankDetails?.accountNumber || "");
-  const [iban, setIban] = useState(initialSettings.bankDetails?.iban || "");
-  const [easypaisaNumber, setEasypaisaNumber] = useState(initialSettings.bankDetails?.easypaisaNumber || "");
-  const [easypaisaTitle, setEasypaisaTitle] = useState(initialSettings.bankDetails?.easypaisaTitle || "");
 
   // Committee Agendas
   const [committeeAgendas, setCommitteeAgendas] = useState<Record<string, string>>(() => {
@@ -81,15 +85,14 @@ export default function SettingsForm({ initialSettings, onSettingsSaved }: Setti
         regularDelegationFee,
         registrationDeadline,
         privateDelegateFee,
+        privateDelegateEarlyBirdFee,
+        observerFee,
         isRegistrationOpen,
         announcement,
         bankDetails: {
           bankName,
           accountTitle,
           accountNumber,
-          iban,
-          easypaisaNumber,
-          easypaisaTitle,
         },
         committeeAgendas,
       };
@@ -319,6 +322,18 @@ export default function SettingsForm({ initialSettings, onSettingsSaved }: Setti
               </div>
               <div>
                 <label className="block text-[11px] uppercase tracking-wider text-stone-300 mb-1">
+                  Private Delegate Early Bird Fee
+                </label>
+                <input
+                  type="text"
+                  value={privateDelegateEarlyBirdFee}
+                  onChange={(e) => setPrivateDelegateEarlyBirdFee(e.target.value)}
+                  placeholder="e.g. PKR 3,500 / Delegate"
+                  className="w-full px-3 py-2 rounded bg-emerald-900/60 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-xs"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] uppercase tracking-wider text-stone-300 mb-1">
                   Private Delegate Fee (Regular)
                 </label>
                 <input
@@ -326,6 +341,18 @@ export default function SettingsForm({ initialSettings, onSettingsSaved }: Setti
                   value={privateDelegateFee}
                   onChange={(e) => setPrivateDelegateFee(e.target.value)}
                   placeholder="e.g. PKR 4,500 / Delegate"
+                  className="w-full px-3 py-2 rounded bg-emerald-900/60 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-xs"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] uppercase tracking-wider text-stone-300 mb-1">
+                  Observer Registration Fee
+                </label>
+                <input
+                  type="text"
+                  value={observerFee}
+                  onChange={(e) => setObserverFee(e.target.value)}
+                  placeholder="e.g. PKR 2,500 / Observer"
                   className="w-full px-3 py-2 rounded bg-emerald-900/60 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-xs"
                 />
               </div>
@@ -370,7 +397,7 @@ export default function SettingsForm({ initialSettings, onSettingsSaved }: Setti
             Treasury Remittance Accounts
           </h4>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block text-[11px] uppercase tracking-wider text-stone-400 font-semibold mb-1">
                 Bank Name
@@ -403,30 +430,6 @@ export default function SettingsForm({ initialSettings, onSettingsSaved }: Setti
                 type="text"
                 value={accountNumber}
                 onChange={(e) => setAccountNumber(e.target.value)}
-                className="w-full px-3 py-2 rounded bg-emerald-950/80 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-xs font-mono"
-              />
-            </div>
-
-            <div className="sm:col-span-2">
-              <label className="block text-[11px] uppercase tracking-wider text-stone-400 font-semibold mb-1">
-                IBAN Number
-              </label>
-              <input
-                type="text"
-                value={iban}
-                onChange={(e) => setIban(e.target.value)}
-                className="w-full px-3 py-2 rounded bg-emerald-950/80 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-xs font-mono"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[11px] uppercase tracking-wider text-stone-400 font-semibold mb-1">
-                Mobile Wallet (Number)
-              </label>
-              <input
-                type="text"
-                value={easypaisaNumber}
-                onChange={(e) => setEasypaisaNumber(e.target.value)}
                 className="w-full px-3 py-2 rounded bg-emerald-950/80 border border-stone-700 focus:border-gold-400 focus:outline-none text-stone-100 text-xs font-mono"
               />
             </div>

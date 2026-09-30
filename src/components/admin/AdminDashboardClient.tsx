@@ -23,12 +23,12 @@ import {
   RotateCcw,
   User,
   CreditCard,
-  Award,
   AlertTriangle,
   Database,
   Tag,
   Sparkles,
   Clock,
+  Eye,
 } from "lucide-react";
 import { ConferenceSettings, DelegateRegistration } from "@/lib/types";
 import { COMMITTEES } from "@/lib/constants";
@@ -84,6 +84,14 @@ export default function AdminDashboardClient({
       initialSettings.registrationFee ||
       "PKR 4,500 / Delegate"
   );
+  const [privateDelegateEarlyBirdFee, setPrivateDelegateEarlyBirdFee] = useState(
+    initialSettings.privateDelegateEarlyBirdFee ||
+      initialSettings.earlyBirdDelegateFee ||
+      "PKR 3,500 / Delegate"
+  );
+  const [observerFee, setObserverFee] = useState(
+    initialSettings.observerFee || "PKR 2,500 / Observer"
+  );
   const [isSavingFees, setIsSavingFees] = useState(false);
   const [feesFeedback, setFeesFeedback] = useState<string | null>(null);
   const [isFeesExpanded, setIsFeesExpanded] = useState(true);
@@ -105,26 +113,23 @@ export default function AdminDashboardClient({
     bankName: initialSettings.bankDetails?.bankName || "",
     accountTitle: initialSettings.bankDetails?.accountTitle || "",
     accountNumber: initialSettings.bankDetails?.accountNumber || "",
-    iban: initialSettings.bankDetails?.iban || "",
-    easypaisaNumber: initialSettings.bankDetails?.easypaisaNumber || "",
-    easypaisaTitle: initialSettings.bankDetails?.easypaisaTitle || "",
   });
   const [isSavingBank, setIsSavingBank] = useState(false);
   const [bankFeedback, setBankFeedback] = useState<string | null>(null);
   const [isBankExpanded, setIsBankExpanded] = useState(true);
 
   // Delegates state
-  const [delegates, setDelegates] = useState<DelegateRegistration[]>(initialDelegates);
+  const [delegates, setDelegates] = useState<DelegateRegistration[]>(() =>
+    initialDelegates.filter((d) => d.registrationType !== "directorate")
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState<
-    "ALL" | "delegation" | "private_delegate" | "observer" | "directorate"
+    "ALL" | "delegation" | "private_delegate" | "observer"
   >("ALL");
   const [statusUpdatingId, setStatusUpdatingId] = useState<string | null>(null);
   const [selectedReceiptDelegate, setSelectedReceiptDelegate] =
     useState<DelegateRegistration | null>(null);
   const [selectedRosterDelegate, setSelectedRosterDelegate] =
-    useState<DelegateRegistration | null>(null);
-  const [selectedDirectorateApplicant, setSelectedDirectorateApplicant] =
     useState<DelegateRegistration | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -152,10 +157,6 @@ export default function AdminDashboardClient({
     (d) => d.registrationType === "observer" || d.comingAs === "Observer"
   ).length;
 
-  const directorateDossiersCount = delegates.filter(
-    (d) => d.registrationType === "directorate"
-  ).length;
-
   // Handle Logout
   const handleLogout = async () => {
     try {
@@ -174,7 +175,8 @@ export default function AdminDashboardClient({
       const res = await fetch("/api/admin/delegates");
       if (res.ok) {
         const data = await res.json();
-        setDelegates(data.delegates || []);
+        const fetched = (data.delegates || []) as DelegateRegistration[];
+        setDelegates(fetched.filter((d) => d.registrationType !== "directorate"));
         if (data.storageStatus) {
           setCurrentStorageStatus(data.storageStatus);
         }
@@ -282,6 +284,8 @@ export default function AdminDashboardClient({
           regularDelegationFee: regularDelegationFee.trim(),
           registrationDeadline: registrationDeadline.trim(),
           privateDelegateFee: privateDelegateFee.trim(),
+          privateDelegateEarlyBirdFee: privateDelegateEarlyBirdFee.trim(),
+          observerFee: observerFee.trim(),
           registrationFee: regularDelegateFee.trim(),
         }),
       });
@@ -308,7 +312,13 @@ export default function AdminDashboardClient({
       const res = await fetch("/api/settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bankDetails }),
+        body: JSON.stringify({
+          bankDetails: {
+            bankName: bankDetails.bankName.trim(),
+            accountTitle: bankDetails.accountTitle.trim(),
+            accountNumber: bankDetails.accountNumber.trim(),
+          },
+        }),
       });
 
       const data = await res.json();
@@ -364,13 +374,11 @@ export default function AdminDashboardClient({
   const filteredDelegates = delegates.filter((d) => {
     if (typeFilter !== "ALL") {
       if (typeFilter === "delegation" && d.registrationType !== "delegation") return false;
-      if (typeFilter === "directorate" && d.registrationType !== "directorate") return false;
       if (typeFilter === "observer" && d.registrationType !== "observer" && d.comingAs !== "Observer") return false;
       if (
         typeFilter === "private_delegate" &&
         (d.registrationType === "delegation" ||
           d.registrationType === "observer" ||
-          d.registrationType === "directorate" ||
           d.comingAs === "Observer")
       ) {
         return false;
@@ -712,16 +720,32 @@ export default function AdminDashboardClient({
                   </div>
                 </div>
 
-                {/* Private Delegate Form Pricing */}
+                {/* Private Delegate & Observer Form Pricing */}
                 <div className="bg-[#0a1811] border border-amber-500/25 rounded-lg p-4 space-y-3 flex flex-col justify-between">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between pb-2 border-b border-amber-500/15">
                       <span className="text-xs font-semibold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
                         <User className="w-3.5 h-3.5" />
-                        Private Delegate Form
+                        Private &amp; Observer Pricing
                       </span>
                       <span className="text-[10px] text-amber-300/80 font-mono bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/30">
                         Individual
+                      </span>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
+                        Private Delegate Early Bird Fee
+                      </label>
+                      <input
+                        type="text"
+                        value={privateDelegateEarlyBirdFee}
+                        onChange={(e) => setPrivateDelegateEarlyBirdFee(e.target.value)}
+                        placeholder="e.g. PKR 3,500 / Delegate"
+                        className="w-full bg-[#07120d] border border-stone-800 focus:border-amber-500 rounded px-3 py-1.5 text-stone-100 text-xs focus:outline-none transition-colors"
+                      />
+                      <span className="text-[10px] text-stone-500 mt-1 block">
+                        Early bird fee on /register/private-delegate
                       </span>
                     </div>
 
@@ -737,21 +761,24 @@ export default function AdminDashboardClient({
                         className="w-full bg-[#07120d] border border-stone-800 focus:border-amber-500 rounded px-3 py-1.5 text-stone-100 text-xs focus:outline-none transition-colors"
                       />
                       <span className="text-[10px] text-stone-500 mt-1 block">
-                        Direct fee displayed on /register/private-delegate
+                        Regular fee on /register/private-delegate
                       </span>
                     </div>
 
-                    <div className="p-3 rounded-lg bg-[#07120d] border border-stone-800/80 text-[11px] text-stone-400 space-y-1.5">
-                      <p className="font-semibold text-stone-300 flex items-center gap-1">
-                        <Clock className="w-3 h-3 text-[#c5a059]" />
-                        Form Display Guide:
-                      </p>
-                      <p className="leading-relaxed">
-                        • <strong>Delegation Portal</strong> displays all 6 Early Bird &amp; Regular fees with their deadlines.
-                      </p>
-                      <p className="leading-relaxed">
-                        • <strong>Private Delegate Portal</strong> displays Early Bird Delegate Fee and this Private Delegate Fee.
-                      </p>
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
+                        Observer Registration Fee
+                      </label>
+                      <input
+                        type="text"
+                        value={observerFee}
+                        onChange={(e) => setObserverFee(e.target.value)}
+                        placeholder="e.g. PKR 2,500 / Observer"
+                        className="w-full bg-[#07120d] border border-stone-800 focus:border-amber-500 rounded px-3 py-1.5 text-stone-100 text-xs focus:outline-none transition-colors"
+                      />
+                      <span className="text-[10px] text-stone-500 mt-1 block">
+                        Pass fee on /register/observer
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -950,7 +977,7 @@ export default function AdminDashboardClient({
 
           {isBankExpanded && (
             <form onSubmit={handleSaveBankDetails} className="mt-4 space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {/* Bank Name */}
                 <div className="bg-[#0a1811] border border-[#c5a059]/20 rounded-lg p-3">
                   <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
@@ -998,59 +1025,11 @@ export default function AdminDashboardClient({
                     className="w-full bg-[#07120d] border border-stone-800 focus:border-[#c5a059] rounded px-3 py-1.5 text-stone-200 text-xs font-mono focus:outline-none transition-colors"
                   />
                 </div>
-
-                {/* IBAN Number */}
-                <div className="sm:col-span-2 bg-[#0a1811] border border-[#c5a059]/20 rounded-lg p-3">
-                  <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
-                    IBAN Number (International / Raast)
-                  </label>
-                  <input
-                    type="text"
-                    value={bankDetails.iban}
-                    onChange={(e) =>
-                      setBankDetails((prev) => ({ ...prev, iban: e.target.value }))
-                    }
-                    placeholder="e.g. PK36MEZN0001020304050607"
-                    className="w-full bg-[#07120d] border border-stone-800 focus:border-[#c5a059] rounded px-3 py-1.5 text-stone-200 text-xs font-mono focus:outline-none transition-colors"
-                  />
-                </div>
-
-                {/* Easypaisa Number */}
-                <div className="bg-[#0a1811] border border-[#c5a059]/20 rounded-lg p-3">
-                  <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
-                    Mobile Wallet / Easypaisa Number
-                  </label>
-                  <input
-                    type="text"
-                    value={bankDetails.easypaisaNumber}
-                    onChange={(e) =>
-                      setBankDetails((prev) => ({ ...prev, easypaisaNumber: e.target.value }))
-                    }
-                    placeholder="e.g. 0300 1234567"
-                    className="w-full bg-[#07120d] border border-stone-800 focus:border-[#c5a059] rounded px-3 py-1.5 text-stone-200 text-xs font-mono focus:outline-none transition-colors"
-                  />
-                </div>
-
-                {/* Easypaisa Title */}
-                <div className="bg-[#0a1811] border border-[#c5a059]/20 rounded-lg p-3">
-                  <label className="block text-[10px] uppercase tracking-wider text-stone-400 mb-1 font-semibold">
-                    Mobile Wallet Account Title
-                  </label>
-                  <input
-                    type="text"
-                    value={bankDetails.easypaisaTitle}
-                    onChange={(e) =>
-                      setBankDetails((prev) => ({ ...prev, easypaisaTitle: e.target.value }))
-                    }
-                    placeholder="e.g. Ali Naveed"
-                    className="w-full bg-[#07120d] border border-stone-800 focus:border-[#c5a059] rounded px-3 py-1.5 text-stone-200 text-xs focus:outline-none transition-colors"
-                  />
-                </div>
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-[#c5a059]/15">
                 <p className="text-[11px] text-stone-400">
-                  New bank numbers are immediately mirrored on the registration portals with one-click copy buttons.
+                  Bank details are immediately mirrored on the registration portals with one-click copy buttons.
                 </p>
 
                 <div className="flex items-center gap-3 self-end sm:self-auto">
@@ -1131,18 +1110,18 @@ export default function AdminDashboardClient({
             </p>
           </div>
 
-          <div className="bg-[#08150f] border border-purple-500/30 rounded-xl p-4 shadow-sm">
+          <div className="bg-[#08150f] border border-[#c5a059]/25 rounded-xl p-4 shadow-sm">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] uppercase tracking-wider text-purple-300 font-medium">
-                Directorate
+              <span className="text-[11px] uppercase tracking-wider text-stone-400 font-medium">
+                Observers
               </span>
-              <Award className="w-4 h-4 text-purple-400" />
+              <Eye className="w-4 h-4 text-stone-400" />
             </div>
-            <div className="text-2xl sm:text-3xl font-serif font-bold text-purple-200 mt-1">
-              {directorateDossiersCount}
+            <div className="text-2xl sm:text-3xl font-serif font-bold text-[#f5f5f4] mt-1">
+              {observerDossiersCount}
             </div>
             <p className="text-[10px] text-stone-400 mt-0.5">
-              Host team applicants
+              Observer passes
             </p>
           </div>
 
@@ -1225,17 +1204,6 @@ export default function AdminDashboardClient({
                   }`}
                 >
                   Observers ({observerDossiersCount})
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTypeFilter("directorate")}
-                  className={`px-2.5 py-1 rounded transition-colors ${
-                    typeFilter === "directorate"
-                      ? "bg-purple-600 text-white font-semibold"
-                      : "text-stone-400 hover:text-stone-200"
-                  }`}
-                >
-                  Directorate ({directorateDossiersCount})
                 </button>
               </div>
 
@@ -1325,25 +1293,9 @@ export default function AdminDashboardClient({
                             {delegate.fullName}
                           </span>
 
-                          {isDirectorate ? (
-                            <div>
-                              <span className="text-[11px] text-stone-400 block">
-                                Class: {delegate.studentClass || "N/A"}
-                              </span>
-                              <button
-                                type="button"
-                                onClick={() => setSelectedDirectorateApplicant(delegate)}
-                                className="mt-1 text-[11px] text-purple-400 hover:text-purple-300 hover:underline underline-offset-2 inline-flex items-center gap-1 font-medium"
-                              >
-                                <Award className="w-3 h-3" />
-                                <span>View Application Dossier</span>
-                              </button>
-                            </div>
-                          ) : (
-                            <span className="text-[11px] text-stone-400 block truncate max-w-[200px]">
-                              {delegate.institution}
-                            </span>
-                          )}
+                          <span className="text-[11px] text-stone-400 block truncate max-w-[200px]">
+                            {delegate.institution}
+                          </span>
 
                           {/* If Delegation: View Roster button */}
                           {isDelegation && delegate.delegates && delegate.delegates.length > 0 && (
@@ -1556,147 +1508,7 @@ export default function AdminDashboardClient({
         </div>
       )}
 
-      {/* Directorate Application Details Modal */}
-      {selectedDirectorateApplicant && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-fade-in"
-          onClick={() => setSelectedDirectorateApplicant(null)}
-        >
-          <div
-            className="relative w-full max-w-xl bg-[#0a1811] border border-purple-500/40 rounded-xl p-5 sm:p-6 flex flex-col shadow-2xl overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between pb-3 mb-4 border-b border-purple-500/20">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400">
-                  <Award className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="font-serif text-xl text-[#f5f5f4] font-normal flex items-center gap-2">
-                    <span>Directorate Application</span>
-                    <span className="text-xs font-mono px-2 py-0.5 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30">
-                      {selectedDirectorateApplicant.id}
-                    </span>
-                  </h3>
-                  <p className="text-xs text-stone-400 mt-0.5">
-                    Category: <strong className="text-purple-300">{selectedDirectorateApplicant.directorateCategory || "General"}</strong> • Host Team Recruitment
-                  </p>
-                </div>
-              </div>
 
-              <button
-                onClick={() => setSelectedDirectorateApplicant(null)}
-                className="p-1.5 text-stone-400 hover:text-stone-100 transition-colors"
-                title="Close"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="space-y-4 max-h-[75vh] overflow-y-auto pr-1">
-              {/* Profile Overview */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#08150f] border border-purple-500/20 rounded-lg p-3.5">
-                <div>
-                  <span className="text-stone-500 text-[10px] uppercase tracking-wider block">
-                    Full Name
-                  </span>
-                  <span className="text-stone-100 font-medium text-sm">
-                    {selectedDirectorateApplicant.fullName}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-stone-500 text-[10px] uppercase tracking-wider block">
-                    Assigned Department
-                  </span>
-                  <span className="text-purple-300 font-semibold text-sm">
-                    {selectedDirectorateApplicant.directorateCategory || selectedDirectorateApplicant.committee}
-                  </span>
-                </div>
-                <div className="sm:col-span-2">
-                  <span className="text-stone-500 text-[10px] uppercase tracking-wider block">
-                    Class
-                  </span>
-                  <span className="text-stone-200">
-                    {selectedDirectorateApplicant.studentClass || "Not specified"}
-                  </span>
-                </div>
-              </div>
-
-              {/* Contact Info */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#08150f] border border-[#c5a059]/20 rounded-lg p-3.5">
-                <div>
-                  <span className="text-stone-500 text-[10px] uppercase tracking-wider block">
-                    Contact / WhatsApp
-                  </span>
-                  <span className="text-stone-200 font-mono">
-                    {selectedDirectorateApplicant.phone}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-stone-500 text-[10px] uppercase tracking-wider block">
-                    Email Address
-                  </span>
-                  <span className="text-stone-200 truncate block">
-                    {selectedDirectorateApplicant.email}
-                  </span>
-                </div>
-              </div>
-
-              {/* Why Suited for Category */}
-              <div className="bg-[#08150f] border border-stone-800 rounded-lg p-3.5">
-                <span className="text-stone-500 text-[10px] uppercase tracking-wider block mb-1 font-medium text-[#c5a059]">
-                  Why do you think you are suited for this category?
-                </span>
-                <p className="text-stone-200 text-xs leading-relaxed whitespace-pre-wrap bg-[#0a1811] p-2.5 rounded border border-stone-800/80">
-                  {selectedDirectorateApplicant.whySuited || "Not specified."}
-                </p>
-              </div>
-
-              {/* Animal Question */}
-              <div className="bg-[#08150f] border border-stone-800 rounded-lg p-3.5">
-                <span className="text-stone-500 text-[10px] uppercase tracking-wider block mb-1 font-medium text-[#c5a059]">
-                  If you were an animal what animal would you be?
-                </span>
-                <p className="text-stone-200 text-xs leading-relaxed whitespace-pre-wrap bg-[#0a1811] p-2.5 rounded border border-stone-800/80">
-                  {selectedDirectorateApplicant.spiritAnimal || "Not specified."}
-                </p>
-              </div>
-
-              {/* Sponsors */}
-              <div className="bg-[#08150f] border border-stone-800 rounded-lg p-3.5">
-                <span className="text-stone-500 text-[10px] uppercase tracking-wider block mb-1 font-medium text-[#c5a059]">
-                  Sponsors (If any)
-                </span>
-                <p className="text-stone-200 text-xs leading-relaxed bg-[#0a1811] p-2.5 rounded border border-stone-800/80">
-                  {selectedDirectorateApplicant.sponsors || "No sponsors specified."}
-                </p>
-              </div>
-
-              {/* Past MUN Experience */}
-              <div className="bg-[#08150f] border border-stone-800 rounded-lg p-3.5">
-                <span className="text-stone-500 text-[10px] uppercase tracking-wider block mb-1 font-medium text-[#c5a059]">
-                  Past MUN Experience (If any)
-                </span>
-                <p className="text-stone-200 text-xs leading-relaxed whitespace-pre-wrap bg-[#0a1811] p-2.5 rounded border border-stone-800/80">
-                  {selectedDirectorateApplicant.pastExperience || "No past MUN experience specified."}
-                </p>
-              </div>
-
-              {/* Metadata & Status */}
-              <div className="flex items-center justify-between pt-2 text-[11px] text-stone-400 border-t border-stone-800">
-                <span>Submitted: {new Date(selectedDirectorateApplicant.createdAt).toLocaleString()}</span>
-                <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-semibold ${
-                  selectedDirectorateApplicant.status === "Approved" || selectedDirectorateApplicant.status === "Verified"
-                    ? "bg-emerald-950/80 text-emerald-400 border border-emerald-500/30"
-                    : "bg-amber-950/80 text-amber-400 border border-amber-500/30"
-                }`}>
-                  Status: {selectedDirectorateApplicant.status}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Receipt Modal */}
       {selectedReceiptDelegate && (

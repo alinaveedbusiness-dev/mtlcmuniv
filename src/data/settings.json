@@ -9,13 +9,12 @@
   "regularDelegationFee": "PKR 18,000 / Delegation",
   "registrationDeadline": "October 20, 2026",
   "privateDelegateFee": "PKR 4,500 / Delegate",
+  "privateDelegateEarlyBirdFee": "PKR 3,500 / Delegate",
+  "observerFee": "PKR 2,500 / Observer",
   "bankDetails": {
     "bankName": "Meezan Bank Islamic Banking",
     "accountTitle": "MTLC Model United Nations Society",
-    "accountNumber": "0245-0104889201",
-    "iban": "PK78MEZN0002450104889201",
-    "easypaisaNumber": "0300-9876543",
-    "easypaisaTitle": "MTLC Secretariat (Ali Naveed)"
+    "accountNumber": "0245-0104889201"
   },
   "isRegistrationOpen": true,
   "announcement": "Registrations for MTLC MUN IV (October 23 - 24 - 25, 2026) are now live! Secure your committee allocations.",

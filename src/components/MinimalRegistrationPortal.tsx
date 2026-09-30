@@ -73,6 +73,8 @@ export default function MinimalRegistrationPortal({
   const regularDelegationFee = settings.regularDelegationFee || "PKR 18,000 / Delegation";
   const regularDeadline = settings.registrationDeadline || "October 20, 2026";
   const privateDelegateFee = settings.privateDelegateFee || regularDelegateFee;
+  const privateDelegateEarlyBirdFee = settings.privateDelegateEarlyBirdFee || earlyBirdDelegateFee;
+  const observerFee = settings.observerFee || "PKR 2,500 / Observer";
 
   // Track 1: Delegation Form (Head Delegate + 3 required + 2 optional)
   const [delegationType, setDelegationType] = useState<"institutional" | "private">("institutional");
@@ -830,7 +832,7 @@ export default function MinimalRegistrationPortal({
                           Early Bird Delegate Fee
                         </span>
                         <span className="font-serif font-bold text-stone-100 text-sm sm:text-base">
-                          {earlyBirdDelegateFee}
+                          {privateDelegateEarlyBirdFee}
                         </span>
                       </div>
                       <div className="text-right text-[10px] text-stone-300 font-mono">
@@ -977,6 +979,32 @@ export default function MinimalRegistrationPortal({
                   </p>
                 </div>
 
+                {/* Official Observer Registration Fee Card */}
+                <div className="rounded-lg border border-[#c5a059]/30 bg-[#07120d] p-3.5 space-y-2.5">
+                  <div className="flex items-center justify-between pb-1.5 border-b border-[#c5a059]/20">
+                    <span className="font-serif font-semibold text-[#d4af37] text-xs sm:text-sm">
+                      Observer Registration Fee
+                    </span>
+                    <span className="text-[10px] text-stone-400 font-mono">
+                      Conference Access
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between pt-0.5">
+                    <div>
+                      <span className="text-[10px] uppercase tracking-wider text-stone-400 block font-medium">
+                        Observer Pass Fee
+                      </span>
+                      <span className="font-serif font-bold text-stone-100 text-sm sm:text-base">
+                        {observerFee}
+                      </span>
+                    </div>
+                    <div className="text-right text-[10px] text-stone-300 font-mono">
+                      <span className="block text-stone-400 text-[9px] uppercase">Deadline</span>
+                      <strong className="text-[#f5f5f4]">{regularDeadline}</strong>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="space-y-4 text-xs">
                   {/* delegate name* */}
                   <div>
@@ -1067,84 +1095,38 @@ export default function MinimalRegistrationPortal({
               {/* Collapsible Official Banking Details Drawer */}
               {showPaymentDetails && (
                 <div className="rounded-lg border border-[#c5a059]/25 bg-[#0a1811] p-4 text-xs space-y-3 animate-fade-in">
-                  <div className="flex flex-col sm:flex-row justify-between gap-3 pb-2 border-b border-[#c5a059]/15">
+                  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
                     <div>
-                      <span className="text-[10px] uppercase tracking-wider text-stone-400 block font-medium">
-                        Bank Transfer (Meezan Bank)
+                      <span className="text-[10px] uppercase tracking-wider text-[#d4af37] block font-medium">
+                        Official Bank Remittance
                       </span>
-                      <p className="text-stone-200 font-medium">
+                      <p className="text-stone-100 font-serif font-semibold text-sm">
                         {settings.bankDetails.bankName}
                       </p>
-                      <p className="text-stone-400 text-[11px]">
-                        Title: {settings.bankDetails.accountTitle}
+                      <p className="text-stone-400 text-[11px] mt-0.5">
+                        Account Title: <span className="text-stone-200 font-medium">{settings.bankDetails.accountTitle}</span>
                       </p>
                     </div>
 
-                    <div className="flex flex-col gap-1 sm:items-end">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-stone-200 text-xs">
+                    <div className="flex items-center gap-2 bg-[#07120d] border border-[#c5a059]/30 rounded-lg px-3 py-2">
+                      <div>
+                        <span className="text-[9px] uppercase tracking-wider text-stone-500 block font-mono">Account Number</span>
+                        <span className="font-mono text-[#f5f5f4] text-xs sm:text-sm font-bold tracking-wider">
                           {settings.bankDetails.accountNumber}
                         </span>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleCopy(settings.bankDetails.accountNumber, "accNum")
-                          }
-                          className="text-stone-400 hover:text-[#c5a059]"
-                          title="Copy account number"
-                        >
-                          {copiedField === "accNum" ? (
-                            <Check className="w-3 h-3 text-emerald-400" />
-                          ) : (
-                            <Copy className="w-3 h-3" />
-                          )}
-                        </button>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-stone-400 text-[10px]">
-                          IBAN: {settings.bankDetails.iban}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => handleCopy(settings.bankDetails.iban, "iban")}
-                          className="text-stone-400 hover:text-[#c5a059]"
-                          title="Copy IBAN"
-                        >
-                          {copiedField === "iban" ? (
-                            <Check className="w-3 h-3 text-emerald-400" />
-                          ) : (
-                            <Copy className="w-3 h-3" />
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                    <div>
-                      <span className="text-[10px] uppercase tracking-wider text-stone-400 block font-medium">
-                        Mobile Banking (EasyPaisa)
-                      </span>
-                      <p className="text-stone-200 text-xs">
-                        {settings.bankDetails.easypaisaTitle}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-stone-200 text-xs">
-                        {settings.bankDetails.easypaisaNumber}
-                      </span>
                       <button
                         type="button"
                         onClick={() =>
-                          handleCopy(settings.bankDetails.easypaisaNumber, "epNum")
+                          handleCopy(settings.bankDetails.accountNumber, "accNum")
                         }
-                        className="text-stone-400 hover:text-[#c5a059]"
-                        title="Copy EasyPaisa Number"
+                        className="text-stone-400 hover:text-[#d4af37] p-1.5 rounded transition-colors ml-1"
+                        title="Copy account number"
                       >
-                        {copiedField === "epNum" ? (
-                          <Check className="w-3 h-3 text-emerald-400" />
+                        {copiedField === "accNum" ? (
+                          <Check className="w-4 h-4 text-emerald-400" />
                         ) : (
-                          <Copy className="w-3 h-3" />
+                          <Copy className="w-4 h-4" />
                         )}
                       </button>
                     </div>

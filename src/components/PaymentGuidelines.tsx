@@ -80,11 +80,11 @@ export default function PaymentGuidelines({ settings }: PaymentGuidelinesProps) 
           ))}
         </div>
 
-        {/* Bank & Mobile Transfer Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Bank Transfer Card */}
+        <div className="max-w-xl mx-auto">
           {/* Direct Bank Transfer */}
-          <div className="glass-panel p-6 sm:p-8 rounded-2xl border border-gold-400/25 relative">
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gold-400/15">
+          <div className="glass-panel p-6 sm:p-8 rounded-2xl border border-gold-400/25 relative space-y-6">
+            <div className="flex items-center gap-3 pb-4 border-b border-gold-400/15">
               <div className="w-10 h-10 rounded-lg bg-emerald-900/60 border border-gold-400/30 flex items-center justify-center">
                 <Landmark className="w-5 h-5 text-gold-400" />
               </div>
@@ -129,87 +129,17 @@ export default function PaymentGuidelines({ settings }: PaymentGuidelinesProps) 
                   )}
                 </button>
               </div>
-
-              <div className="flex items-center justify-between p-3 rounded-lg bg-emerald-950/70 border border-stone-800">
-                <div>
-                  <div className="text-stone-400 font-medium">IBAN Number</div>
-                  <div className="font-mono text-xs font-bold text-gold-200 mt-0.5 break-all">{settings.bankDetails.iban}</div>
-                </div>
-                <button
-                  onClick={() => copyToClipboard(settings.bankDetails.iban, "iban")}
-                  className="btn-outline-gold px-3 py-1.5 rounded flex items-center gap-1.5 text-xs font-semibold shrink-0 ml-2"
-                >
-                  {copiedKey === "iban" ? (
-                    <>
-                      <Check className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>Copied</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3.5 h-3.5 text-gold-400" />
-                      <span>Copy</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile Wallets & Instructions */}
-          <div className="glass-panel p-6 sm:p-8 rounded-2xl border border-gold-400/25 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gold-400/15">
-                <div className="w-10 h-10 rounded-lg bg-emerald-900/60 border border-gold-400/30 flex items-center justify-center">
-                  <Smartphone className="w-5 h-5 text-gold-400" />
-                </div>
-                <div>
-                  <h3 className="font-serif text-lg font-bold text-stone-100">
-                    Mobile Wallets (Easypaisa / JazzCash)
-                  </h3>
-                  <p className="text-xs text-stone-400">Instant transfer via mobile wallet apps</p>
-                </div>
-              </div>
-
-              <div className="space-y-4 text-xs sm:text-sm">
-                <div className="flex items-center justify-between p-3 rounded-lg bg-emerald-950/70 border border-stone-800">
-                  <span className="text-stone-400 font-medium">Account Title</span>
-                  <span className="font-bold text-stone-100 text-right">{settings.bankDetails.easypaisaTitle}</span>
-                </div>
-
-                <div className="flex items-center justify-between p-3 rounded-lg bg-emerald-950/70 border border-stone-800">
-                  <div>
-                    <div className="text-stone-400 font-medium">Mobile Wallet Number</div>
-                    <div className="font-mono font-bold text-gold-200 mt-0.5">{settings.bankDetails.easypaisaNumber}</div>
-                  </div>
-                  <button
-                    onClick={() => copyToClipboard(settings.bankDetails.easypaisaNumber, "mobileWallet")}
-                    className="btn-outline-gold px-3 py-1.5 rounded flex items-center gap-1.5 text-xs font-semibold"
-                  >
-                    {copiedKey === "mobileWallet" ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        <span>Copied</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3.5 h-3.5 text-gold-400" />
-                        <span>Copy</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Notice Box */}
-              <div className="mt-6 p-4 rounded-xl bg-amber-950/30 border border-amber-500/30 flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-                <p className="text-stone-300 text-xs leading-relaxed">
-                  <strong>Important:</strong> Please ensure your payment receipt clearly reveals the transaction Reference / ID. Uploading fraudulent or unreadable proofs will lead to automatic rejection by the Secretariat.
-                </p>
-              </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-gold-400/15 flex items-center justify-between text-xs text-stone-400">
+            {/* Notice Box */}
+            <div className="p-4 rounded-xl bg-amber-950/30 border border-amber-500/30 flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+              <p className="text-stone-300 text-xs leading-relaxed">
+                <strong>Important:</strong> Please ensure your payment receipt clearly reveals the transaction Reference / ID. Uploading fraudulent or unreadable proofs will lead to automatic rejection by the Secretariat.
+              </p>
+            </div>
+
+            <div className="pt-4 border-t border-gold-400/15 flex items-center justify-between text-xs text-stone-400">
               <span>Standard Delegate Fee</span>
               <span className="font-serif font-bold text-gold-300 text-base">{settings.registrationFee}</span>
             </div>

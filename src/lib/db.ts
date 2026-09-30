@@ -175,10 +175,9 @@ export async function updateSettings(updates: Partial<ConferenceSettings>): Prom
   const updated: ConferenceSettings = {
     ...current,
     ...updates,
-    bankDetails: {
-      ...current.bankDetails,
-      ...(updates.bankDetails || {}),
-    },
+    bankDetails: updates.bankDetails
+      ? { ...updates.bankDetails }
+      : current.bankDetails,
     committeeAgendas: {
       ...(current.committeeAgendas || {}),
       ...(updates.committeeAgendas || {}),

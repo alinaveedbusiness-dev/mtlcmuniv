@@ -83,13 +83,15 @@ export interface ConferenceSettings {
   regularDelegationFee?: string;
   registrationDeadline?: string;
   privateDelegateFee?: string;
+  privateDelegateEarlyBirdFee?: string;
+  observerFee?: string;
   bankDetails: {
     bankName: string;
     accountTitle: string;
     accountNumber: string;
-    iban: string;
-    easypaisaNumber: string;
-    easypaisaTitle: string;
+    iban?: string;
+    easypaisaNumber?: string;
+    easypaisaTitle?: string;
   };
   isRegistrationOpen: boolean;
   announcement: string;
